@@ -26,7 +26,7 @@ void Three_Phased_PWM::stop_all(){
     turn_off_v();
     turn_off_w();
     Enable.turn_on();
-    Reset.turn_off();
+    Reset.turn_off(); 
 }
 void Three_Phased_PWM::disable(){
     Enable.turn_on();
@@ -86,7 +86,7 @@ uint32_t Three_Phased_PWM::get_frequency_w(){
 void Three_Phased_PWM::turn_on_u(){
     if(data->pwm_active == PWM_ACTIVE::U) return;
 
-    turn_off_other_pwm();
+    turn_off_active_pwm();
     U_Dual.turn_on();
     data->actual_duty = get_duty_u();
     data->actual_frequency = get_frequency_u();
@@ -95,7 +95,7 @@ void Three_Phased_PWM::turn_on_u(){
 void Three_Phased_PWM::turn_on_w(){
     if(data->pwm_active == PWM_ACTIVE::W) return;
 
-    turn_off_other_pwm();
+    turn_off_active_pwm();
     W_Dual.turn_on();
     data->actual_duty = get_duty_w();
     data->actual_frequency = get_frequency_w();
@@ -104,7 +104,7 @@ void Three_Phased_PWM::turn_on_w(){
 void Three_Phased_PWM::turn_on_v(){
     if(data->pwm_active == PWM_ACTIVE::V) return;
 
-    turn_off_other_pwm();
+    turn_off_active_pwm();
     V_Dual.turn_on();
     data->actual_duty = get_duty_v();
     data->actual_frequency = get_frequency_v();
@@ -128,7 +128,7 @@ void Three_Phased_PWM::turn_off_w(){
     data->actual_frequency = 0;
     data->pwm_active = PWM_ACTIVE::NONE;
 }
-void Three_Phased_PWM::turn_off_other_pwm(){
+void Three_Phased_PWM::turn_off_active_pwm(){
     switch (data->pwm_active)
     {
     case PWM_ACTIVE::NONE:

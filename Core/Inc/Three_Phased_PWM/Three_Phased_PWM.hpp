@@ -5,7 +5,6 @@ static constexpr uint32_t initial_frequency = 10000;
 static constexpr std::chrono::nanoseconds dead_time_ns = static_cast<std::chrono::nanoseconds>(300);
 class Three_Phased_PWM{
     private:
-        void turn_off_other_pwm();
         DualPWM U_Dual;
         DualPWM V_Dual;
         DualPWM W_Dual;
@@ -36,5 +35,6 @@ class Three_Phased_PWM{
         void turn_off_u();
         void turn_off_v();
         void turn_off_w();
+        void turn_off_active_pwm();
         void reset();
 };

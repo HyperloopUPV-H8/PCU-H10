@@ -1,8 +1,8 @@
 #pragma once
 #include "ST-LIB.hpp"
 namespace Pinout{
-    static constexpr Pin& U_PWM = PE13;
-    static constexpr Pin& U_PWM_NEGATED = PE12;
+    static constexpr Pin& U_PWM = PE8;
+    static constexpr Pin& U_PWM_NEGATED = PE9;
     static constexpr Pin& W_PWM = PE13;
     static constexpr Pin& W_PWM_NEGATED = PE12;
     static constexpr Pin& V_PWM = PE11;
