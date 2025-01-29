@@ -32,10 +32,10 @@ void StateMachinePCU::add_transitions(){
         return !communication->is_connected();
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Sending_PWM,[this](){
-        return Data->pwm_active != PWM_ACTIVE::NONE;
+        return (Data->pwm_active != PWM_ACTIVE::NONE && Data->buffer_enable == BUFFER_ENABLE::ON);
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Sending_PWM,Operational_State_PCU::Idle,[this](){
-        return Data->pwm_active == PWM_ACTIVE::NONE;
+        return (Data->pwm_active == PWM_ACTIVE::NONE || Data->buffer_enable == BUFFER_ENABLE::OFF);
     });
 }
 void StateMachinePCU::add_exit_actions(){
