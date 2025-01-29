@@ -13,7 +13,7 @@ namespace Pinout{
 
 namespace Communication_Data{
     const IPV4 Backend = {"192.168.0.9"};
-    const IPV4 PCU_IP = {"192.168.1.5"};
+    const IPV4 PCU_IP = {"192.168.0.5"};
     static constexpr uint32_t UDP_PORT = 50400;
     static constexpr uint32_t TCP_SERVER = 50500;
     static constexpr uint32_t TCP_CLIENT = 50401;
