@@ -23,6 +23,7 @@ int main(void) {
 
     while (1) {
         STLIB::update();
+        stateMachinePCU.update();
     }
 }
 

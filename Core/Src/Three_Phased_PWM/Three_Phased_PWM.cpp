@@ -12,9 +12,6 @@ void Three_Phased_PWM::start(){
     U_Dual.set_dead_time(dead_time_ns);
     V_Dual.set_dead_time(dead_time_ns);
     W_Dual.set_dead_time(dead_time_ns);
-    set_frequency_u(initial_frequency);
-    set_frequency_v(initial_frequency);
-    set_frequency_w(initial_frequency);
     Enable.turn_on(); //works Active low
     Reset.turn_on(); // has to be active to work
     data->pwm_active = PWM_ACTIVE::NONE;
@@ -25,8 +22,8 @@ void Three_Phased_PWM::stop_all(){
     turn_off_u();
     turn_off_v();
     turn_off_w();
-    Enable.turn_on();
-    Reset.turn_off(); 
+    disable();
+    reset();
 }
 void Three_Phased_PWM::disable(){
     Enable.turn_on();
@@ -135,14 +132,15 @@ void Three_Phased_PWM::turn_off_active_pwm(){
         return;
     case PWM_ACTIVE::U:
         U_Dual.turn_off();
-        return;
+        break;
     case PWM_ACTIVE::V:
         V_Dual.turn_off();
-        return;
+        break;
     case PWM_ACTIVE::W:
         W_Dual.turn_off();
-        return;
+        break;
     }
+    data->pwm_active = PWM_ACTIVE::NONE;
 }
 void Three_Phased_PWM::reset(){
     Reset.turn_off();

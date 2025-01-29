@@ -9,6 +9,7 @@ three_phased_pwm(three_phased)
     operationalStateMachine = new StateMachine();
     add_states();
     add_transitions();
+    add_exit_actions();
 }
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
