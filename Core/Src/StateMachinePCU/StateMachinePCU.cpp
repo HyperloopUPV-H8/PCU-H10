@@ -14,7 +14,9 @@ three_phased_pwm(three_phased)
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
     three_phased_pwm->start();
-
+    stateMachine->add_low_precision_cyclic_action([this](){
+        communication->send_UDP_packets();
+    },ms(100));
 }
 
 void StateMachinePCU::add_states(){
@@ -65,19 +67,19 @@ void StateMachinePCU::update(){
                 three_phased_pwm->turn_off_active_pwm();
                 return;
             case PWM_ACTIVE::U:
-                three_phased_pwm->set_frequency_u(Communication::frequency_received);
+                three_phased_pwm->set_frequency_u(static_cast<uint32_t>(Communication::frequency_received));
                 three_phased_pwm->set_duty_u(Communication::duty_cycle_received);
                 three_phased_pwm->turn_on_u();
             return;
             case PWM_ACTIVE::V:
-                three_phased_pwm->set_frequency_v(Communication::frequency_received);
+                three_phased_pwm->set_frequency_v(static_cast<uint32_t>(Communication::frequency_received));
                 three_phased_pwm->set_duty_v(Communication::duty_cycle_received);
                 three_phased_pwm->turn_on_v();
             return;
             case PWM_ACTIVE::W:
-                three_phased_pwm->set_frequency_w(Communication::frequency_received);
+                three_phased_pwm->set_frequency_w(static_cast<uint32_t>(Communication::frequency_received));
                 three_phased_pwm->set_duty_w(Communication::duty_cycle_received);
-                three_phased_pwm->turn_on_w();
+                three_phased_pwm->turn_on_w();  
             return;
         }
     }

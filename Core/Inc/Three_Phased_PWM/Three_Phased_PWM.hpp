@@ -2,7 +2,7 @@
 #include "ST-LIB.hpp"
 #include "Data/Data.hpp"
 static constexpr uint32_t initial_frequency = 10000;
-static constexpr std::chrono::nanoseconds dead_time_ns = static_cast<std::chrono::nanoseconds>(300);
+static constexpr std::chrono::nanoseconds dead_time_ns(300);
 class Three_Phased_PWM{
     private:
         DualPWM U_Dual;

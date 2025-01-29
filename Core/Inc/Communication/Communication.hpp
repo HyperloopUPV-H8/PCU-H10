@@ -18,7 +18,7 @@ class Communication{
         static bool received_disable_buffer;
         static bool received_pwm_order;
         static bool received_stop_pwm_order;
-        static uint32_t frequency_received;
+        static float frequency_received;
         static float duty_cycle_received;
         static PWM_ACTIVE pwm_received;
         void send_UDP_packets(); 
