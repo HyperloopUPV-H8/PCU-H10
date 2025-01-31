@@ -15,6 +15,8 @@ void StateMachinePCU::start(Communication *comms){
     communication = comms;
     three_phased_pwm->start();
     stateMachine->add_low_precision_cyclic_action([this](){
+        //read ADC
+        three_phased_pwm->read_ADC();
         communication->send_UDP_packets();
     },ms(100));
 }
@@ -59,12 +61,23 @@ void StateMachinePCU::update(){
         Communication::received_stop_pwm_order = false;
         three_phased_pwm->stop_all();
     }
+    if(Communication::received_disable_reset == true){
+        Communication::received_disable_reset = false;
+        three_phased_pwm->Disable_reset();
+    }
+    else if(Communication::received_enable_reset == true){
+        Communication::received_enable_reset = false;
+        three_phased_pwm->Enable_reset();
+    }
+    if(Communication::received_choose_batteries_type){
+        Data->connector_Batteries = Communication::connector_received;
+    }
     if(Communication::received_pwm_order == true){
         Communication::received_pwm_order = false;
+        three_phased_pwm->turn_off_active_pwm();
         switch (Communication::pwm_received)
         {
             case PWM_ACTIVE::NONE:
-                three_phased_pwm->turn_off_active_pwm();
                 return;
             case PWM_ACTIVE::U:
                 three_phased_pwm->set_frequency_u(static_cast<uint32_t>(Communication::frequency_received));

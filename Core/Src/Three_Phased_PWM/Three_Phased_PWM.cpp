@@ -1,40 +1,49 @@
 #include "../../Inc/Three_Phased_PWM/Three_Phased_PWM.hpp"
 using namespace std::chrono_literals;
 
-Three_Phased_PWM::Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Data_struct *data):
+Three_Phased_PWM::Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Pin& batt_con_A,Pin& batt_con_B,Data_struct *data):
 U_Dual(u,u_negated),
 V_Dual(v,v_negated),
 W_Dual(w,w_negated),
 Enable(enable),
 Reset(reset),
 data(data)
-{}
+{ 
+    battery_connector_A_id =ADC::inscribe(batt_con_A);
+    battery_connector_B_id = ADC::inscribe(batt_con_B);
+}
 void Three_Phased_PWM::start(){
     U_Dual.set_frequency(initial_frequency);
     V_Dual.set_frequency(initial_frequency);
     W_Dual.set_frequency(initial_frequency);
-    U_Dual.set_dead_time(1us);
-    V_Dual.set_dead_time(1us);
-    W_Dual.set_dead_time(1us);
+    U_Dual.set_dead_time(500ns);
+    V_Dual.set_dead_time(500ns);
+    W_Dual.set_dead_time(500ns);
     U_Dual.set_duty_cycle(0.0);
     V_Dual.set_duty_cycle(0.0);
     W_Dual.set_duty_cycle(0.0);
     U_Dual.turn_on();
     V_Dual.turn_on();
     W_Dual.turn_on();
-    
 
     Enable.turn_on(); //works Active low
-    Reset.turn_on(); // has to be active to work
+    Enable_reset(); // has to be active to work
+
+    //start adc
+    ADC::start();
+    ADC::turn_on(battery_connector_A_id);
+    ADC::turn_on(battery_connector_B_id);
     data->pwm_active = PWM_ACTIVE::NONE;
     data->actual_duty = 0;
-    data->actual_frequency = 0.0;  
+    data->actual_frequency = 0.0;
 }
 void Three_Phased_PWM::stop_all(){
     U_Dual.set_duty_cycle(0.0);
     V_Dual.set_duty_cycle(0.0);
     W_Dual.set_duty_cycle(0.0);
     disable();
+    Disable_reset();
+    
 }
 void Three_Phased_PWM::disable(){
     Enable.turn_on();
@@ -79,7 +88,7 @@ void Three_Phased_PWM::set_duty_w(float duty_cycle){
     data->actual_duty = get_duty_w();
 }
 float Three_Phased_PWM::Three_Phased_PWM::get_duty_u(){
-     return U_Dual.get_duty_cycle();
+    return U_Dual.get_duty_cycle();
    
 }
 float Three_Phased_PWM::get_duty_v(){
@@ -132,7 +141,32 @@ void Three_Phased_PWM::turn_off_w(){
     data->pwm_active = PWM_ACTIVE::NONE;
 }
 void Three_Phased_PWM::turn_off_active_pwm(){
-    data->pwm_active = PWM_ACTIVE::NONE;
+    switch(data->pwm_active){
+        case PWM_ACTIVE::NONE :
+            return;
+        case PWM_ACTIVE::U : 
+            turn_off_u();
+            return;
+        case PWM_ACTIVE::V :
+            turn_off_v();
+            return;
+        case PWM_ACTIVE::W :
+            turn_off_w();
+    }
 }
-void Three_Phased_PWM::reset(){
+void Three_Phased_PWM::Disable_reset(){
+    Reset.turn_off();
+}
+void Three_Phased_PWM::Enable_reset(){
+    Reset.turn_on();
+}
+void Three_Phased_PWM::read_ADC(){
+    switch (data->connector_Batteries)
+    {
+    case Battery_Connector::A :
+        data->actual_voltage_batteries = ADC::get_value(battery_connector_A_id);
+        break;
+    case Battery_Connector::B:
+        data->actual_voltage_batteries = ADC::get_value(battery_connector_B_id);
+    }
 }

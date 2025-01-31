@@ -11,8 +11,10 @@ class Three_Phased_PWM{
         DigitalOutput Enable; // the logic is negated
         DigitalOutput Reset;
         Data_struct *data;
-    public: 
-        Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Data_struct *data);
+        uint8_t battery_connector_A_id;
+        uint8_t battery_connector_B_id;
+    public:
+        Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Pin& batt_con_A,Pin& batt_con_B,Data_struct *data);
         void start();
         void stop_all();
         void enable();
@@ -36,5 +38,7 @@ class Three_Phased_PWM{
         void turn_off_v();
         void turn_off_w();
         void turn_off_active_pwm();
-        void reset();
+        void Disable_reset();
+        void Enable_reset();
+        void read_ADC();
 };

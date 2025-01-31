@@ -11,17 +11,26 @@ class Communication{
         HeapOrder *Disable_Buffer_Order;
         HeapOrder *Send_pwm_Order;
         HeapOrder *Stop_pwm_Order;
-       
+        HeapOrder *Disable_Reset;
+        HeapOrder *Enable_Reset;
+        HeapOrder *Choose_Batteries_type;
+        HeapPacket *Pwm_packet;
+        HeapPacket *batteries_Packet;
     public:
         Communication(Data_struct *data);
         static bool received_enable_buffer;
         static bool received_disable_buffer;
         static bool received_pwm_order;
         static bool received_stop_pwm_order;
+        static bool received_disable_reset;
+        static bool received_enable_reset;
+        static bool received_choose_batteries_type;
         static float frequency_received;
         static float duty_cycle_received;
         static PWM_ACTIVE pwm_received;
+        static Battery_Connector connector_received;
         void send_UDP_packets(); 
         bool is_connected();
-        HeapPacket *Pwm_packet;
+       
+
 };

@@ -9,6 +9,8 @@ namespace Pinout{
     static constexpr Pin& V_PWM_NEGATED = PE10; 
     static constexpr Pin& ENABLE_BUFFER = PF4; 
     static constexpr Pin& Reset = PE15;
+    static constexpr Pin& Batt_Voltage_A = PF11;
+    static constexpr Pin& Batt_Voltage_B = PF12;
 };
 
 namespace Communication_Data{
@@ -22,7 +24,11 @@ namespace Communication_Data{
     static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;
     static constexpr uint16_t SEND_PWM_ORDER = 502;
     static constexpr uint16_t STOP_PWM_ORDER = 503;
+    static constexpr uint16_t ENABLE_RESET_ORDER = 504;
+    static constexpr uint16_t DISABLE_RESET_ORDER = 505;
+    static constexpr uint16_t BATTERIES_TYPE_ORDER = 506;
     static constexpr uint16_t PWM_PACKET = 550;
+    static constexpr uint16_t BATTERIES_PACKET = 551;
 };
 enum class PWM_ACTIVE: uint8_t{
     NONE,
@@ -34,9 +40,16 @@ enum class BUFFER_ENABLE : uint8_t{
     OFF,
     ON
 };
+enum class Battery_Connector : uint8_t{
+    A,
+    B
+};
 struct Data_struct{
     PWM_ACTIVE pwm_active{};
     uint32_t actual_frequency{};
     float actual_duty{};
     BUFFER_ENABLE buffer_enable{};
+    //batteries
+    float actual_voltage_batteries{};
+    Battery_Connector connector_Batteries = Battery_Connector::A;
 };
