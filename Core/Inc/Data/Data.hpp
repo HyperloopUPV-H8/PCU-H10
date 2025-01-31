@@ -11,6 +11,7 @@ namespace Pinout{
     static constexpr Pin& Reset = PE15;
     static constexpr Pin& Batt_Voltage_A = PF11;
     static constexpr Pin& Batt_Voltage_B = PF12;
+    static constexpr Pin& LED_COMMUTION = PG6;
 };
 
 namespace Communication_Data{

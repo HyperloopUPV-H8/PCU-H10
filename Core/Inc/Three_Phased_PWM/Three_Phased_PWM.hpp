@@ -10,11 +10,12 @@ class Three_Phased_PWM{
         DualPWM W_Dual;
         DigitalOutput Enable; // the logic is negated
         DigitalOutput Reset;
+        DigitalOutput Led_Commutation;
         Data_struct *data;
         uint8_t battery_connector_A_id;
         uint8_t battery_connector_B_id;
     public:
-        Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Pin& batt_con_A,Pin& batt_con_B,Data_struct *data);
+        Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Pin& batt_con_A,Pin& batt_con_B,Pin& Led_Comm,Data_struct *data);
         void start();
         void stop_all();
         void enable();

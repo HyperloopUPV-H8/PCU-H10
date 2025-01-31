@@ -44,6 +44,13 @@ void StateMachinePCU::add_transitions(){
     });
 }
 void StateMachinePCU::add_exit_actions(){
+     operationalStateMachine->add_enter_action([this](){
+        three_phased_pwm->Led_Commutation.turn_on();
+    },Operational_State_PCU::Sending_PWM);
+    operationalStateMachine->add_exit_action([this](){
+        three_phased_pwm->Led_Commutation.turn_off();
+    },Operational_State_PCU::Sending_PWM);
+
     stateMachine->add_exit_action([this](){
         three_phased_pwm->stop_all();
     },State_PCU::Operational);

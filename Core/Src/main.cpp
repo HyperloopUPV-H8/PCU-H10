@@ -14,7 +14,7 @@ int main(void) {
     SharedMemory::start();
 #endif
     Data_struct Data;
-    Three_Phased_PWM three_phased_pwm(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,Pinout::Reset,Pinout::Batt_Voltage_A,Pinout::Batt_Voltage_B,&Data);
+    Three_Phased_PWM three_phased_pwm(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,Pinout::Reset,Pinout::Batt_Voltage_A,Pinout::Batt_Voltage_B,Pinout::LED_COMMUTION,&Data);
     StateMachinePCU stateMachinePCU(&Data,&three_phased_pwm);
     STLIB::start("192.168.0.5");
     Communication comms(&Data);
