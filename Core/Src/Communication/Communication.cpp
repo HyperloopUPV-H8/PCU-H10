@@ -25,13 +25,13 @@ void stop_pwm_order_callback(){
     Communication::received_stop_pwm_order = true;
 }
 void disable_reset_callback(){
-    Communication::received_disable_reset = false;
+    Communication::received_disable_reset = true;
 }
 void enable_reset_callback(){
-    Communication::received_enable_reset = false;
+    Communication::received_enable_reset = true;
 }
 void received_choose_batteries_type_callback(){
-    Communication::received_choose_batteries_type = false;
+    Communication::received_choose_batteries_type = true;
 }
 Communication::Communication(Data_struct *data): Data(data){
     ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER);
