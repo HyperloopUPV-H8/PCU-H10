@@ -172,3 +172,6 @@ void Three_Phased_PWM::read_ADC(){
         data->actual_voltage_batteries = ADC::get_value(battery_connector_B_id);
     }
 }
+void Three_Phased_PWM::space_vector_calculus(){
+    
+}

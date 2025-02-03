@@ -5,8 +5,8 @@ StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phas
 Data(data),
 three_phased_pwm(three_phased)
 {
-    stateMachine = new StateMachine();
-    operationalStateMachine = new StateMachine();
+    stateMachine = new StateMachine(State_PCU::Connecting);
+    operationalStateMachine = new StateMachine(Operational_State_PCU::Idle);
     add_states();
     add_transitions();
     add_exit_actions();
@@ -22,10 +22,8 @@ void StateMachinePCU::start(Communication *comms){
 }
 
 void StateMachinePCU::add_states(){
-    stateMachine->add_state(State_PCU::Connecting);
     stateMachine->add_state(State_PCU::Operational);
     stateMachine->add_state(State_PCU::Fault);
-    operationalStateMachine ->add_state(Operational_State_PCU::Idle);
     operationalStateMachine->add_state(Operational_State_PCU::Sending_PWM);
     stateMachine->add_state_machine(*operationalStateMachine,State_PCU::Operational);
 }
@@ -76,7 +74,8 @@ void StateMachinePCU::update(){
         Communication::received_enable_reset = false;
         three_phased_pwm->Enable_reset();
     }
-    if(Communication::received_choose_batteries_type){
+    if(Communication::received_choose_batteries_type == true){
+        Communication::received_choose_batteries_type = false;
         Data->connector_Batteries = Communication::connector_received;
     }
     if(Communication::received_pwm_order == true){
