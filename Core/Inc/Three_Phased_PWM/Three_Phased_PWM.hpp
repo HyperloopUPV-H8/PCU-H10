@@ -29,6 +29,7 @@ class Three_Phased_PWM{
         float get_duty_u();
         float get_duty_v();
         float get_duty_w();
+        void set_three_frequencies(uint32_t frequency);
         uint32_t get_frequency_u();
         uint32_t get_frequency_v();
         uint32_t get_frequency_w();
@@ -42,5 +43,4 @@ class Three_Phased_PWM{
         void Disable_reset();
         void Enable_reset();
         void read_ADC();
-        void space_vector_calculus();
 };

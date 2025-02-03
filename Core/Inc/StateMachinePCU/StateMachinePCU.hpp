@@ -2,6 +2,7 @@
 #include "ST-LIB.hpp"
 #include "Communication/Communication.hpp"
 #include "Three_Phased_PWM/Three_Phased_PWM.hpp"
+#include "Control/SpaceVector.hpp"
 
 enum State_PCU{
     Connecting,
@@ -10,7 +11,8 @@ enum State_PCU{
 };
 enum Operational_State_PCU{
     Idle,
-    Sending_PWM
+    Sending_PWM,
+    Accelerating
 };
 class StateMachinePCU{
     private:
@@ -19,8 +21,10 @@ class StateMachinePCU{
         Data_struct *Data;
         Three_Phased_PWM *three_phased_pwm;
         Communication *communication;
+        SpaceVector *spaceVectorControl;
     public:
-        StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased);
+        static bool space_vector_on;
+        StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,SpaceVector *spVec);
         void start(Communication *comms);
         void add_states();
         void add_transitions();

@@ -28,6 +28,8 @@ namespace Communication_Data{
     static constexpr uint16_t ENABLE_RESET_ORDER = 504;
     static constexpr uint16_t DISABLE_RESET_ORDER = 505;
     static constexpr uint16_t BATTERIES_TYPE_ORDER = 506;
+    static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
+    static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
     static constexpr uint16_t PWM_PACKET = 550;
     static constexpr uint16_t BATTERIES_PACKET = 551;
 };

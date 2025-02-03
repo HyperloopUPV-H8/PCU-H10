@@ -7,8 +7,16 @@ bool Communication::received_stop_pwm_order = false;
 bool Communication::received_choose_batteries_type = false;
 bool Communication::received_disable_reset = false;
 bool Communication::received_enable_reset = false;
-float Communication::frequency_received = 0;
-float Communication::duty_cycle_received = 0.0;
+bool Communication::received_activate_space_vector = false;
+bool Communication::received_stop_space_vector = false;
+
+float Communication::duty_cycle_received{};
+float Communication::ref_voltage_space_vector_received{};
+
+uint32_t Communication::frequency_space_vector_received{};
+uint32_t Communication::frequency_received{};
+
+
 Battery_Connector Communication::connector_received = Battery_Connector::A;
 PWM_ACTIVE Communication::pwm_received = PWM_ACTIVE::NONE;
 
@@ -33,6 +41,12 @@ void enable_reset_callback(){
 void received_choose_batteries_type_callback(){
     Communication::received_choose_batteries_type = true;
 }
+void received_activate_space_vector_callback(){
+    Communication::received_activate_space_vector = true;
+}
+void received_stop_space_vector_callback(){
+    Communication::received_stop_space_vector = true;
+}
 Communication::Communication(Data_struct *data): Data(data){
     ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER);
     datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT);
@@ -43,6 +57,8 @@ Communication::Communication(Data_struct *data): Data(data){
     Disable_Reset = new HeapOrder(Communication_Data::DISABLE_RESET_ORDER,&disable_reset_callback);
     Enable_Reset = new HeapOrder(Communication_Data::ENABLE_RESET_ORDER,&enable_reset_callback);
     Choose_Batteries_type = new HeapOrder(Communication_Data::BATTERIES_TYPE_ORDER,&received_choose_batteries_type_callback,&connector_received);
+    Start_space_vector = new HeapOrder(Communication_Data::START_SPACE_VECTOR_ORDER,&received_activate_space_vector_callback,&frequency_space_vector_received,&ref_voltage_space_vector_received);
+    Stop_space_vector = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_space_vector_callback);
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_batteries,&Data->connector_Batteries);
 }

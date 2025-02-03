@@ -172,6 +172,12 @@ void Three_Phased_PWM::read_ADC(){
         data->actual_voltage_batteries = ADC::get_value(battery_connector_B_id);
     }
 }
-void Three_Phased_PWM::space_vector_calculus(){
-    
+
+void Three_Phased_PWM::set_three_frequencies(uint32_t frequency){
+    U_Dual.set_frequency(frequency);
+    V_Dual.set_frequency(frequency);
+    W_Dual.set_frequency(frequency);
+    data->actual_frequency = get_frequency_u();
+    data->actual_frequency = get_frequency_v();
+    data->actual_frequency = get_frequency_w();
 }
