@@ -12,6 +12,7 @@ namespace Pinout{
     static constexpr Pin& Batt_Voltage_A = PF11;
     static constexpr Pin& Batt_Voltage_B = PF12;
     static constexpr Pin& LED_COMMUTION = PG6;
+    static constexpr Pin& LED_FAULT = PG7;
 };
 
 namespace Communication_Data{
@@ -20,7 +21,7 @@ namespace Communication_Data{
     static constexpr uint32_t UDP_PORT = 50400;
     static constexpr uint32_t TCP_SERVER = 50500;
     static constexpr uint32_t TCP_CLIENT = 50401;
-    static constexpr uint32_t UDP_PORT_PCU = 50421;
+    static constexpr uint32_t UDP_PORT_PCU = 50400;
     static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
     static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;
     static constexpr uint16_t SEND_PWM_ORDER = 502;
@@ -34,18 +35,18 @@ namespace Communication_Data{
     static constexpr uint16_t BATTERIES_PACKET = 551;
 };
 enum class PWM_ACTIVE: uint8_t{
-    NONE,
-    U,
-    V,
-    W
+    NONE = 0,
+    U = 1,
+    V = 2,
+    W = 3
 }; 
 enum class BUFFER_ENABLE : uint8_t{
-    OFF,
-    ON
+    OFF = 0,
+    ON = 1
 };
 enum class Battery_Connector : uint8_t{
-    A,
-    B
+    A = 0,
+    B = 1
 };
 struct Data_struct{
     PWM_ACTIVE pwm_active{};

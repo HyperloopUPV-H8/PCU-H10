@@ -14,7 +14,8 @@ class Three_Phased_PWM{
         uint8_t battery_connector_A_id;
         uint8_t battery_connector_B_id;
     public:
-    DigitalOutput Led_Commutation;
+        DigitalOutput Led_Commutation;
+        DigitalOutput Led_fault{Pinout::LED_FAULT};
         Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Pin& batt_con_A,Pin& batt_con_B,Pin& Led_Comm,Data_struct *data);
         void start();
         void stop_all();

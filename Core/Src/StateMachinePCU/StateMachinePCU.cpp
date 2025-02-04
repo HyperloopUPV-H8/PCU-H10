@@ -16,14 +16,14 @@ spaceVectorControl(spVec)
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
     three_phased_pwm->start();
-    stateMachine->add_low_precision_cyclic_action([this](){
+    Time::register_low_precision_alarm(100,[this](){
         //read ADC
         three_phased_pwm->read_ADC();
         communication->send_UDP_packets();
-    },ms(100));
+    });
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
         spaceVectorControl->calculate_duties();
-    },us(200),Operational_State_PCU::Accelerating);
+    },us(spaceVectorControl->Period),Operational_State_PCU::Accelerating);
 }
 
 void StateMachinePCU::add_states(){
@@ -57,15 +57,14 @@ void StateMachinePCU::add_transitions(){
     
 }
 void StateMachinePCU::add_exit_actions(){
-     operationalStateMachine->add_enter_action([this](){
+    operationalStateMachine->add_enter_action([this](){
         three_phased_pwm->Led_Commutation.turn_on();
-    },Operational_State_PCU::Sending_PWM);
-    operationalStateMachine->add_exit_action([this](){
-        three_phased_pwm->Led_Commutation.turn_off();
-    },Operational_State_PCU::Sending_PWM);
+    },State_PCU::Operational);
 
     stateMachine->add_exit_action([this](){
         three_phased_pwm->stop_all();
+        three_phased_pwm->Led_fault.turn_on();
+        three_phased_pwm->Led_Commutation.turn_off();
     },State_PCU::Operational);
 }
 void StateMachinePCU::update(){
@@ -96,8 +95,8 @@ void StateMachinePCU::update(){
     if(Communication::received_activate_space_vector == true){
         Communication::received_activate_space_vector = false;
         StateMachinePCU::space_vector_on = true;
-        three_phased_pwm->set_three_frequencies(Communication::frequency_space_vector_received);
-        spaceVectorControl->set_frequency(Communication::frequency_space_vector_received);
+        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         spaceVectorControl->set_target_voltage(Communication::ref_voltage_space_vector_received);
 
     }else if(Communication::received_stop_space_vector == true){
@@ -127,7 +126,6 @@ void StateMachinePCU::update(){
                 three_phased_pwm->turn_on_w();  
                 break;
         }
-        stateMachine->check_transitions();
-        operationalStateMachine->check_transitions();
     }
+    stateMachine->check_transitions();
 }
