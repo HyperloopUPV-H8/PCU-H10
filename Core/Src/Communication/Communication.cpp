@@ -13,8 +13,8 @@ bool Communication::received_stop_space_vector = false;
 float Communication::duty_cycle_received{};
 float Communication::ref_voltage_space_vector_received{};
 
-uint32_t Communication::frequency_space_vector_received{};
-uint32_t Communication::frequency_received{};
+float Communication::frequency_space_vector_received{};
+float Communication::frequency_received{};
 
 
 Battery_Connector Communication::connector_received = Battery_Connector::A;

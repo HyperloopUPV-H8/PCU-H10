@@ -29,9 +29,9 @@ class Communication{
         static bool received_activate_space_vector;
         static bool received_stop_space_vector;
         static bool received_choose_batteries_type;
-        static uint32_t frequency_received;
+        static float frequency_received;
         static float duty_cycle_received;
-        static uint32_t frequency_space_vector_received;
+        static float frequency_space_vector_received;
         static float ref_voltage_space_vector_received;
         static PWM_ACTIVE pwm_received;
         static Battery_Connector connector_received;
