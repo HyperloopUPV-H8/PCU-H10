@@ -63,22 +63,23 @@ void StateMachinePCU::update(){
         {
             case PWM_ACTIVE::NONE:
                 three_phased_pwm->turn_off_active_pwm();
-                return;
+                break;
             case PWM_ACTIVE::U:
                 three_phased_pwm->set_frequency_u(Communication::frequency_received);
                 three_phased_pwm->set_duty_u(Communication::duty_cycle_received);
                 three_phased_pwm->turn_on_u();
-            return;
+                break;
             case PWM_ACTIVE::V:
                 three_phased_pwm->set_frequency_v(Communication::frequency_received);
                 three_phased_pwm->set_duty_v(Communication::duty_cycle_received);
                 three_phased_pwm->turn_on_v();
-            return;
+                break;
             case PWM_ACTIVE::W:
                 three_phased_pwm->set_frequency_w(Communication::frequency_received);
                 three_phased_pwm->set_duty_w(Communication::duty_cycle_received);
                 three_phased_pwm->turn_on_w();
-            return;
+                break;
         }
+        stateMachine->check_transitions();
     }
 }

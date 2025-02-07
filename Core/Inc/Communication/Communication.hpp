@@ -11,7 +11,7 @@ class Communication{
         HeapOrder *Disable_Buffer_Order;
         HeapOrder *Send_pwm_Order;
         HeapOrder *Stop_pwm_Order;
-       
+        HeapPacket *Pwm_packet;
     public:
         Communication(Data_struct *data);
         static bool received_enable_buffer;
@@ -23,5 +23,4 @@ class Communication{
         static PWM_ACTIVE pwm_received;
         void send_UDP_packets(); 
         bool is_connected();
-        HeapPacket *Pwm_packet;
 };
