@@ -2,9 +2,10 @@
 
 
 bool StateMachinePCU::space_vector_on = false;
-StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,SpaceVector *spVec):
+StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec):
 Data(data),
 three_phased_pwm(three_phased),
+sensors(sensors),
 spaceVectorControl(spVec)
 {
     stateMachine = new StateMachine(State_PCU::Connecting);

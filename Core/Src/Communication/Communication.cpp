@@ -61,10 +61,12 @@ Communication::Communication(Data_struct *data): Data(data){
     Stop_space_vector = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_space_vector_callback);
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_batteries,&Data->connector_Batteries);
+    Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_a,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b);
 }
 void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Pwm_packet);
     datagramSocket->send_packet(*batteries_Packet);
+    datagramSocket->send_packet(*Current_sensor_Packet);
 }
 
 bool Communication::is_connected(){

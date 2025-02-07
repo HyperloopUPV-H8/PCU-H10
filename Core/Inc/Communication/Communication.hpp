@@ -1,5 +1,4 @@
 #pragma once
-#include "ST-LIB.hpp"
 #include "Data/Data.hpp"
 class Communication{
     private:
@@ -18,6 +17,7 @@ class Communication{
         HeapOrder *Stop_space_vector;
         HeapPacket *Pwm_packet;
         HeapPacket *batteries_Packet;
+        HeapPacket *Current_sensor_Packet;
     public:
         Communication(Data_struct *data);
         static bool received_enable_buffer;

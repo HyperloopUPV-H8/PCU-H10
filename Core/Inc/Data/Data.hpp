@@ -13,6 +13,27 @@ namespace Pinout{
     static constexpr Pin& Batt_Voltage_B = PF12;
     static constexpr Pin& LED_COMMUTION = PG6;
     static constexpr Pin& LED_FAULT = PG7;
+    //current sensors
+    static constexpr Pin& CURRENT_SENSOR_U_A = PA0;
+    static constexpr Pin& CURRENT_SENSOR_U_B = PA6;
+    static constexpr Pin& CURRENT_SENSOR_V_A = PA4;
+    static constexpr Pin& CURRENT_SENSOR_V_B = PB0;
+    static constexpr Pin& CURRENT_SENSOR_W_A =PA5;
+    static constexpr Pin& CURRENT_SENSOR_W_B = PB1;
+};
+namespace Current_Sensors{
+    static constexpr float slope_u_a = 1;
+    static constexpr float offset_u_a = 0;
+    static constexpr float slope_v_a = 1;
+    static constexpr float offset_v_a = 0;
+    static constexpr float slope_w_a = 1;
+    static constexpr float offset_w_a = 0;
+    static constexpr float slope_u_b = 1;
+    static constexpr float offset_u_b = 0;
+    static constexpr float slope_v_b = 1;
+    static constexpr float offset_v_b = 0;
+    static constexpr float slope_w_b = 1;
+    static constexpr float offset_w_b = 0;
 };
 
 namespace Communication_Data{
@@ -33,6 +54,7 @@ namespace Communication_Data{
     static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
     static constexpr uint16_t PWM_PACKET = 550;
     static constexpr uint16_t BATTERIES_PACKET = 551;
+    static constexpr uint16_t CURRENT_SENSOR_PACKET = 552;
 };
 enum class PWM_ACTIVE: uint8_t{
     NONE = 0,
@@ -56,4 +78,11 @@ struct Data_struct{
     //batteries
     float actual_voltage_batteries{};
     Battery_Connector connector_Batteries = Battery_Connector::A;
+    //current sensor
+    float actual_current_sensor_u_a{};
+    float actual_current_sensor_u_b{};
+    float actual_current_sensor_v_a{};
+    float actual_current_sensor_v_b{};
+    float actual_current_sensor_w_a{};
+    float actual_current_sensor_w_b{};
 };
