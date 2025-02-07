@@ -47,8 +47,7 @@ void received_activate_space_vector_callback(){
 void received_stop_space_vector_callback(){
     Communication::received_stop_space_vector = true;
 }
-Communication::Communication(Data_struct *data): Data(data){
-    ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER);
+Communication::Communication(Data_struct *data): Data(data),ControlStationSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER){
     datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT);
     Enable_Buffer_Order = new HeapOrder(Communication_Data::ENABLE_BUFFER_ORDER,&received_enable_buffer_callback);
     Disable_Buffer_Order = new HeapOrder(Communication_Data::DISABLE_BUFFER_ORDER,&received_disable_buffer_callback);
@@ -70,5 +69,5 @@ void Communication::send_UDP_packets(){
 }
 
 bool Communication::is_connected(){
-    return ControlStationSocket->is_connected();
+    return ControlStationSocket.is_connected();
 }

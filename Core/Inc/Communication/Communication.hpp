@@ -4,7 +4,7 @@ class Communication{
     private:
         
         Data_struct *Data;
-        ServerSocket *ControlStationSocket;
+        ServerSocket ControlStationSocket;
         DatagramSocket *datagramSocket;
         HeapOrder *Enable_Buffer_Order;
         HeapOrder *Disable_Buffer_Order;
