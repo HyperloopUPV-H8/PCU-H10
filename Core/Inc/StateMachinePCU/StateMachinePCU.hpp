@@ -1,20 +1,12 @@
 #pragma once
 #include "ST-LIB.hpp"
 #include "Communication/Communication.hpp"
+#include "Data/Data.hpp"
 #include "Three_Phased_PWM/Three_Phased_PWM.hpp"
 #include  "Sensors/Sensors.hpp"
 #include "Control/SpaceVector.hpp"
 
-enum State_PCU{
-    Connecting,
-    Operational,
-    Fault
-};
-enum Operational_State_PCU{
-    Idle,
-    Sending_PWM,
-    Accelerating
-};
+
 class StateMachinePCU{
     private:
         StateMachine *stateMachine;

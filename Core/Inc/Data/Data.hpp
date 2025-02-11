@@ -55,6 +55,7 @@ namespace Communication_Data{
     static constexpr uint16_t PWM_PACKET = 550;
     static constexpr uint16_t BATTERIES_PACKET = 551;
     static constexpr uint16_t CURRENT_SENSOR_PACKET = 552;
+    static constexpr uint16_t STATE_MACHINE_PACKET = 553;
 };
 enum class PWM_ACTIVE: uint8_t{
     NONE = 0,
@@ -69,6 +70,17 @@ enum class BUFFER_ENABLE : uint8_t{
 enum class Battery_Connector : uint8_t{
     A = 0,
     B = 1
+};
+
+enum State_PCU: uint8_t{
+    Connecting,
+    Operational,
+    Fault
+};
+enum Operational_State_PCU: uint8_t{
+    Idle,
+    Sending_PWM,
+    Accelerating
 };
 struct Data_struct{
     PWM_ACTIVE pwm_active{};
@@ -85,4 +97,6 @@ struct Data_struct{
     float actual_current_sensor_v_b{};
     float actual_current_sensor_w_a{};
     float actual_current_sensor_w_b{};
+    uint8_t state_pcu{}; // general state
+    uint8_t operational_state_pcu{}; //operational state
 };
