@@ -20,12 +20,12 @@ void CurrentSensors::zeroing(){
         new_offset_w_b = (new_offset_w_b * (i - 1) + data->actual_current_sensor_w_b)/i;        
     }
     //once we have the average of 10000 thousand values
-    sensor_u_a.set_offset(new_offset_u_a);
-    sensor_u_b.set_offset(new_offset_u_b);
-    sensor_v_a.set_offset(new_offset_v_a);
-    sensor_v_b.set_offset(new_offset_v_b);
-    sensor_w_a.set_offset(new_offset_w_a);
-    sensor_w_b.set_offset(new_offset_w_b);
+    sensor_u_a.set_offset(-new_offset_u_a);
+    sensor_u_b.set_offset(-new_offset_u_b);
+    sensor_v_a.set_offset(-new_offset_v_a);
+    sensor_v_b.set_offset(-new_offset_v_b);
+    sensor_w_a.set_offset(-new_offset_w_a);
+    sensor_w_b.set_offset(-new_offset_w_b);
 }
 void CurrentSensors::read(){
     sensor_u_a.read();
