@@ -1,5 +1,5 @@
 #include "Sensors/CurrentSensors.hpp"
-#define TIMES_TO_CREATE_ZERO 100000
+#define TIMES_TO_CREATE_ZERO 10000
 CurrentSensors::CurrentSensors(Data_struct *data):data(data){
     zeroing();
 }
