@@ -4,9 +4,9 @@
 class Sensors{
     private: 
         Data_struct *data;
-        CurrentSensors currentSensors;
     public:
     Sensors(Data_struct *data);
+    CurrentSensors currentSensors;
     void read();
      
 };
