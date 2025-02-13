@@ -15,9 +15,9 @@ namespace Pinout{
     static constexpr Pin& LED_FAULT = PG7;
     //current sensors
     static constexpr Pin& CURRENT_SENSOR_U_A = PA0;
-    static constexpr Pin& CURRENT_SENSOR_U_B = PA6;
+    static constexpr Pin& CURRENT_SENSOR_U_B = PB0;
     static constexpr Pin& CURRENT_SENSOR_V_A = PA4;
-    static constexpr Pin& CURRENT_SENSOR_V_B = PB0;
+    static constexpr Pin& CURRENT_SENSOR_V_B = PA6;
     static constexpr Pin& CURRENT_SENSOR_W_A =PA5;
     static constexpr Pin& CURRENT_SENSOR_W_B = PB1;
 };

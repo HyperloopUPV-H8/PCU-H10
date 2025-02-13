@@ -19,7 +19,7 @@ void CurrentSensors::zeroing(){
         new_offset_w_a = (new_offset_w_a * (i - 1) + data->actual_current_sensor_w_a)/i;
         new_offset_w_b = (new_offset_w_b * (i - 1) + data->actual_current_sensor_w_b)/i;        
     }
-    //once we have the average of 10.000.000 values
+
     sensor_u_a.set_offset(sensor_u_a.get_offset()-new_offset_u_a);
     sensor_u_b.set_offset(sensor_u_b.get_offset()-new_offset_u_b);
     sensor_v_a.set_offset(sensor_v_a.get_offset()-new_offset_v_a);

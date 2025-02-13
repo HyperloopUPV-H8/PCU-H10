@@ -1,14 +1,13 @@
 #include "../../Inc/Three_Phased_PWM/Three_Phased_PWM.hpp"
 using namespace std::chrono_literals;
 
-Three_Phased_PWM::Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Pin& batt_con_A,Pin& batt_con_B,Pin& Led_Commutat,Data_struct *data):
+Three_Phased_PWM::Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Pin& batt_con_A,Pin& batt_con_B,Data_struct *data):
 U_Dual(u,u_negated),
 V_Dual(v,v_negated),
 W_Dual(w,w_negated),
 Enable(enable),
 Reset(reset),
-data(data),
-Led_Commutation(Led_Commutat)
+data(data)
 { 
     battery_connector_A_id =ADC::inscribe(batt_con_A);
     battery_connector_B_id = ADC::inscribe(batt_con_B);
