@@ -1,7 +1,6 @@
 #include "Sensors/CurrentSensors.hpp"
 #define TIMES_TO_CREATE_ZERO 10000
 CurrentSensors::CurrentSensors(Data_struct *data):data(data){
-    zeroing();
 }
 void CurrentSensors::zeroing(){
     float new_offset_u_a = 0;
