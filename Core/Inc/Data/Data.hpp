@@ -40,8 +40,8 @@ namespace Communication_Data{
     const IPV4 Backend = {"192.168.0.9"};
     const IPV4 PCU_IP = {"192.168.0.5"};
     static constexpr uint32_t UDP_PORT = 50400;
-    static constexpr uint32_t TCP_SERVER = 50500;
-    static constexpr uint32_t TCP_CLIENT = 50401;
+    static constexpr uint32_t TCP_SERVER = 8000;
+    static constexpr uint32_t TCP_CLIENT = 8000;
     static constexpr uint32_t UDP_PORT_PCU = 50400;
     static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
     static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;
@@ -52,11 +52,18 @@ namespace Communication_Data{
     static constexpr uint16_t BATTERIES_TYPE_ORDER = 506;
     static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
     static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
+    static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
     static constexpr uint16_t PWM_PACKET = 550;
     static constexpr uint16_t BATTERIES_PACKET = 551;
     static constexpr uint16_t CURRENT_SENSOR_PACKET = 552;
     static constexpr uint16_t STATE_MACHINE_PACKET = 553;
 };
+namespace Current_Control_Data{
+    static constexpr double kp = 0.2;
+    static constexpr double ki = 6.0;
+    static constexpr double period = 0.0002;
+    static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
+}
 enum class PWM_ACTIVE: uint8_t{
     NONE = 0,
     U = 1,

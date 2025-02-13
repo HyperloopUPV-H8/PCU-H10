@@ -2,11 +2,12 @@
 
 
 bool StateMachinePCU::space_vector_on = false;
-StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec):
+StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl):
 Data(data),
 three_phased_pwm(three_phased),
 sensors(sensors),
-spaceVectorControl(spVec)
+spaceVectorControl(spVec),
+currentControl(currentControl)
 {
     stateMachine = new StateMachine(State_PCU::Connecting);
     operationalStateMachine = new StateMachine(Operational_State_PCU::Idle);
@@ -25,6 +26,9 @@ void StateMachinePCU::start(Communication *comms){
         Data->operational_state_pcu = operationalStateMachine->current_state;
         communication->send_UDP_packets();
     });
+    operationalStateMachine->add_mid_precision_cyclic_action([this](){
+        currentControl->control_action();
+    },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
         spaceVectorControl->calculate_duties();
     },us(spaceVectorControl->Period),Operational_State_PCU::Accelerating);
@@ -103,9 +107,18 @@ void StateMachinePCU::update(){
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         spaceVectorControl->set_target_voltage(Communication::ref_voltage_space_vector_received);
 
-    }else if(Communication::received_stop_space_vector == true){
+    }
+    else if(Communication::received_stop_space_vector == true){
         Communication::received_stop_space_vector = false;
         StateMachinePCU::space_vector_on = false;
+    }
+    if(Communication::received_Current_reference_order == true){
+        Communication::received_Current_reference_order = false;
+        currentControl->set_current_ref(Communication::current_reference_received);
+        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
+        StateMachinePCU::space_vector_on = true;
+
     }
     if(Communication::received_pwm_order == true){
         Communication::received_pwm_order = false;

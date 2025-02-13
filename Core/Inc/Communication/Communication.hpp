@@ -15,6 +15,7 @@ class Communication{
         HeapOrder *Choose_Batteries_type;
         HeapOrder *Start_space_vector;
         HeapOrder *Stop_space_vector;
+        HeapOrder *Current_reference_Order;
         HeapPacket *Pwm_packet;
         HeapPacket *batteries_Packet;
         HeapPacket *Current_sensor_Packet;
@@ -30,10 +31,12 @@ class Communication{
         static bool received_activate_space_vector;
         static bool received_stop_space_vector;
         static bool received_choose_batteries_type;
+        static bool received_Current_reference_order;
         static float frequency_received;
         static float duty_cycle_received;
         static float frequency_space_vector_received;
         static float ref_voltage_space_vector_received;
+        static float current_reference_received;
         static PWM_ACTIVE pwm_received;
         static Battery_Connector connector_received;
         void send_UDP_packets(); 

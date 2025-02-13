@@ -79,6 +79,8 @@
     "cinttypes": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp",
-    "xstring": "cpp"
+    "xstring": "cpp",
+    "regex": "cpp",
+    "valarray": "cpp"
   }
 }
