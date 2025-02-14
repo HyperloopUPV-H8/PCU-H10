@@ -106,4 +106,7 @@ struct Data_struct{
     float actual_current_sensor_w_b{};
     uint8_t state_pcu{}; // general state
     uint8_t operational_state_pcu{}; //operational state
+    double error_PI{};
+    double current_Peak{};
+    double target_voltage{};
 };

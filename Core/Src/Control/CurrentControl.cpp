@@ -1,6 +1,5 @@
 #include "Control/CurrentControl.hpp"
 #define NANOSECOND 1000000000
-
 CurrentControl::CurrentControl(Data_struct *Data,SpaceVector *spaceVector):
 Data(Data),
 spaceVector(spaceVector)
@@ -55,7 +54,14 @@ double CurrentControl::calculate_peak(){
 void CurrentControl::control_action(){
     double current_peak = calculate_peak();
     double current_error = current_ref - current_peak;
+    Data->current_Peak = current_peak;
+    Data->error_PI = current_error;
     current_PI.input(current_error);
     current_PI.execute();
-    spaceVector->set_target_voltage(current_PI.output_value);
+    Data->target_voltage = current_PI.output_value;
+
+    if(current_PI.output_value > spaceVector->VMAX){
+        Data->target_voltage = spaceVector->VMAX;
+    }
+    spaceVector->set_target_voltage(Data->target_voltage);
 }

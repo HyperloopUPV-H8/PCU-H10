@@ -6,9 +6,10 @@ class SpaceVector{
         Three_Phased_PWM *three_pwm;
         float Imodulation;
         uint32_t Modulation_frequency;
-        static constexpr float VMAX = 163.0;
+        
         static constexpr float IMAX = 1.1547;
     public:
+    static constexpr float VMAX = 163.0;
         static constexpr uint32_t Period = 200; //this Period is in microseconds
         SpaceVector(Three_Phased_PWM *three_pwm_class);
         void set_target_voltage(float V_ref);
