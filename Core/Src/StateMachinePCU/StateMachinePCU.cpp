@@ -21,12 +21,12 @@ void StateMachinePCU::start(Communication *comms){
     Time::register_low_precision_alarm(100,[this](){
         //read ADC
         three_phased_pwm->read_ADC();
-        sensors->read();
         Data->state_pcu = stateMachine->current_state;
         Data->operational_state_pcu = operationalStateMachine->current_state;
         communication->send_UDP_packets();
     });
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
+        sensors->read();
         currentControl->control_action();
     },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
@@ -71,6 +71,7 @@ void StateMachinePCU::add_exit_actions(){
 
     operationalStateMachine->add_exit_action([this](){
         three_phased_pwm->Led_Commutation.turn_off();
+        three_phased_pwm->stop_all();
     },Operational_State_PCU::Accelerating);
     stateMachine->add_exit_action([this](){
         three_phased_pwm->stop_all();
