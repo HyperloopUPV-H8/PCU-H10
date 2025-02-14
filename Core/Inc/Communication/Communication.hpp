@@ -37,6 +37,7 @@ class Communication{
         static float frequency_space_vector_received;
         static float ref_voltage_space_vector_received;
         static float current_reference_received;
+        static float Vmax_control_received;
         static PWM_ACTIVE pwm_received;
         static Battery_Connector connector_received;
         void send_UDP_packets(); 

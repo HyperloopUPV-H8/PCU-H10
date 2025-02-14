@@ -33,3 +33,6 @@ uint32_t SpaceVector::get_modulation_frequency(){
 float SpaceVector::get_actual_time(){
     return time;
 }
+void SpaceVector::set_VMAX(float Vmax){
+    VMAX = Vmax;
+}
