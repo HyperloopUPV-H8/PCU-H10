@@ -25,8 +25,10 @@ void StateMachinePCU::start(Communication *comms){
         Data->operational_state_pcu = operationalStateMachine->current_state;
         communication->send_UDP_packets();
     });
-    operationalStateMachine->add_mid_precision_cyclic_action([this](){
+    Time::register_mid_precision_alarm(200,[this](){
         sensors->read();
+    });
+    operationalStateMachine->add_mid_precision_cyclic_action([this](){
         currentControl->control_action();
     },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
