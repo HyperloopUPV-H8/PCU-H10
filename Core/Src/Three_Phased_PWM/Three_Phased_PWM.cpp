@@ -17,9 +17,9 @@ void Three_Phased_PWM::start(){
     U_Dual.set_frequency(initial_frequency);
     V_Dual.set_frequency(initial_frequency);
     W_Dual.set_frequency(initial_frequency);
-    U_Dual.set_dead_time(500ns);
-    V_Dual.set_dead_time(500ns);
-    W_Dual.set_dead_time(500ns);
+    U_Dual.set_dead_time(dead_time_ns);
+    V_Dual.set_dead_time(dead_time_ns);
+    W_Dual.set_dead_time(dead_time_ns);
     U_Dual.set_duty_cycle(0.0);
     V_Dual.set_duty_cycle(0.0);
     W_Dual.set_duty_cycle(0.0);
