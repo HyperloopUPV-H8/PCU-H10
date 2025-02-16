@@ -5,12 +5,14 @@ Data(Data),
 spaceVector(spaceVector)
 {
     current_PI.reset();
+    *current_ref = 0.0; 
 }
-void CurrentControl::set_current_ref(float cur_ref){
-    current_ref = cur_ref;
+void CurrentControl::set_current_ref(float &cur_ref){
+    current_ref = &cur_ref;
 }
+
 float CurrentControl::get_current_ref(){
-    return current_ref;
+    return *current_ref;
 }
 double CurrentControl::calculate_peak(){
     double tiempo = static_cast<double>(Time::get_global_tick())/NANOSECOND;
@@ -53,7 +55,7 @@ double CurrentControl::calculate_peak(){
 }
 void CurrentControl::control_action(){
     double current_peak = calculate_peak();
-    double current_error = current_ref - current_peak;
+    double current_error = *current_ref - current_peak;
     Data->current_Peak = current_peak;
     Data->error_PI = current_error;
     current_PI.input(current_error);
