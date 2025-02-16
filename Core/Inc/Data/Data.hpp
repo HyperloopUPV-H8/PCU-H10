@@ -43,6 +43,8 @@ namespace Communication_Data{
     static constexpr uint32_t TCP_SERVER = 8000;
     static constexpr uint32_t TCP_CLIENT = 8000;
     static constexpr uint32_t UDP_PORT_PCU = 50400;
+    
+    //orders//
     static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
     static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;
     static constexpr uint16_t SEND_PWM_ORDER = 502;
@@ -53,6 +55,12 @@ namespace Communication_Data{
     static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
     static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
     static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
+    static constexpr uint16_t SPEED_REFERENCE_ORDER = 510;
+    static constexpr uint16_t ZEROING_ORDER = 511;
+    static constexpr uint16_t DISABLE_SPEED_CONTROL = 512;
+    static constexpr uint16_t ENABLE_SPEED_CONTROL = 513;
+
+    //packets//
     static constexpr uint16_t PWM_PACKET = 550;
     static constexpr uint16_t BATTERIES_PACKET = 551;
     static constexpr uint16_t CURRENT_SENSOR_PACKET = 552;

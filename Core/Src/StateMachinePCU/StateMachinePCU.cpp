@@ -12,28 +12,15 @@ currentControl(currentControl)
     stateMachine = new StateMachine(State_PCU::Connecting);
     operationalStateMachine = new StateMachine(Operational_State_PCU::Idle);
     add_states();
+    add_enter_actions();
     add_transitions();
     add_exit_actions();
+    
 }
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
     three_phased_pwm->start();
-    Time::register_low_precision_alarm(100,[this](){
-        //read ADC
-        three_phased_pwm->read_ADC();
-        Data->state_pcu = stateMachine->current_state;
-        Data->operational_state_pcu = operationalStateMachine->current_state;
-        communication->send_UDP_packets();
-    });
-    Time::register_mid_precision_alarm(200,[this](){
-        sensors->read();
-    });
-    operationalStateMachine->add_mid_precision_cyclic_action([this](){
-        currentControl->control_action();
-    },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
-    operationalStateMachine->add_mid_precision_cyclic_action([this](){
-        spaceVectorControl->calculate_duties();
-    },us(spaceVectorControl->Period),Operational_State_PCU::Accelerating);
+    add_cyclic_actions();
 }
 
 void StateMachinePCU::add_states(){
@@ -63,23 +50,44 @@ void StateMachinePCU::add_transitions(){
     operationalStateMachine->add_transition(Operational_State_PCU::Accelerating,Operational_State_PCU::Idle,[this](){
         return StateMachinePCU::space_vector_on == false;
     });
-
-    
 }
-void StateMachinePCU::add_exit_actions(){
+void StateMachinePCU::add_cyclic_actions(){
+
+    Time::register_low_precision_alarm(100,[this](){
+        //read ADC
+        three_phased_pwm->read_ADC();
+        Data->state_pcu = stateMachine->current_state;
+        Data->operational_state_pcu = operationalStateMachine->current_state;
+        communication->send_UDP_packets();
+    });
+    Time::register_mid_precision_alarm(200,[this](){
+        sensors->read();
+    });
+    operationalStateMachine->add_mid_precision_cyclic_action([this](){
+        currentControl->control_action();
+    },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+    operationalStateMachine->add_mid_precision_cyclic_action([this](){
+        spaceVectorControl->calculate_duties();
+    },us(spaceVectorControl->Period),Operational_State_PCU::Accelerating);
+
+}
+void StateMachinePCU::add_enter_actions(){
     operationalStateMachine->add_enter_action([this](){
         three_phased_pwm->Led_Commutation.turn_on();
     },Operational_State_PCU::Accelerating);
 
-    operationalStateMachine->add_exit_action([this](){
-        three_phased_pwm->Led_Commutation.turn_off();
-        three_phased_pwm->stop_all();
-    },Operational_State_PCU::Accelerating);
+}
+void StateMachinePCU::add_exit_actions(){
     stateMachine->add_exit_action([this](){
         three_phased_pwm->stop_all();
         three_phased_pwm->Led_fault.turn_on();
         three_phased_pwm->Led_Commutation.turn_off();
     },State_PCU::Operational);
+    
+    operationalStateMachine->add_exit_action([this](){
+        three_phased_pwm->Led_Commutation.turn_off();
+        three_phased_pwm->stop_all();
+    },Operational_State_PCU::Accelerating);
 }
 void StateMachinePCU::update(){
     if(Communication::received_disable_buffer == true){
@@ -125,8 +133,13 @@ void StateMachinePCU::update(){
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         StateMachinePCU::space_vector_on = true;
-
     }
+    if(Communication::received_zeroing_order == true){
+        sensors->currentSensors.zeroing();
+    }
+    //add flags for SpeedControl
+
+    
     if(Communication::received_pwm_order == true){
         Communication::received_pwm_order = false;
         three_phased_pwm->turn_off_active_pwm();

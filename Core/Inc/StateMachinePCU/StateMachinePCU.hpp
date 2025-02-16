@@ -22,6 +22,7 @@ class StateMachinePCU{
         void start(Communication *comms);
         void add_states();
         void add_transitions();
+        void add_enter_actions();
         void add_exit_actions();
         void add_cyclic_actions();
         void update();

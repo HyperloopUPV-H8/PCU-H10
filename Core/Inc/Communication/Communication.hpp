@@ -6,6 +6,7 @@ class Communication{
         Data_struct *Data;
         ServerSocket ControlStationSocket;
         DatagramSocket *datagramSocket;
+        //orders//
         HeapOrder *Enable_Buffer_Order;
         HeapOrder *Disable_Buffer_Order;
         HeapOrder *Send_pwm_Order;
@@ -16,6 +17,11 @@ class Communication{
         HeapOrder *Start_space_vector;
         HeapOrder *Stop_space_vector;
         HeapOrder *Current_reference_Order;
+        HeapOrder *Speed_reference_Order;
+        HeapOrder *zeroing_Order;
+        HeapOrder *Disable_Speed_Control;
+        HeapOrder *Enable_Speed_Control;
+        //packets//
         HeapPacket *Pwm_packet;
         HeapPacket *batteries_Packet;
         HeapPacket *Current_sensor_Packet;
@@ -32,12 +38,18 @@ class Communication{
         static bool received_stop_space_vector;
         static bool received_choose_batteries_type;
         static bool received_Current_reference_order;
+        static bool received_Speed_reference_order;
+        static bool received_zeroing_order;
+        static bool received_enable_Speed_Control;
+        static bool received_disable_Speed_Control;
+
         static float frequency_received;
         static float duty_cycle_received;
         static float frequency_space_vector_received;
         static float ref_voltage_space_vector_received;
         static float current_reference_received;
         static float Vmax_control_received;
+        static float speed_reference_received;
         static PWM_ACTIVE pwm_received;
         static Battery_Connector connector_received;
         void send_UDP_packets(); 
