@@ -4,7 +4,6 @@ bool Communication::received_enable_buffer = false;
 bool Communication::received_disable_buffer = false;
 bool Communication::received_pwm_order = false;
 bool Communication::received_stop_pwm_order = false;
-bool Communication::received_choose_batteries_type = false;
 bool Communication::received_disable_reset = false;
 bool Communication::received_enable_reset = false;
 bool Communication::received_activate_space_vector = false;
