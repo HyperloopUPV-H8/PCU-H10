@@ -129,6 +129,10 @@ void StateMachinePCU::update(){
         currentControl->start();
 
     }
+    if(Communication::received_zeroing_order == true){
+        Communication::received_zeroing_order = false;
+        sensors->currentSensors.zeroing();
+    }
     if(Communication::received_pwm_order == true){
         Communication::received_pwm_order = false;
         three_phased_pwm->turn_off_active_pwm();
