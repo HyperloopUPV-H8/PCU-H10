@@ -109,4 +109,5 @@ struct Data_struct{
     double error_PI{};
     double current_Peak{};
     double target_voltage{};
+    float time{};
 };
