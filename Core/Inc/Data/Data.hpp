@@ -1,5 +1,8 @@
 #pragma once
 #include "ST-LIB.hpp"
+//configuraciones
+// 0 PPU connector A, 1 PPU connector B , 2 Both PPU
+#define PPU_USING 1
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8;
@@ -42,10 +45,10 @@ namespace Communication_Data{
     static constexpr uint16_t STOP_PWM_ORDER = 503;
     static constexpr uint16_t ENABLE_RESET_ORDER = 504;
     static constexpr uint16_t DISABLE_RESET_ORDER = 505;
-    static constexpr uint16_t BATTERIES_TYPE_ORDER = 506;
     static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
     static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
     static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
+    static constexpr uint16_t ZEROING_ORDER = 510;
     static constexpr uint16_t PWM_PACKET = 550;
     static constexpr uint16_t BATTERIES_PACKET = 551;
     static constexpr uint16_t CURRENT_SENSOR_PACKET = 552;

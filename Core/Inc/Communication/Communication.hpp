@@ -16,6 +16,7 @@ class Communication{
         HeapOrder *Start_space_vector;
         HeapOrder *Stop_space_vector;
         HeapOrder *Current_reference_Order;
+        HeapOrder *Zeroing_Order;
         HeapPacket *Pwm_packet;
         HeapPacket *batteries_Packet;
         HeapPacket *Current_sensor_Packet;
@@ -31,6 +32,7 @@ class Communication{
         static bool received_activate_space_vector;
         static bool received_stop_space_vector;
         static bool received_Current_reference_order;
+        static bool received_zeroing_order;
         static float frequency_received;
         static float duty_cycle_received;
         static float frequency_space_vector_received;
