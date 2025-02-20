@@ -70,3 +70,11 @@ void CurrentControl::control_action(){
     }
     spaceVector->set_target_voltage(Data->target_voltage);
 }
+
+void CurrentControl::start() {
+    should_be_running = true;
+}
+
+void CurrentControl::stop() {
+    should_be_running = false;
+}
