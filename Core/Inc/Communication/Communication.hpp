@@ -30,7 +30,6 @@ class Communication{
         static bool received_enable_reset;
         static bool received_activate_space_vector;
         static bool received_stop_space_vector;
-        static bool received_choose_batteries_type;
         static bool received_Current_reference_order;
         static float frequency_received;
         static float duty_cycle_received;
@@ -39,7 +38,7 @@ class Communication{
         static float current_reference_received;
         static float Vmax_control_received;
         static PWM_ACTIVE pwm_received;
-        static Battery_Connector connector_received;
+        
         void send_UDP_packets(); 
         bool is_connected();
        

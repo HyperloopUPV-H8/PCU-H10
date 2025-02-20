@@ -18,9 +18,8 @@ currentControl(currentControl)
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
     three_phased_pwm->start();
+
     Time::register_low_precision_alarm(100,[this](){
-        //read ADC
-        three_phased_pwm->read_ADC();
         Data->state_pcu = stateMachine->current_state;
         Data->operational_state_pcu = operationalStateMachine->current_state;
     });
@@ -47,6 +46,7 @@ void StateMachinePCU::add_states(){
 
 }
 void StateMachinePCU::add_transitions(){
+
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Operational,[this](){
         return communication->is_connected();
     });
@@ -104,10 +104,7 @@ void StateMachinePCU::update(){
         Communication::received_enable_reset = false;
         three_phased_pwm->Enable_reset();
     }
-    if(Communication::received_choose_batteries_type == true){
-        Communication::received_choose_batteries_type = false;
-        Data->connector_Batteries = Communication::connector_received;
-    }
+
     if(Communication::received_activate_space_vector == true){
         Communication::received_activate_space_vector = false;
         StateMachinePCU::space_vector_on = true;

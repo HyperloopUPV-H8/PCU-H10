@@ -21,19 +21,12 @@ namespace Pinout{
     static constexpr Pin& CURRENT_SENSOR_W_A =PA5;
     static constexpr Pin& CURRENT_SENSOR_W_B = PB1;
 };
-namespace Current_Sensors{
-    static constexpr float slope_u_a = 1;
-    static constexpr float offset_u_a = 0;
-    static constexpr float slope_v_a = 1;
-    static constexpr float offset_v_a = 0;
-    static constexpr float slope_w_a = 1;
-    static constexpr float offset_w_a = 0;
-    static constexpr float slope_u_b = 1;
-    static constexpr float offset_u_b = 0;
-    static constexpr float slope_v_b = 1;
-    static constexpr float offset_v_b = 0;
-    static constexpr float slope_w_b = 1;
-    static constexpr float offset_w_b = 0;
+namespace Sensors_data{
+    static constexpr float slope_current_sensor = 96.945;
+    static constexpr float offset_current_sensor = -157.30;
+    
+    static constexpr float slope_voltage_sensor = 133.31627;
+    static constexpr float offset_voltage_sensor = -9.24655;
 };
 
 namespace Communication_Data{
@@ -74,10 +67,6 @@ enum class BUFFER_ENABLE : uint8_t{
     OFF = 0,
     ON = 1
 };
-enum class Battery_Connector : uint8_t{
-    A = 0,
-    B = 1
-};
 
 enum State_PCU: uint8_t{
     Connecting,
@@ -95,8 +84,8 @@ struct Data_struct{
     float actual_duty{};
     BUFFER_ENABLE buffer_enable{};
     //batteries
-    float actual_voltage_batteries{};
-    Battery_Connector connector_Batteries = Battery_Connector::A;
+    float actual_voltage_battery_A{};
+    float actual_voltage_battery_B{};
     //current sensor
     float actual_current_sensor_u_a{};
     float actual_current_sensor_u_b{};

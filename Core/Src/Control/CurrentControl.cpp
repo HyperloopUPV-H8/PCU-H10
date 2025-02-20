@@ -22,11 +22,11 @@ double CurrentControl::calculate_peak(){
 
    double period = 1.0 / double(spaceVector->get_modulation_frequency());
    //Max current will be the max between the actual values and the value of the last measure
-   double max_current = std::max({// std::abs(Data->actual_current_sensor_u_a), 
+   double max_current = std::max({std::abs(Data->actual_current_sensor_u_a), 
                                   std::abs(Data->actual_current_sensor_u_b),
-                                  // std::abs(Data->actual_current_sensor_v_a),
+                                  std::abs(Data->actual_current_sensor_v_a),
                                   std::abs(Data->actual_current_sensor_v_b),
-                                  // std::abs(Data->actual_current_sensor_w_a),
+                                  std::abs(Data->actual_current_sensor_w_a),
                                   std::abs(Data->actual_current_sensor_w_b)}); 
                             
     if(max_current >= antiguo_maximo){
