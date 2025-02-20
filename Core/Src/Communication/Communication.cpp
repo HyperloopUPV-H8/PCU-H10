@@ -60,12 +60,12 @@ Communication::Communication(Data_struct *data): Data(data),ControlStationSocket
     Disable_Reset = new HeapOrder(Communication_Data::DISABLE_RESET_ORDER,&disable_reset_callback);
     Enable_Reset = new HeapOrder(Communication_Data::ENABLE_RESET_ORDER,&enable_reset_callback);
     Choose_Batteries_type = new HeapOrder(Communication_Data::BATTERIES_TYPE_ORDER,&received_choose_batteries_type_callback,&connector_received);
-    Start_space_vector = new HeapOrder(Communication_Data::START_SPACE_VECTOR_ORDER,&received_activate_space_vector_callback,&frequency_space_vector_received,&frequency_received,&ref_voltage_space_vector_received);
+    Start_space_vector = new HeapOrder(Communication_Data::START_SPACE_VECTOR_ORDER,&received_activate_space_vector_callback,&frequency_space_vector_received,&frequency_received,&ref_voltage_space_vector_received,&Vmax_control_received);
     Stop_space_vector = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_space_vector_callback);
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received);
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_batteries,&Data->connector_Batteries);
-    Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->error_PI,&Data->target_voltage);
+    Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->error_PI,&Data->target_voltage,&Data->time);
     StateMachine_Packet = new HeapPacket(Communication_Data::STATE_MACHINE_PACKET,&Data->state_pcu,&Data->operational_state_pcu);
     
 }
