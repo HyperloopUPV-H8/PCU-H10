@@ -32,6 +32,7 @@ void StateMachinePCU::add_states(){
 
 }
 void StateMachinePCU::add_transitions(){
+
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Operational,[this](){
         return communication->is_connected();
     });
@@ -54,10 +55,10 @@ void StateMachinePCU::add_transitions(){
 void StateMachinePCU::add_cyclic_actions(){
 
     Time::register_low_precision_alarm(100,[this](){
-        //read ADC
-        three_phased_pwm->read_ADC();
         Data->state_pcu = stateMachine->current_state;
         Data->operational_state_pcu = operationalStateMachine->current_state;
+    });
+    Time::register_mid_precision_alarm(1000, [this](){
         communication->send_UDP_packets();
     });
     Time::register_mid_precision_alarm(200,[this](){
@@ -110,21 +111,20 @@ void StateMachinePCU::update(){
         Communication::received_enable_reset = false;
         three_phased_pwm->Enable_reset();
     }
-    if(Communication::received_choose_batteries_type == true){
-        Communication::received_choose_batteries_type = false;
-        Data->connector_Batteries = Communication::connector_received;
-    }
+
     if(Communication::received_activate_space_vector == true){
         Communication::received_activate_space_vector = false;
         StateMachinePCU::space_vector_on = true;
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
+        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         spaceVectorControl->set_target_voltage(Communication::ref_voltage_space_vector_received);
-
+        currentControl->stop();
     }
     else if(Communication::received_stop_space_vector == true){
         Communication::received_stop_space_vector = false;
         StateMachinePCU::space_vector_on = false;
+        currentControl->stop();
     }
     if(Communication::received_Current_reference_order == true){
         Communication::received_Current_reference_order = false;
@@ -133,13 +133,13 @@ void StateMachinePCU::update(){
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         StateMachinePCU::space_vector_on = true;
+        currentControl->start();
     }
     if(Communication::received_zeroing_order == true){
+        Communication::received_zeroing_order = false;
         sensors->currentSensors.zeroing();
     }
-    //add flags for SpeedControl
 
-    
     if(Communication::received_pwm_order == true){
         Communication::received_pwm_order = false;
         three_phased_pwm->turn_off_active_pwm();

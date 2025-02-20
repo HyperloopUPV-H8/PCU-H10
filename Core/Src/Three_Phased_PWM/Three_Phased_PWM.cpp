@@ -1,18 +1,14 @@
 #include "../../Inc/Three_Phased_PWM/Three_Phased_PWM.hpp"
 using namespace std::chrono_literals;
 
-Three_Phased_PWM::Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Pin& batt_con_A,Pin& batt_con_B,Data_struct *data):
+Three_Phased_PWM::Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Data_struct *data):
 U_Dual(u,u_negated),
 V_Dual(v,v_negated),
 W_Dual(w,w_negated),
 Enable(enable),
 Reset(reset),
 data(data)
-{ 
-    battery_connector_A_id =ADC::inscribe(batt_con_A);
-    battery_connector_B_id = ADC::inscribe(batt_con_B);
-    
-}
+{}
 void Three_Phased_PWM::start(){
     U_Dual.set_frequency(initial_frequency);
     V_Dual.set_frequency(initial_frequency);
@@ -30,10 +26,6 @@ void Three_Phased_PWM::start(){
     Enable.turn_on(); //works Active low
     Enable_reset(); // has to be active to work
 
-    //start adc
-    ADC::start();
-    ADC::turn_on(battery_connector_A_id);
-    ADC::turn_on(battery_connector_B_id);
     data->pwm_active = PWM_ACTIVE::NONE;
     data->actual_duty = 0;
     data->actual_frequency = 0.0;
@@ -160,16 +152,6 @@ void Three_Phased_PWM::Disable_reset(){
 }
 void Three_Phased_PWM::Enable_reset(){
     Reset.turn_on();
-}
-void Three_Phased_PWM::read_ADC(){
-    switch (data->connector_Batteries)
-    {
-    case Battery_Connector::A :
-        data->actual_voltage_batteries = ADC::get_value(battery_connector_A_id);
-        break;
-    case Battery_Connector::B:
-        data->actual_voltage_batteries = ADC::get_value(battery_connector_B_id);
-    }
 }
 
 void Three_Phased_PWM::set_three_frequencies(uint32_t frequency){

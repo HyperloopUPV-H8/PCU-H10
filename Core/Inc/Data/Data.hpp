@@ -1,5 +1,8 @@
 #pragma once
 #include "ST-LIB.hpp"
+//configuraciones
+// 0 PPU connector A, 1 PPU connector B , 2 Both PPU
+#define PPU_USING 2
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8;
@@ -21,19 +24,12 @@ namespace Pinout{
     static constexpr Pin& CURRENT_SENSOR_W_A =PA5;
     static constexpr Pin& CURRENT_SENSOR_W_B = PB1;
 };
-namespace Current_Sensors{
-    static constexpr float slope_u_a = 1;
-    static constexpr float offset_u_a = 0;
-    static constexpr float slope_v_a = 1;
-    static constexpr float offset_v_a = 0;
-    static constexpr float slope_w_a = 1;
-    static constexpr float offset_w_a = 0;
-    static constexpr float slope_u_b = 1;
-    static constexpr float offset_u_b = 0;
-    static constexpr float slope_v_b = 1;
-    static constexpr float offset_v_b = 0;
-    static constexpr float slope_w_b = 1;
-    static constexpr float offset_w_b = 0;
+namespace Sensors_data{
+    static constexpr float slope_current_sensor = 96.945;
+    static constexpr float offset_current_sensor = -157.30;
+    
+    static constexpr float slope_voltage_sensor = 133.31627;
+    static constexpr float offset_voltage_sensor = -9.24655;
 };
 
 namespace Communication_Data{
@@ -51,16 +47,14 @@ namespace Communication_Data{
     static constexpr uint16_t STOP_PWM_ORDER = 503;
     static constexpr uint16_t ENABLE_RESET_ORDER = 504;
     static constexpr uint16_t DISABLE_RESET_ORDER = 505;
-    static constexpr uint16_t BATTERIES_TYPE_ORDER = 506;
     static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
     static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
     static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
-    static constexpr uint16_t SPEED_REFERENCE_ORDER = 510;
-    static constexpr uint16_t ZEROING_ORDER = 511;
-    static constexpr uint16_t DISABLE_SPEED_CONTROL = 512;
-    static constexpr uint16_t ENABLE_SPEED_CONTROL = 513;
-
+    static constexpr uint16_t ZEROING_ORDER = 510;
+    static constexpr uint16_t SPEED_REFERENCE_ORDER = 511;
+    
     //packets//
+
     static constexpr uint16_t PWM_PACKET = 550;
     static constexpr uint16_t BATTERIES_PACKET = 551;
     static constexpr uint16_t CURRENT_SENSOR_PACKET = 552;
@@ -82,10 +76,6 @@ enum class BUFFER_ENABLE : uint8_t{
     OFF = 0,
     ON = 1
 };
-enum class Battery_Connector : uint8_t{
-    A = 0,
-    B = 1
-};
 
 enum State_PCU: uint8_t{
     Connecting,
@@ -103,8 +93,8 @@ struct Data_struct{
     float actual_duty{};
     BUFFER_ENABLE buffer_enable{};
     //batteries
-    float actual_voltage_batteries{};
-    Battery_Connector connector_Batteries = Battery_Connector::A;
+    float actual_voltage_battery_A{};
+    float actual_voltage_battery_B{};
     //current sensor
     float actual_current_sensor_u_a{};
     float actual_current_sensor_u_b{};
@@ -117,4 +107,5 @@ struct Data_struct{
     double error_PI{};
     double current_Peak{};
     double target_voltage{};
+    float time{};
 };

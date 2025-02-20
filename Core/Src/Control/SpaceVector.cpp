@@ -1,8 +1,9 @@
 #include "Control/SpaceVector.hpp"
-SpaceVector::SpaceVector(Three_Phased_PWM *three_pwm_class): three_pwm(three_pwm_class){}
+SpaceVector::SpaceVector(Three_Phased_PWM *three_pwm_class, Data_struct *data): three_pwm(three_pwm_class), data(data) {}
 
 void SpaceVector::set_target_voltage(float V_ref){
-    Imodulation = V_ref/VMAX * IMAX;
+    Imodulation = V_ref * 2.0 / VMAX;
+    if (Imodulation >= IMAX) Imodulation = IMAX;
 }
 
 void SpaceVector::set_frequency_Modulation(uint32_t freq){
@@ -24,6 +25,7 @@ void SpaceVector::calculate_duties(){
     three_pwm->set_duty_v((sin_v/2.0 + 0.5) * 100.0);
     three_pwm->set_duty_w((sin_w/2.0 + 0.5) * 100.0);
     time+=Period/1000000.0;
+    data->time = time;
 }
 
 uint32_t SpaceVector::get_modulation_frequency(){
