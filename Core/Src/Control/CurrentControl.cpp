@@ -20,11 +20,14 @@ double CurrentControl::calculate_peak(){
     static double posible_nuevo_maximo = 0.0;
     static double posible_t_maximo = 0.0;
 
-   double period = 1/(spaceVector->get_modulation_frequency());
+   double period = 1.0 / double(spaceVector->get_modulation_frequency());
    //Max current will be the max between the actual values and the value of the last measure
-   double max_current = abs(std::max({Data->actual_current_sensor_u_a, Data->actual_current_sensor_u_b,
-                            Data->actual_current_sensor_v_a,Data->actual_current_sensor_v_b,
-                            Data->actual_current_sensor_w_a,Data->actual_current_sensor_w_b})); 
+   double max_current = std::max({// std::abs(Data->actual_current_sensor_u_a), 
+                                  std::abs(Data->actual_current_sensor_u_b),
+                                  // std::abs(Data->actual_current_sensor_v_a),
+                                  std::abs(Data->actual_current_sensor_v_b),
+                                  // std::abs(Data->actual_current_sensor_w_a),
+                                  std::abs(Data->actual_current_sensor_w_b)}); 
                             
     if(max_current >= antiguo_maximo){
         maximo = max_current;
@@ -52,6 +55,8 @@ double CurrentControl::calculate_peak(){
 
 }
 void CurrentControl::control_action(){
+    if (!should_be_running) return;
+
     double current_peak = calculate_peak();
     double current_error = current_ref - current_peak;
     Data->current_Peak = current_peak;
