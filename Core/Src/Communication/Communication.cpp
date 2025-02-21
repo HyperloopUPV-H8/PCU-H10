@@ -84,6 +84,7 @@ void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*batteries_Packet);
     datagramSocket->send_packet(*Current_sensor_Packet);
     datagramSocket->send_packet(*StateMachine_Packet);
+    datagramSocket->send_packet(*Encoder_Packet);
 }
 
 bool Communication::is_connected(){

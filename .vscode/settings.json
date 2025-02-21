@@ -82,5 +82,6 @@
     "xstring": "cpp",
     "regex": "cpp",
     "valarray": "cpp"
-  }
+  },
+  "cortex-debug.variableUseNaturalFormat": false
 }

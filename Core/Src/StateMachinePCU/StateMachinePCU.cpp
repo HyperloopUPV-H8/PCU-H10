@@ -20,8 +20,9 @@ currentControl(currentControl)
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
     three_phased_pwm->start();
-    add_cyclic_actions();
     sensors->start();
+    add_cyclic_actions();
+    
 }
 
 void StateMachinePCU::add_states(){

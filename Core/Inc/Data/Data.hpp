@@ -39,8 +39,8 @@ namespace Communication_Data{
     const IPV4 Backend = {"192.168.0.9"};
     const IPV4 PCU_IP = {"192.168.0.5"};
     static constexpr uint32_t UDP_PORT = 50400;
-    static constexpr uint32_t TCP_SERVER = 8000;
-    static constexpr uint32_t TCP_CLIENT = 8000;
+    static constexpr uint32_t TCP_SERVER = 50500;
+    static constexpr uint32_t TCP_CLIENT = 50500;
     static constexpr uint32_t UDP_PORT_PCU = 50400;
     
     //orders//
