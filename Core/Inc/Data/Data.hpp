@@ -23,6 +23,9 @@ namespace Pinout{
     static constexpr Pin& CURRENT_SENSOR_V_B = PA6;
     static constexpr Pin& CURRENT_SENSOR_W_A =PA5;
     static constexpr Pin& CURRENT_SENSOR_W_B = PB1;
+    //Speetec
+    static constexpr Pin& ENCODER_A = PF1;
+    static constexpr Pin& ENCODER_B = PF0;
 };
 namespace Sensors_data{
     static constexpr float slope_current_sensor = 96.945;
@@ -59,6 +62,7 @@ namespace Communication_Data{
     static constexpr uint16_t BATTERIES_PACKET = 551;
     static constexpr uint16_t CURRENT_SENSOR_PACKET = 552;
     static constexpr uint16_t STATE_MACHINE_PACKET = 553;
+    static constexpr uint16_t ENCODER_PACKET = 554;
 };
 namespace Current_Control_Data{
     static constexpr double kp = 0.2;
@@ -108,4 +112,9 @@ struct Data_struct{
     double current_Peak{};
     double target_voltage{};
     float time{};
+    //encoder
+    double position{};
+    bool direction{};
+    double speed{};
+    double acceleration{};
 };

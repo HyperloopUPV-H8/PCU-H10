@@ -77,7 +77,7 @@ Communication::Communication(Data_struct *data): Data(data),ControlStationSocket
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
     Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->error_PI,&Data->target_voltage,&Data->time);
     StateMachine_Packet = new HeapPacket(Communication_Data::STATE_MACHINE_PACKET,&Data->state_pcu,&Data->operational_state_pcu);
-    
+    Encoder_Packet = new HeapPacket(Communication_Data::ENCODER_PACKET,&Data->position,&Data->direction,&Data->speed,&Data->acceleration);
 }
 void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Pwm_packet);

@@ -25,6 +25,7 @@ class Communication{
         HeapPacket *batteries_Packet;
         HeapPacket *Current_sensor_Packet;
         HeapPacket *StateMachine_Packet;
+        HeapPacket *Encoder_Packet;
     public:
         Communication(Data_struct *data);
         static bool received_enable_buffer;
