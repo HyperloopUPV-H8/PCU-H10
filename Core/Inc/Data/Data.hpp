@@ -63,12 +63,20 @@ namespace Communication_Data{
     static constexpr uint16_t CURRENT_SENSOR_PACKET = 552;
     static constexpr uint16_t STATE_MACHINE_PACKET = 553;
     static constexpr uint16_t ENCODER_PACKET = 554;
+    static constexpr uint16_t CONTROL_SPEED_PACKET = 555;
 };
 namespace Current_Control_Data{
     static constexpr double kp = 0.2;
     static constexpr double ki = 6.0;
     static constexpr double period = 0.0002;
     static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
+}
+namespace Speed_Control_Data{
+    static constexpr double kp = 0.2;
+    static constexpr double ki = 1.5;
+    static constexpr double period = 0.001;
+    static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
+    
 }
 enum class PWM_ACTIVE: uint8_t{
     NONE = 0,
@@ -108,7 +116,7 @@ struct Data_struct{
     float actual_current_sensor_w_b{};
     uint8_t state_pcu{}; // general state
     uint8_t operational_state_pcu{}; //operational state
-    double error_PI{};
+    double current_error{};
     double current_Peak{};
     double target_voltage{};
     float time{};
@@ -117,4 +125,8 @@ struct Data_struct{
     bool direction{};
     double speed{};
     double acceleration{};
+    //speed
+    float target_speed{};
+    double speed_error{};
+    float actual_current_ref{};
 };

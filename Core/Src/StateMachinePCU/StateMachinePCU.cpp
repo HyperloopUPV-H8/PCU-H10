@@ -2,12 +2,14 @@
 
 
 bool StateMachinePCU::space_vector_on = false;
-StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl):
+bool StateMachinePCU::speed_control = false;
+StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl,SpeedControl *speedControl):
 Data(data),
 three_phased_pwm(three_phased),
 sensors(sensors),
 spaceVectorControl(spVec),
-currentControl(currentControl)
+currentControl(currentControl),
+speedControl(speedControl)
 {
     stateMachine = new StateMachine(State_PCU::Connecting);
     operationalStateMachine = new StateMachine(Operational_State_PCU::Idle);
@@ -66,9 +68,17 @@ void StateMachinePCU::add_cyclic_actions(){
     Time::register_mid_precision_alarm(200,[this](){
         sensors->read();
     });
+
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
         currentControl->control_action();
     },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+
+    operationalStateMachine->add_mid_precision_cyclic_action([this](){
+        if(speed_control){
+            speedControl->control_action();
+        }
+    },us(Speed_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
         spaceVectorControl->calculate_duties();
     },us(spaceVectorControl->Period),Operational_State_PCU::Accelerating);
@@ -130,12 +140,19 @@ void StateMachinePCU::update(){
     }
     if(Communication::received_Current_reference_order == true){
         Communication::received_Current_reference_order = false;
+        speed_control = false;
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         currentControl->set_current_ref(Communication::current_reference_received);
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         StateMachinePCU::space_vector_on = true;
         currentControl->start();
+    }
+    if(Communication::received_Speed_reference_order == true){
+        speed_control = true;
+        Data->target_speed = Communication::speed_reference_received;
+        speedControl->set_reference_speed(Communication::speed_reference_received);
+        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
     }
     if(Communication::received_zeroing_order == true){
         Communication::received_zeroing_order = false;

@@ -18,7 +18,8 @@ int main(void) {
     Three_Phased_PWM three_phased_pwm(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,Pinout::Reset,&Data);
     SpaceVector spaceVec(&three_phased_pwm, &Data);
     CurrentControl currentControl(&Data,&spaceVec);
-    StateMachinePCU stateMachinePCU(&Data,&three_phased_pwm,&sensors,&spaceVec,&currentControl);
+    SpeedControl speedControl(&Data,&currentControl,&spaceVec);
+    StateMachinePCU stateMachinePCU(&Data,&three_phased_pwm,&sensors,&spaceVec,&currentControl,&speedControl);
     STLIB::start("192.168.0.5");
     sensors.currentSensors.zeroing();
     Communication comms(&Data);

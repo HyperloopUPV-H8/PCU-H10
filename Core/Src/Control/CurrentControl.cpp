@@ -7,14 +7,14 @@ Data(Data),
 spaceVector(spaceVector)
 {
     current_PI.reset();
-    *current_ref = 0.0; 
+    current_ref = 0.0; 
 }
-void CurrentControl::set_current_ref(float &cur_ref){
-    current_ref = &cur_ref;
+void CurrentControl::set_current_ref(float cur_ref){
+    current_ref = cur_ref;
 }
 
 float CurrentControl::get_current_ref(){
-    return *current_ref;
+    return current_ref;
 }
 double CurrentControl::calculate_peak(){
     Max_Peak::set_modulation_freq(spaceVector->get_modulation_frequency());
@@ -42,9 +42,9 @@ void CurrentControl::control_action(){
     if (!should_be_running) return;
 
     double current_peak = calculate_peak();
-    double current_error = *current_ref - current_peak;
+    double current_error = current_ref - current_peak;
     Data->current_Peak = current_peak;
-    Data->error_PI = current_error;
+    Data->current_error = current_error;
     current_PI.input(current_error);
     current_PI.execute();
     Data->target_voltage = current_PI.output_value;

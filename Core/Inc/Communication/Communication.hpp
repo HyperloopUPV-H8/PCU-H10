@@ -20,12 +20,12 @@ class Communication{
         HeapOrder *Speed_reference_Order;
         HeapOrder *Zeroing_Order;
         //packets//
-
         HeapPacket *Pwm_packet;
         HeapPacket *batteries_Packet;
         HeapPacket *Current_sensor_Packet;
         HeapPacket *StateMachine_Packet;
         HeapPacket *Encoder_Packet;
+        HeapPacket *Control_Speed_Packet;
     public:
         Communication(Data_struct *data);
         static bool received_enable_buffer;

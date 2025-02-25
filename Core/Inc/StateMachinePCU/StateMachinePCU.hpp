@@ -6,6 +6,7 @@
 #include  "Sensors/Sensors.hpp"
 #include "Control/SpaceVector.hpp"
 #include "Control/CurrentControl.hpp"
+#include "Control/SpeedControl.hpp"
 class StateMachinePCU{
     private:
         StateMachine *stateMachine;
@@ -16,9 +17,11 @@ class StateMachinePCU{
         Communication *communication;
         SpaceVector *spaceVectorControl;
         CurrentControl *currentControl;
+        SpeedControl *speedControl;
     public:
         static bool space_vector_on;
-        StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec,CurrentControl *current_Control);
+        static bool speed_control;
+        StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec,CurrentControl *current_Control,SpeedControl *speedControl);
         void start(Communication *comms);
         void add_states();
         void add_transitions();

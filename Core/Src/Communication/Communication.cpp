@@ -70,14 +70,15 @@ Communication::Communication(Data_struct *data): Data(data),ControlStationSocket
     Stop_space_vector = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_space_vector_callback);
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received);
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
-    Speed_reference_Order = new HeapOrder(Communication_Data::SPEED_REFERENCE_ORDER,&received_speed_reference_callback,&speed_reference_received,&frequency_space_vector_received);
+    Speed_reference_Order = new HeapOrder(Communication_Data::SPEED_REFERENCE_ORDER,&received_speed_reference_callback,&speed_reference_received,&frequency_received);
     
     //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
-    Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->error_PI,&Data->target_voltage,&Data->time);
+    Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->current_error,&Data->target_voltage,&Data->time);
     StateMachine_Packet = new HeapPacket(Communication_Data::STATE_MACHINE_PACKET,&Data->state_pcu,&Data->operational_state_pcu);
     Encoder_Packet = new HeapPacket(Communication_Data::ENCODER_PACKET,&Data->position,&Data->direction,&Data->speed,&Data->acceleration);
+    Control_Speed_Packet = new HeapPacket(Communication_Data::CONTROL_SPEED_PACKET,&Data->target_speed,&Data->speed_error,&Data->actual_current_ref);
 }
 void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Pwm_packet);
@@ -85,6 +86,7 @@ void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Current_sensor_Packet);
     datagramSocket->send_packet(*StateMachine_Packet);
     datagramSocket->send_packet(*Encoder_Packet);
+    datagramSocket->send_packet(*Control_Speed_Packet);
 }
 
 bool Communication::is_connected(){
