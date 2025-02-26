@@ -2,7 +2,9 @@
 #define CURRENT_LIMIT 100
 
 SpeedControl::SpeedControl(Data_struct *Data,CurrentControl *currentControl,SpaceVector *spaceVector):
-    Data(Data),currentControl(currentControl),spaceVector(spaceVector){}
+    Data(Data),currentControl(currentControl),spaceVector(spaceVector){
+        speed_PI.reset();
+    }
 
 void SpeedControl::set_reference_speed(float speed_ref){
     reference_speed = speed_ref;

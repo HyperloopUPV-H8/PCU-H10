@@ -9,13 +9,13 @@ class Max_Peak{
         double t_maximo = 0.0;
         double posible_nuevo_maximo = 0.0;
         double posible_t_maximo = 0.0;
-        float current_sensor;
+        float *current_sensor;
         static double modulation_frequency; 
     public:
         static void set_modulation_freq(double modulation_freq){
             modulation_frequency = modulation_freq;
         }
-        Max_Peak(float &curr_sensor): current_sensor(curr_sensor){}
+        Max_Peak(float &curr_sensor): current_sensor(&curr_sensor){}
         
         double calculate_Max_Peak(){
             double tiempo = static_cast<double>(Time::get_global_tick())/NANOSECOND;
@@ -23,7 +23,7 @@ class Max_Peak{
 
             double period = 1.0 / modulation_frequency;
 
-            double max_current = std::abs(current_sensor);
+            double max_current = std::abs(*current_sensor);
                                     
             if(max_current >= antiguo_maximo){
                 maximo = max_current;

@@ -2,7 +2,7 @@
 #include "ST-LIB.hpp"
 //configuraciones
 // 0 PPU connector A, 1 PPU connector B , 2 Both PPU
-#define PPU_USING 2
+#define PPU_USING 0
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8;
