@@ -29,7 +29,7 @@ namespace Pinout{
 };
 namespace Sensors_data{
     static constexpr float slope_current_sensor = 96.945;
-    static constexpr float offset_current_sensor = -157.30;
+    static constexpr float offset_current_sensor = 0.0;
     
     static constexpr float slope_voltage_sensor = 133.31627;
     static constexpr float offset_voltage_sensor = -9.24655;

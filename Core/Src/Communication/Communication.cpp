@@ -75,7 +75,7 @@ Communication::Communication(Data_struct *data): Data(data),ControlStationSocket
     //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
-    Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->current_error,&Data->target_voltage,&Data->time);
+    Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_a,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->current_error,&Data->target_voltage,&Data->time);
     StateMachine_Packet = new HeapPacket(Communication_Data::STATE_MACHINE_PACKET,&Data->state_pcu,&Data->operational_state_pcu);
     Encoder_Packet = new HeapPacket(Communication_Data::ENCODER_PACKET,&Data->position,&Data->direction,&Data->speed,&Data->acceleration);
     Control_Speed_Packet = new HeapPacket(Communication_Data::CONTROL_SPEED_PACKET,&Data->target_speed,&Data->speed_error,&Data->actual_current_ref);
