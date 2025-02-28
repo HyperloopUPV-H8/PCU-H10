@@ -89,6 +89,10 @@ void StateMachinePCU::add_enter_actions(){
         three_phased_pwm->Led_Commutation.turn_on();
     },Operational_State_PCU::Accelerating);
 
+    operationalStateMachine->add_enter_action([this](){
+        sensors->currentSensors.zeroing();
+    },State_PCU::Operational);
+
 }
 void StateMachinePCU::add_exit_actions(){
     stateMachine->add_exit_action([this](){
