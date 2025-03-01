@@ -59,6 +59,9 @@ void received_speed_reference_callback(){
 
 
 Communication::Communication(Data_struct *data): Data(data),ControlStationSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER){
+    #if COMMUNICATION_HVSCU 
+        HVSCU_datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_HVSCU,Communication_Data::HVSCU_IP,Communication_Data::UDP_PORT);
+    #endif
     datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT);
     Enable_Buffer_Order = new HeapOrder(Communication_Data::ENABLE_BUFFER_ORDER,&received_enable_buffer_callback);
     Disable_Buffer_Order = new HeapOrder(Communication_Data::DISABLE_BUFFER_ORDER,&received_disable_buffer_callback);
@@ -87,6 +90,9 @@ void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*StateMachine_Packet);
     datagramSocket->send_packet(*Encoder_Packet);
     datagramSocket->send_packet(*Control_Speed_Packet);
+    #if COMMUNICATION_HVSCU 
+        HVSCU_datagramSocket->send_packet(*batteries_Packet);
+    #endif
 }
 
 bool Communication::is_connected(){

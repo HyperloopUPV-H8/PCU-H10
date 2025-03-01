@@ -20,7 +20,7 @@ int main(void) {
     CurrentControl currentControl(&Data,&spaceVec);
     SpeedControl speedControl(&Data,&currentControl,&spaceVec);
     StateMachinePCU stateMachinePCU(&Data,&three_phased_pwm,&sensors,&spaceVec,&currentControl,&speedControl);
-    STLIB::start("192.168.0.5");
+    STLIB::start("192.168.1.5");
     sensors.currentSensors.zeroing();
     Communication comms(&Data);
     stateMachinePCU.start(&comms);

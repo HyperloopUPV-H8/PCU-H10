@@ -3,6 +3,7 @@
 //configuraciones
 // 0 PPU connector A, 1 PPU connector B , 2 Both PPU
 #define PPU_USING 0
+#define COMMUNICATION_HVSCU 1 // 0 = No communication, 1 = send packet with voltages 
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8;
@@ -37,12 +38,15 @@ namespace Sensors_data{
 
 namespace Communication_Data{
     const IPV4 Backend = {"192.168.0.9"};
-    const IPV4 PCU_IP = {"192.168.0.5"};
+    const IPV4 PCU_IP = {"192.168.1.5"};
     static constexpr uint32_t UDP_PORT = 50400;
     static constexpr uint32_t TCP_SERVER = 50500;
     static constexpr uint32_t TCP_CLIENT = 50500;
     static constexpr uint32_t UDP_PORT_PCU = 50400;
-    
+    #if COMMUNICATION_HVSCU
+    static constexpr uint32_t UDP_PORT_HVSCU = 50800;
+    const IPV4 HVSCU_IP = {"192.168.1.7"};
+    #endif
     //orders//
     static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
     static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;

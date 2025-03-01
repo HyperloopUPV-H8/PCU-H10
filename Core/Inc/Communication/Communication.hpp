@@ -6,6 +6,9 @@ class Communication{
         Data_struct *Data;
         ServerSocket ControlStationSocket;
         DatagramSocket *datagramSocket;
+        #if COMMUNICATION_HVSCU 
+        DatagramSocket *HVSCU_datagramSocket;
+        #endif
         //orders//
         HeapOrder *Enable_Buffer_Order;
         HeapOrder *Disable_Buffer_Order;
