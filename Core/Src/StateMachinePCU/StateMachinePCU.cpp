@@ -87,6 +87,8 @@ void StateMachinePCU::add_cyclic_actions(){
 void StateMachinePCU::add_enter_actions(){
     operationalStateMachine->add_enter_action([this](){
         three_phased_pwm->Led_Commutation.turn_on();
+        three_phased_pwm->enable();
+        three_phased_pwm->Enable_reset();
     },Operational_State_PCU::Accelerating);
 
     operationalStateMachine->add_enter_action([this](){

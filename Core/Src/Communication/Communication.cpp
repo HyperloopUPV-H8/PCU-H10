@@ -13,6 +13,9 @@ bool Communication::received_stop_space_vector = false;
 bool Communication::received_Current_reference_order = false;
 bool Communication::received_zeroing_order = false;
 bool Communication::received_Speed_reference_order = false;
+bool Communication::received_Precharge_order = false;
+bool Communication::received_Complete_Run_order = false;
+
 
 float Communication::duty_cycle_received{};
 float Communication::ref_voltage_space_vector_received{};
