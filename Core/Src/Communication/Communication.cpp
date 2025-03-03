@@ -1,11 +1,13 @@
 #include "Communication/Communication.hpp"
 
-bool Communication::received_enable_buffer = false;
-bool Communication::received_disable_buffer = false;
-bool Communication::received_pwm_order = false;
-bool Communication::received_stop_pwm_order = false;
-bool Communication::received_disable_reset = false;
-bool Communication::received_enable_reset = false;
+#if TEST_PWM
+    bool Communication::received_enable_buffer = false;
+    bool Communication::received_disable_buffer = false;
+    bool Communication::received_pwm_order = false;
+    bool Communication::received_stop_pwm_order = false;
+    bool Communication::received_disable_reset = false;
+    bool Communication::received_enable_reset = false;
+#endif
 bool Communication::received_activate_space_vector = false;
 bool Communication::received_stop_space_vector = false;
 bool Communication::received_Current_reference_order = false;
@@ -22,25 +24,26 @@ float Communication::current_reference_received{};
 float Communication::speed_reference_received{};
 
 PWM_ACTIVE Communication::pwm_received = PWM_ACTIVE::NONE;
-
-void received_enable_buffer_callback(){
-    Communication::received_enable_buffer = true;
-}
-void received_disable_buffer_callback(){
-    Communication::received_disable_buffer = true;
-}
-void received_pwm_order_callback(){
-    Communication::received_pwm_order = true;
-}
-void stop_pwm_order_callback(){
-    Communication::received_stop_pwm_order = true;
-}
-void disable_reset_callback(){
-    Communication::received_disable_reset = true;
-}
-void enable_reset_callback(){
-    Communication::received_enable_reset = true;
-}
+#if TEST_PWM
+    void received_enable_buffer_callback(){
+        Communication::received_enable_buffer = true;
+    }
+    void received_disable_buffer_callback(){
+        Communication::received_disable_buffer = true;
+    }
+    void received_pwm_order_callback(){
+        Communication::received_pwm_order = true;
+    }
+    void stop_pwm_order_callback(){
+        Communication::received_stop_pwm_order = true;
+    }
+    void disable_reset_callback(){
+        Communication::received_disable_reset = true;
+    }
+    void enable_reset_callback(){
+        Communication::received_enable_reset = true;
+    }
+#endif
 void received_activate_space_vector_callback(){
     Communication::received_activate_space_vector = true;
 }
@@ -68,12 +71,14 @@ Communication::Communication(Data_struct *data): Data(data),ControlStationSocket
         HVSCU_datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_HVSCU,Communication_Data::HVSCU_IP,Communication_Data::UDP_PORT);
     #endif
     datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT);
-    Enable_Buffer_Order = new HeapOrder(Communication_Data::ENABLE_BUFFER_ORDER,&received_enable_buffer_callback);
-    Disable_Buffer_Order = new HeapOrder(Communication_Data::DISABLE_BUFFER_ORDER,&received_disable_buffer_callback);
-    Send_pwm_Order = new HeapOrder(Communication_Data::SEND_PWM_ORDER,&received_pwm_order_callback,&pwm_received,&frequency_received,&duty_cycle_received);
-    Stop_pwm_Order = new HeapOrder(Communication_Data::STOP_PWM_ORDER,&stop_pwm_order_callback);
-    Disable_Reset = new HeapOrder(Communication_Data::DISABLE_RESET_ORDER,&disable_reset_callback);
-    Enable_Reset = new HeapOrder(Communication_Data::ENABLE_RESET_ORDER,&enable_reset_callback);
+    #if TEST_PWM
+        Enable_Buffer_Order = new HeapOrder(Communication_Data::ENABLE_BUFFER_ORDER,&received_enable_buffer_callback);
+        Disable_Buffer_Order = new HeapOrder(Communication_Data::DISABLE_BUFFER_ORDER,&received_disable_buffer_callback);
+        Send_pwm_Order = new HeapOrder(Communication_Data::SEND_PWM_ORDER,&received_pwm_order_callback,&pwm_received,&frequency_received,&duty_cycle_received);
+        Stop_pwm_Order = new HeapOrder(Communication_Data::STOP_PWM_ORDER,&stop_pwm_order_callback);
+        Disable_Reset = new HeapOrder(Communication_Data::DISABLE_RESET_ORDER,&disable_reset_callback);
+        Enable_Reset = new HeapOrder(Communication_Data::ENABLE_RESET_ORDER,&enable_reset_callback);
+    #endif
     Start_space_vector = new HeapOrder(Communication_Data::START_SPACE_VECTOR_ORDER,&received_activate_space_vector_callback,&frequency_space_vector_received,&frequency_received,&ref_voltage_space_vector_received,&Vmax_control_received);
     Stop_space_vector = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_space_vector_callback);
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received);

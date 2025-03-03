@@ -4,6 +4,7 @@
 // 0 PPU connector A, 1 PPU connector B , 2 Both PPU
 #define PPU_USING 0
 #define COMMUNICATION_HVSCU 1 // 0 = No communication, 1 = send packet with voltages 
+#define TEST_PWM 0 //0 = no test pwm, eliminate some orders, 1 = have every order for test single pwm
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8;
