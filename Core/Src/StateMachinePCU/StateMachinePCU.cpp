@@ -1,5 +1,5 @@
 #include "StateMachinePCU/StateMachinePCU.hpp"
-
+#define MODULATION_FREQUENCY_DEFAULT 10
 
 bool StateMachinePCU::space_vector_on = false;
 bool StateMachinePCU::speed_control = false;
@@ -145,6 +145,15 @@ void StateMachinePCU::update(){
         Communication::received_stop_space_vector = false;
         StateMachinePCU::space_vector_on = false;
         StateMachinePCU::speed_control = false;
+        currentControl->stop();
+    }
+    if(Communication::received_Precharge_order == true){
+        Communication::received_Precharge_order = false;
+        StateMachinePCU::space_vector_on = true;
+        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
+        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
+        spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
         currentControl->stop();
     }
     if(Communication::received_Current_reference_order == true){

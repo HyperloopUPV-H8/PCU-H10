@@ -74,7 +74,7 @@ public:
     double calculate_peak();
     float get_current_ref();
     void control_action();
-
     void start();
     void stop();
+    bool is_running();
 };

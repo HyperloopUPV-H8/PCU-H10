@@ -62,3 +62,6 @@ void CurrentControl::start() {
 void CurrentControl::stop() {
     should_be_running = false;
 }
+bool CurrentControl::is_running(){
+    return should_be_running;
+}

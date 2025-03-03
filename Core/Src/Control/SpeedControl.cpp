@@ -16,6 +16,7 @@ double SpeedControl::calculate_frequency_modulation(){
     return a*Data->speed + b;
 }
 void SpeedControl::control_action(){
+    if(!currentControl->is_running())  return;
     spaceVector->set_frequency_Modulation(calculate_frequency_modulation());
     double speed_error = reference_speed - Data->speed;
     Data->speed_error = speed_error;
