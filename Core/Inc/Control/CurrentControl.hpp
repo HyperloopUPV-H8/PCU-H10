@@ -52,7 +52,8 @@ class Max_Peak{
 class CurrentControl{
 private:
     float current_ref;
-    PI<IntegratorType::Trapezoidal> current_PI{Current_Control_Data::kp,Current_Control_Data::ki,Current_Control_Data::period};
+    PI<IntegratorType::Trapezoidal> current_PI{Current_Control_Data::kp_accelerate,Current_Control_Data::ki_accelerate,Current_Control_Data::period};
+    PI<IntegratorType::Trapezoidal> current_regenerate_PI{Current_Control_Data::kp_regenerate,Current_Control_Data::ki_regenerate,Current_Control_Data::period};
     Data_struct *Data;
     SpaceVector *spaceVector;
     #if PPU_USING != 1
@@ -65,7 +66,7 @@ private:
         Max_Peak current_v_b{Data->actual_current_sensor_v_b};
         Max_Peak current_W_b{Data->actual_current_sensor_w_b};
     #endif
-
+    ControlStates currentControlState{ControlStates::accelerate};
     bool should_be_running{false};
 
 public:

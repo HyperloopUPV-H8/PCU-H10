@@ -40,18 +40,24 @@ double CurrentControl::calculate_peak(){
 }
 void CurrentControl::control_action(){
     if (!should_be_running) return;
-
+    double target_voltage;
     double current_peak = calculate_peak();
     double current_error = current_ref - current_peak;
     Data->current_Peak = current_peak;
     Data->current_error = current_error;
-    current_PI.input(current_error);
-    current_PI.execute();
-    Data->target_voltage = current_PI.output_value;
     
-    if(current_PI.output_value > spaceVector->VMAX){
-        Data->target_voltage = spaceVector->VMAX;
+    if(currentControlState == ControlStates::accelerate){
+        current_PI.input(current_error);
+        current_PI.execute();
+        target_voltage = current_PI.output_value;
     }
+    else{
+        current_regenerate_PI.input(current_error);
+        current_regenerate_PI.execute();
+        target_voltage = current_regenerate_PI.output_value;
+    }
+
+    Data->target_voltage = (target_voltage <= spaceVector->VMAX) ? target_voltage : spaceVector->VMAX;
     spaceVector->set_target_voltage(Data->target_voltage);
 }
 

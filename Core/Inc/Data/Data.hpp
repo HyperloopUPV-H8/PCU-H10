@@ -73,17 +73,20 @@ namespace Communication_Data{
     static constexpr uint16_t CONTROL_SPEED_PACKET = 555;
 };
 namespace Current_Control_Data{
-    static constexpr double kp = 0.2;
-    static constexpr double ki = 6.0;
+    static constexpr double kp_accelerate = 0.2;
+    static constexpr double ki_accelerate = 6.0;
+    static constexpr double kp_regenerate = 1.0;
+    static constexpr double ki_regenerate = 12.0;
     static constexpr double period = 0.0002;
     static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
 }
 namespace Speed_Control_Data{
-    static constexpr double kp = 0.2;
-    static constexpr double ki = 1.5;
+    static constexpr double kp_accelerate = 0.2;
+    static constexpr double ki_accelerate = 1.5;
+    static constexpr double kp_regenerate = 9.0;
+    static constexpr double ki_regenerate = 1.0;
     static constexpr double period = 0.001;
     static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
-    
 }
 enum class PWM_ACTIVE: uint8_t{
     NONE = 0,
@@ -105,6 +108,10 @@ enum Operational_State_PCU: uint8_t{
     Idle,
     Sending_PWM,
     Accelerating
+};
+enum ControlStates{
+    accelerate,
+    regenerate
 };
 struct Data_struct{
     PWM_ACTIVE pwm_active{};
