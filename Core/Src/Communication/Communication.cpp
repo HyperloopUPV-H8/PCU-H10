@@ -56,7 +56,12 @@ void received_zeroing_callback(){
 void received_speed_reference_callback(){
     Communication::received_Speed_reference_order = true;    
 }
-
+void received_Precharge_callback(){
+    Communication::received_Precharge_order = true;
+}
+void received_Complete_Run_callback(){
+    Communication::received_Complete_Run_order = true;
+}
 
 Communication::Communication(Data_struct *data): Data(data),ControlStationSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER){
     #if COMMUNICATION_HVSCU 
@@ -74,7 +79,8 @@ Communication::Communication(Data_struct *data): Data(data),ControlStationSocket
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received);
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
     Speed_reference_Order = new HeapOrder(Communication_Data::SPEED_REFERENCE_ORDER,&received_speed_reference_callback,&speed_reference_received,&frequency_received);
-    
+    Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&ref_voltage_space_vector_received);
+    Complete_Run_order = new HeapOrder(Communication_Data::MAKE_COMPLETE_RUN_ORDER,&received_Complete_Run_callback);
     //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);

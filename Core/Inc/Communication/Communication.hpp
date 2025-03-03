@@ -22,6 +22,8 @@ class Communication{
         HeapOrder *Current_reference_Order;
         HeapOrder *Speed_reference_Order;
         HeapOrder *Zeroing_Order;
+        HeapOrder *Precharge_Order;
+        HeapOrder *Complete_Run_order;
         //packets//
         HeapPacket *Pwm_packet;
         HeapPacket *batteries_Packet;
@@ -42,6 +44,8 @@ class Communication{
         static bool received_Current_reference_order;
         static bool received_Speed_reference_order;
         static bool received_zeroing_order;
+        static bool received_Precharge_order;
+        static bool received_Complete_Run_order;
 
         static float frequency_received;
         static float duty_cycle_received;

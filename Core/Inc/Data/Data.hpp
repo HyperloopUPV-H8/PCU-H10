@@ -59,6 +59,8 @@ namespace Communication_Data{
     static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
     static constexpr uint16_t ZEROING_ORDER = 510;
     static constexpr uint16_t SPEED_REFERENCE_ORDER = 511;
+    static constexpr uint16_t PRECHARGE_ORDER = 512;
+    static constexpr uint16_t MAKE_COMPLETE_RUN_ORDER = 513;
     
     //packets//
 
