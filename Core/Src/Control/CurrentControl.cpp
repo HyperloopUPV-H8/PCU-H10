@@ -71,3 +71,6 @@ void CurrentControl::stop() {
 bool CurrentControl::is_running(){
     return should_be_running;
 }
+void CurrentControl::change_mode(ControlStates state){
+    currentControlState = state;
+}

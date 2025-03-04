@@ -33,11 +33,14 @@ void SpeedControl::control_action(){
     actual_current_ref = (actual_current_ref > CURRENT_LIMIT || actual_current_ref < -CURRENT_LIMIT) ? CURRENT_LIMIT : actual_current_ref;
     Data->actual_current_ref = actual_current_ref;
     currentControl->set_current_ref(actual_current_ref);
+    //if we are in regenerate and we arrive to the max speed we change the reference speed to zero
+    if(controlState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed > reference_speed){
+        set_reference_speed(0.0);
+    }
 }
 ControlStates SpeedControl::get_controlState(){
     return controlState;
 }
-void SpeedControl::change_to_regenerate(){
-    controlState = ControlStates::regenerate;
-    reference_speed = REGENERATIVE_SPEED_REF;
+void SpeedControl::change_mode(ControlStates state){
+    controlState = state;
 }

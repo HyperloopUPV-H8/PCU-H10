@@ -21,6 +21,6 @@ private:
     void set_reference_speed(float speed_ref);
     float get_reference_speed();
     ControlStates get_controlState();
-    void change_to_regenerate();
+    void change_mode(ControlStates state);
     void control_action();
 };
