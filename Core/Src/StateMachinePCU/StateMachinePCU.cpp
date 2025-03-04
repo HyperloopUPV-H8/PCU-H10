@@ -176,7 +176,7 @@ void StateMachinePCU::update(){
         StateMachinePCU::space_vector_on = true;
         StateMachinePCU::speed_control = true;
         currentControl->start();
-        Data->target_speed = Communication::speed_reference_received;
+        speedControl->set_reference_speed(Communication::speed_reference_received);
         speedControl->set_reference_speed(Communication::speed_reference_received);
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
     }
@@ -187,7 +187,7 @@ void StateMachinePCU::update(){
         StateMachinePCU::space_vector_on = true;
         StateMachinePCU::speed_control = true;
         currentControl->start();
-        Data->target_speed = Communication::speed_reference_received;
+        speedControl->set_reference_speed(Communication::speed_reference_received);
         speedControl->set_reference_speed(Communication::speed_reference_received);
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
     }

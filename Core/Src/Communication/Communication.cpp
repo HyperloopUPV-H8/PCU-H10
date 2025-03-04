@@ -96,6 +96,7 @@ Communication::Communication(Data_struct *data): Data(data),ControlStationSocket
     StateMachine_Packet = new HeapPacket(Communication_Data::STATE_MACHINE_PACKET,&Data->state_pcu,&Data->operational_state_pcu);
     Encoder_Packet = new HeapPacket(Communication_Data::ENCODER_PACKET,&Data->position,&Data->direction,&Data->speed,&Data->acceleration);
     Control_Speed_Packet = new HeapPacket(Communication_Data::CONTROL_SPEED_PACKET,&Data->target_speed,&Data->speed_error,&Data->actual_current_ref);
+    ControlState_Packet = new HeapPacket(Communication_Data::CONTROL_STATE_PACKET,&Data->currentState,&Data->speedState);
 }
 void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Pwm_packet);

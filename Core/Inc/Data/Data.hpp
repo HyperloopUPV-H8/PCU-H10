@@ -71,6 +71,7 @@ namespace Communication_Data{
     static constexpr uint16_t STATE_MACHINE_PACKET = 553;
     static constexpr uint16_t ENCODER_PACKET = 554;
     static constexpr uint16_t CONTROL_SPEED_PACKET = 555;
+    static constexpr uint16_t CONTROL_STATE_PACKET = 556;
 };
 namespace Current_Control_Data{
     static constexpr double kp_accelerate = 1.0;
@@ -143,4 +144,7 @@ struct Data_struct{
     float target_speed{};
     double speed_error{};
     float actual_current_ref{};
+    //control
+    ControlStates currentState{ControlStates::accelerate};
+    ControlStates speedState{ControlStates::accelerate};
 };

@@ -8,6 +8,7 @@ SpeedControl::SpeedControl(Data_struct *Data,CurrentControl *currentControl,Spac
 
 void SpeedControl::set_reference_speed(float speed_ref){
     reference_speed = speed_ref;
+    Data->target_speed = reference_speed;
 }
 float SpeedControl::get_reference_speed(){
     return reference_speed;
@@ -21,7 +22,7 @@ void SpeedControl::control_action(){
     double speed_error = reference_speed - Data->speed;
     Data->speed_error = speed_error;
     float actual_current_ref;
-    if(controlState == ControlStates::accelerate){
+    if(Data->speedState == ControlStates::accelerate){
         speed_PI.input(speed_error);
         speed_PI.execute(); 
         actual_current_ref = speed_PI.output_value;
@@ -34,13 +35,13 @@ void SpeedControl::control_action(){
     Data->actual_current_ref = actual_current_ref;
     currentControl->set_current_ref(actual_current_ref);
     //if we are in regenerate and we arrive to the max speed we change the reference speed to zero
-    if(controlState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed > reference_speed){
-        set_reference_speed(0.0);
+    if(Data->speedState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed > reference_speed){
+        set_reference_speed(REGENERATIVE_SPEED_REF);
     }
 }
 ControlStates SpeedControl::get_controlState(){
-    return controlState;
+    return Data->speedState;
 }
 void SpeedControl::change_mode(ControlStates state){
-    controlState = state;
+    Data->speedState = state;
 }

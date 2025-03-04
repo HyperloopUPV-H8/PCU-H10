@@ -46,7 +46,7 @@ void CurrentControl::control_action(){
     Data->current_Peak = current_peak;
     Data->current_error = current_error;
     
-    if(currentControlState == ControlStates::accelerate){
+    if(Data->currentState == ControlStates::accelerate){
         current_PI.input(current_error);
         current_PI.execute();
         target_voltage = current_PI.output_value;
@@ -72,5 +72,5 @@ bool CurrentControl::is_running(){
     return should_be_running;
 }
 void CurrentControl::change_mode(ControlStates state){
-    currentControlState = state;
+    Data->currentState = state;
 }

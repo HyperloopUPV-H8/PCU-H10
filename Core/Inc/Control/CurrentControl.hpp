@@ -66,7 +66,6 @@ private:
         Max_Peak current_v_b{Data->actual_current_sensor_v_b};
         Max_Peak current_W_b{Data->actual_current_sensor_w_b};
     #endif
-    ControlStates currentControlState{ControlStates::accelerate};
     bool should_be_running{false};
 
 public:

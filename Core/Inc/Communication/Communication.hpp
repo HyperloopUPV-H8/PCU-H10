@@ -32,6 +32,7 @@ class Communication{
         HeapPacket *StateMachine_Packet;
         HeapPacket *Encoder_Packet;
         HeapPacket *Control_Speed_Packet;
+        HeapPacket *ControlState_Packet;
     public:
         Communication(Data_struct *data);
         #if TEST_PWM

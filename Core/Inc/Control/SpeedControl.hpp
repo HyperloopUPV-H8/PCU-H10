@@ -14,8 +14,8 @@ private:
     CurrentControl *currentControl;
     SpaceVector *spaceVector;
     double calculate_frequency_modulation();
-    ControlStates controlState{ControlStates::accelerate};
-    public:
+
+public:
     float current_ref{};
     SpeedControl(Data_struct *Data,CurrentControl *currentControl,SpaceVector *spaceVector);
     void set_reference_speed(float speed_ref);
