@@ -15,7 +15,7 @@ float SpeedControl::get_reference_speed(){
     return reference_speed;
 }
 double SpeedControl::calculate_frequency_modulation(){
-    return a*Data->speed + b;
+    return (Data->speedState == ControlStates::accelerate) ? a*Data->speed + b : (a*Data->speed + b - Data->speed/1.2);
 }
 void SpeedControl::control_action(){
     if(!currentControl->is_running())  return;
