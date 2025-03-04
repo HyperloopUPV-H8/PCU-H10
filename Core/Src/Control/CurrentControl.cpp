@@ -74,3 +74,7 @@ bool CurrentControl::is_running(){
 void CurrentControl::change_mode(ControlStates state){
     Data->currentState = state;
 }
+void CurrentControl::reset_PI(){
+    current_PI.reset();
+    current_regenerate_PI.reset();
+}

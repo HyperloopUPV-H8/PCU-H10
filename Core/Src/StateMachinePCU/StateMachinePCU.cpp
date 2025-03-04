@@ -146,6 +146,7 @@ void StateMachinePCU::update(){
         StateMachinePCU::space_vector_on = false;
         StateMachinePCU::speed_control = false;
         currentControl->stop();
+        speedControl->reset_PI();
     }
     if(Communication::received_Precharge_order == true){
         Communication::received_Precharge_order = false;

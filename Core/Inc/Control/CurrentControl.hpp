@@ -78,4 +78,5 @@ public:
     void stop();
     bool is_running();
     void change_mode(ControlStates state);
+    void reset_PI();
 };

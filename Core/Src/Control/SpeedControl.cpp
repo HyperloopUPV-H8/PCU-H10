@@ -4,6 +4,7 @@
 SpeedControl::SpeedControl(Data_struct *Data,CurrentControl *currentControl,SpaceVector *spaceVector):
     Data(Data),currentControl(currentControl),spaceVector(spaceVector){
         speed_PI.reset();
+        regenerate_PI.reset();
     }
 
 void SpeedControl::set_reference_speed(float speed_ref){
@@ -44,4 +45,9 @@ ControlStates SpeedControl::get_controlState(){
 }
 void SpeedControl::change_mode(ControlStates state){
     Data->speedState = state;
+}
+void SpeedControl::reset_PI(){
+    speed_PI.reset();
+    regenerate_PI.reset();
+    currentControl->reset_PI();
 }

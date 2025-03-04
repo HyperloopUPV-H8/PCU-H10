@@ -23,4 +23,5 @@ public:
     ControlStates get_controlState();
     void change_mode(ControlStates state);
     void control_action();
+    void reset_PI();
 };
