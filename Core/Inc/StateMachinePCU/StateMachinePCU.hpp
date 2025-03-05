@@ -18,6 +18,8 @@ class StateMachinePCU{
         SpaceVector *spaceVectorControl;
         CurrentControl *currentControl;
         SpeedControl *speedControl;
+        bool execute_5khz_accelerating_flag{false};
+        bool send_upd_data_flag{false};
     public:
         static bool space_vector_on;
         static bool speed_control;

@@ -63,26 +63,21 @@ void StateMachinePCU::add_cyclic_actions(){
         Data->operational_state_pcu = operationalStateMachine->current_state;
     });
     Time::register_mid_precision_alarm(1000, [this](){
-        communication->send_UDP_packets();
+        send_upd_data_flag = true;
     });
     Time::register_mid_precision_alarm(200,[this](){
         sensors->read();
     });
-
-    operationalStateMachine->add_mid_precision_cyclic_action([this](){
-        currentControl->control_action();
-    },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+    operationalStateMachine->add_mid_precision_cyclic_action(
+        [this](){
+            execute_5khz_accelerating_flag = true;
+        },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
 
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
         if(speed_control){
             speedControl->control_action();
         }
     },us(Speed_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
-
-    operationalStateMachine->add_mid_precision_cyclic_action([this](){
-        spaceVectorControl->calculate_duties();
-    },us(spaceVectorControl->Period),Operational_State_PCU::Accelerating);
-
 }
 void StateMachinePCU::add_enter_actions(){
     operationalStateMachine->add_enter_action([this](){
@@ -222,5 +217,14 @@ void StateMachinePCU::update(){
             }
         }
     #endif
+    if(execute_5khz_accelerating_flag){
+        execute_5khz_accelerating_flag = false;
+        spaceVectorControl->calculate_duties();
+        currentControl->control_action();
+    }
+    if(send_upd_data_flag){
+        send_upd_data_flag = false;
+        communication->send_UDP_packets();
+    }
     stateMachine->check_transitions();
 }
