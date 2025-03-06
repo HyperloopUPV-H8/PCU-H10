@@ -69,9 +69,14 @@ void received_Complete_Run_callback(){
     Communication::received_Complete_Run_order = true;
 }
 
-Communication::Communication(Data_struct *data): Data(data),ControlStationSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER){
+Communication::Communication(Data_struct *data): Data(data){
+    #if CHILL_KEEPALIVES
+        ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER,1000,500,10);
+    #else
+        ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER);
+    #endif
     #if COMMUNICATION_HVSCU 
-        HVSCU_datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_HVSCU,Communication_Data::HVSCU_IP,Communication_Data::UDP_PORT);
+        HVSCU_datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_HVSCU,Communication_Data::HVSCU_IP,Communication_Data::UDP_PORT_HVSCU_SEND);
     #endif
     datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT);
     #if TEST_PWM
@@ -111,5 +116,5 @@ void Communication::send_UDP_packets(){
 }
 
 bool Communication::is_connected(){
-    return ControlStationSocket.is_connected();
+    return ControlStationSocket->is_connected();
 }

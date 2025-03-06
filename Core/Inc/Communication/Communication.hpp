@@ -4,7 +4,7 @@ class Communication{
     private:
         
         Data_struct *Data;
-        ServerSocket ControlStationSocket;
+        ServerSocket *ControlStationSocket;
         DatagramSocket *datagramSocket;
         #if COMMUNICATION_HVSCU 
         DatagramSocket *HVSCU_datagramSocket;
