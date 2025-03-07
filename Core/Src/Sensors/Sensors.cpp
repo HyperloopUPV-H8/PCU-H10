@@ -10,6 +10,6 @@ void Sensors::read(){
 void Sensors::start(){
     speetec.start();
 }
-void Sensors::read(){
+void Sensors::read_speetec(){
     speetec.read();
 }
