@@ -62,6 +62,9 @@ void StateMachinePCU::add_cyclic_actions(){
         Data->state_pcu = stateMachine->current_state;
         Data->operational_state_pcu = operationalStateMachine->current_state;
     });
+    Time::register_low_precision_alarm(1,[this](){
+        sensors->read_speetec();
+    });
     Time::register_mid_precision_alarm(1000, [this](){
         send_upd_data_flag = true;
     });

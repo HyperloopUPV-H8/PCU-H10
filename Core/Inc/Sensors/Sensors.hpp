@@ -12,5 +12,6 @@ class Sensors{
     CurrentSensors currentSensors;
     void read();
     void start();
+    void read_speetec();
      
 };
