@@ -4,6 +4,7 @@
 // 0 PPU connector A, 1 PPU connector B , 2 Both PPU
 #define PPU_USING 2
 #define COMMUNICATION_HVSCU 1
+#define COMMUNICATION_HVSCU 1
  // 0 = No communication, 1 = send packet with voltages 
 #define TEST_PWM 0 //0 = no test pwm, eliminate some orders, 1 = have every order for test single pwm
 #define CHILL_KEEPALIVES  1  //0 = agressive keepalives, 1 = chill keepalives
@@ -48,6 +49,7 @@ namespace Communication_Data{
     static constexpr uint32_t UDP_PORT_PCU = 50400;
     #if COMMUNICATION_HVSCU
     static constexpr uint32_t UDP_PORT_HVSCU_SEND = 50417;
+    static constexpr uint32_t UDP_PORT_HVSCU = 50417;
     static constexpr uint32_t UDP_PORT_HVSCU = 50417;
     const IPV4 HVSCU_IP = {"192.168.1.7"};
     #endif
