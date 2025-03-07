@@ -48,7 +48,7 @@ namespace Communication_Data{
     static constexpr uint32_t UDP_PORT_PCU = 50400;
     #if COMMUNICATION_HVSCU
     static constexpr uint32_t UDP_PORT_HVSCU_SEND = 50417;
-    static constexpr uint32_t UDP_PORT_HVSCU = 50800;
+    static constexpr uint32_t UDP_PORT_HVSCU = 50417;
     const IPV4 HVSCU_IP = {"192.168.1.7"};
     #endif
     //orders//
