@@ -95,7 +95,7 @@ Communication::Communication(Data_struct *data): Data(data){
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
     Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&Vmax_control_received);
     //packets
-    Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->actual_duty,&Data->buffer_enable);
+    Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->modulation_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
     Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_a,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->current_error,&Data->target_voltage,&Data->time);
     StateMachine_Packet = new HeapPacket(Communication_Data::STATE_MACHINE_PACKET,&Data->state_pcu,&Data->operational_state_pcu);

@@ -126,6 +126,7 @@ struct Data_struct{
     uint32_t actual_frequency{};
     float actual_duty{};
     BUFFER_ENABLE buffer_enable{};
+    uint32_t modulation_frequency{};
     //batteries
     float actual_voltage_battery_A{};
     float actual_voltage_battery_B{};

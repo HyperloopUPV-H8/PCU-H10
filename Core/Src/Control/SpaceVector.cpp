@@ -8,6 +8,7 @@ void SpaceVector::set_target_voltage(float V_ref){
 
 void SpaceVector::set_frequency_Modulation(uint32_t freq){
     Modulation_frequency = freq;
+    data->modulation_frequency = Modulation_frequency;
 }
 
 void SpaceVector::calculate_duties(){
