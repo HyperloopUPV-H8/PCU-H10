@@ -148,47 +148,52 @@ void StateMachinePCU::update(){
     }
     if(Communication::received_Precharge_order == true){
         Communication::received_Precharge_order = false;
-        StateMachinePCU::space_vector_on = true;
+       
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
+        //actions
         currentControl->stop();
+        StateMachinePCU::space_vector_on = true;
     }
     if(Communication::received_Current_reference_order == true){
-        currentControl->change_mode(ControlStates::accelerate);
         Communication::received_Current_reference_order = false;
-        speed_control = false;
+
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         currentControl->set_current_ref(Communication::current_reference_received);
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
+        //actions
+        speed_control = false;
         StateMachinePCU::space_vector_on = true;
+        currentControl->change_mode(ControlStates::accelerate);
         currentControl->start();
+        
     }
-    if(Communication::received_Speed_reference_order == true){
-        currentControl->change_mode(ControlStates::accelerate);
-        speedControl->change_mode(ControlStates::accelerate);
+    if(Communication::received_Speed_reference_order == true){ 
         Communication::received_Speed_reference_order = false;
-        speedControl->change_mode(ControlStates::accelerate);
-        currentControl->change_mode(ControlStates::accelerate);
-        StateMachinePCU::space_vector_on = true;
-        StateMachinePCU::speed_control = true;
-        currentControl->start();
-        speedControl->set_reference_speed(Communication::speed_reference_received);
+        
         speedControl->set_reference_speed(Communication::speed_reference_received);
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        //actions
+        currentControl->change_mode(ControlStates::accelerate);
+        speedControl->change_mode(ControlStates::accelerate); 
+        StateMachinePCU::space_vector_on = true;
+        currentControl->start();
+        StateMachinePCU::speed_control = true;
     }
     if(Communication::received_Complete_Run_order == true){
         Communication::received_Complete_Run_order = false;
-        speedControl->change_mode(ControlStates::regenerate);
-        currentControl->change_mode(ControlStates::regenerate);
-        StateMachinePCU::space_vector_on = true;
-        StateMachinePCU::speed_control = true;
-        currentControl->start();
-        speedControl->set_reference_speed(Communication::speed_reference_received);
+        
         speedControl->set_reference_speed(Communication::speed_reference_received);
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        //actions
+        currentControl->change_mode(ControlStates::regenerate);
+        speedControl->change_mode(ControlStates::regenerate);
+        StateMachinePCU::space_vector_on = true;
+        currentControl->start();
+        StateMachinePCU::speed_control = true;
     }
     if(Communication::received_zeroing_order == true){
         Communication::received_zeroing_order = false;

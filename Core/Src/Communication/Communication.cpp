@@ -91,9 +91,9 @@ Communication::Communication(Data_struct *data): Data(data){
     Stop_space_vector = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_space_vector_callback);
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received);
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
-    Speed_reference_Order = new HeapOrder(Communication_Data::SPEED_REFERENCE_ORDER,&received_speed_reference_callback,&speed_reference_received,&frequency_received);
+    Speed_reference_Order = new HeapOrder(Communication_Data::SPEED_REFERENCE_ORDER,&received_speed_reference_callback,&speed_reference_received,&frequency_received,&Vmax_control_received);
     Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&Vmax_control_received);
-    Complete_Run_order = new HeapOrder(Communication_Data::MAKE_COMPLETE_RUN_ORDER,&received_Complete_Run_callback,&speed_reference_received,&frequency_received);
+    Complete_Run_order = new HeapOrder(Communication_Data::MAKE_COMPLETE_RUN_ORDER,&received_Complete_Run_callback,&speed_reference_received,&frequency_received,&Vmax_control_received);
     //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
