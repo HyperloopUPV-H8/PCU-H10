@@ -124,9 +124,10 @@ enum Direction{
 struct Data_struct{
     PWM_ACTIVE pwm_active{};
     uint32_t actual_frequency{};
+    uint32_t modulation_frequency{};
     float actual_duty{};
     BUFFER_ENABLE buffer_enable{};
-    uint32_t modulation_frequency{};
+    
     //batteries
     float actual_voltage_battery_A{};
     float actual_voltage_battery_B{};

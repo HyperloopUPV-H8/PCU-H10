@@ -57,7 +57,9 @@ void CurrentControl::control_action(){
         target_voltage = current_regenerate_PI.output_value;
     }
 
-    Data->target_voltage = (target_voltage <= spaceVector->VMAX) ? target_voltage : spaceVector->VMAX;
+    Data->target_voltage = (target_voltage <= spaceVector->VMAX) ? 
+                            (target_voltage < 0.0) ? 0.0 : target_voltage 
+                            : spaceVector->VMAX;
     spaceVector->set_target_voltage(Data->target_voltage);
 }
 

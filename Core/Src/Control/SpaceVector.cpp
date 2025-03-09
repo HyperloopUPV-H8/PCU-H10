@@ -2,6 +2,7 @@
 SpaceVector::SpaceVector(Three_Phased_PWM *three_pwm_class, Data_struct *data): three_pwm(three_pwm_class), data(data) {}
 
 void SpaceVector::set_target_voltage(float V_ref){
+    if(V_ref < 0) V_ref = 0;
     Imodulation = V_ref * 2.0 / VMAX;
     if (Imodulation >= IMAX) Imodulation = IMAX;
 }
