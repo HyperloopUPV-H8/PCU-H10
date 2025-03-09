@@ -5,6 +5,7 @@ void SpaceVector::set_target_voltage(float V_ref){
     if(V_ref < 0) V_ref = 0;
     Imodulation = V_ref * 2.0 / VMAX;
     if (Imodulation >= IMAX) Imodulation = IMAX;
+    data->imod = Imodulation;
 }
 
 void SpaceVector::set_frequency_Modulation(uint32_t freq){
