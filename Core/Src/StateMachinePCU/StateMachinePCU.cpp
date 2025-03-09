@@ -176,6 +176,7 @@ void StateMachinePCU::update(){
         
         speedControl->set_reference_speed(Communication::speed_reference_received);
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         //actions
         currentControl->change_mode(ControlStates::accelerate);
         speedControl->change_mode(ControlStates::accelerate); 
@@ -185,9 +186,10 @@ void StateMachinePCU::update(){
     }
     if(Communication::received_Complete_Run_order == true){
         Communication::received_Complete_Run_order = false;
-        
+
         speedControl->set_reference_speed(Communication::speed_reference_received);
         three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         //actions
         currentControl->change_mode(ControlStates::regenerate);
         speedControl->change_mode(ControlStates::regenerate);
