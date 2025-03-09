@@ -12,4 +12,5 @@ void Sensors::start(){
 }
 void Sensors::read_speetec(){
     speetec.read();
+    data->speed_km_h_encoder = 3.6*data->speed_encoder;
 }

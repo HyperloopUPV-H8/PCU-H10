@@ -15,12 +15,12 @@ float SpeedControl::get_reference_speed(){
     return reference_speed;
 }
 double SpeedControl::calculate_frequency_modulation(){
-    return (Data->speedState == ControlStates::accelerate) ? a*Data->speed + b : (a*Data->speed + b - Data->speed/1.2);
+    return (Data->speedState == ControlStates::accelerate) ? a*Data->speed_km_h_encoder + b : (a*Data->speed_km_h_encoder + b - Data->speed_km_h_encoder/1.2);
 }
 void SpeedControl::control_action(){
     if(!currentControl->is_running())  return;
     spaceVector->set_frequency_Modulation(calculate_frequency_modulation());
-    double speed_error = reference_speed - 3.6*Data->speed;
+    double speed_error = reference_speed - Data->speed_km_h_encoder;
     Data->speed_error = speed_error;
     float actual_current_ref;
     if(Data->speedState == ControlStates::accelerate){
@@ -36,7 +36,7 @@ void SpeedControl::control_action(){
     Data->actual_current_ref = actual_current_ref;
     currentControl->set_current_ref(actual_current_ref);
     //if we are in regenerate and we arrive to the max speed we change the reference speed to zero
-    if(Data->speedState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed > reference_speed){
+    if(Data->speedState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed_km_h_encoder > reference_speed){
         set_reference_speed(REGENERATIVE_SPEED_REF);
     }
 }

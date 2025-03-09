@@ -117,6 +117,10 @@ enum ControlStates{
     accelerate,
     regenerate
 };
+enum Direction{
+    Forward,
+    Backward
+};
 struct Data_struct{
     PWM_ACTIVE pwm_active{};
     uint32_t actual_frequency{};
@@ -139,10 +143,11 @@ struct Data_struct{
     double target_voltage{};
     float time{};
     //encoder
-    double position{};
-    bool direction{};
-    double speed{};
-    double acceleration{};
+    double position_encoder{};
+    bool direction_encoder{};
+    double speed_encoder{};
+    double acceleration_encoder{};
+    double speed_km_h_encoder{};
     //speed
     float target_speed{};
     double speed_error{};
@@ -150,4 +155,5 @@ struct Data_struct{
     //control
     ControlStates currentState{ControlStates::accelerate};
     ControlStates speedState{ControlStates::accelerate};
+    Direction Stablished_direction{Direction::Forward};
 };
