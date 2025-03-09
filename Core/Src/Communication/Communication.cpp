@@ -101,7 +101,7 @@ Communication::Communication(Data_struct *data): Data(data){
     StateMachine_Packet = new HeapPacket(Communication_Data::STATE_MACHINE_PACKET,&Data->state_pcu,&Data->operational_state_pcu);
     Encoder_Packet = new HeapPacket(Communication_Data::ENCODER_PACKET,&Data->position_encoder,&Data->direction_encoder,&Data->speed_encoder,&Data->acceleration_encoder);
     Control_Speed_Packet = new HeapPacket(Communication_Data::CONTROL_SPEED_PACKET,&Data->target_speed,&Data->speed_error,&Data->actual_current_ref);
-    ControlState_Packet = new HeapPacket(Communication_Data::CONTROL_STATE_PACKET,&Data->currentState,&Data->speedState);
+    ControlState_Packet = new HeapPacket(Communication_Data::CONTROL_STATE_PACKET,&Data->Stablished_direction,&Data->currentState,&Data->speedState);
 }
 void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Pwm_packet);
