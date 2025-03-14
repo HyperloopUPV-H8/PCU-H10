@@ -44,8 +44,11 @@ void StateMachinePCU::add_transitions(){
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Operational,[this](){
         return communication->is_connected();
     });
+    stateMachine->add_transition(State_PCU::Connecting,State_PCU::Fault,[this](){
+        return Data->actual_voltage_battery_A > 270.0 || Data->actual_voltage_battery_B >270.0;
+    });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
-        return !communication->is_connected();
+        return !communication->is_connected() || Data->actual_voltage_battery_A > 270.0 || Data->actual_voltage_battery_B >270.0;
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Sending_PWM,[this](){
         return (Data->pwm_active != PWM_ACTIVE::NONE && Data->buffer_enable == BUFFER_ENABLE::ON);
