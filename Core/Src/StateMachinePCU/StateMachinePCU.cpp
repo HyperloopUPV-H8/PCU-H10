@@ -17,7 +17,6 @@ speedControl(speedControl)
     add_enter_actions();
     add_transitions();
     add_exit_actions();
-    
 }
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
@@ -33,6 +32,11 @@ void StateMachinePCU::add_states(){
     operationalStateMachine->add_state(Operational_State_PCU::Sending_PWM);
     operationalStateMachine->add_state(Operational_State_PCU::Accelerating);
     stateMachine->add_state_machine(*operationalStateMachine,State_PCU::Operational);
+
+        //protections
+        ProtectionManager::link_state_machine(*stateMachine,State_PCU::Fault);
+        add_protection(&Data->actual_voltage_battery_A,Boundary<float,ABOVE>(270.0));
+        add_protection(&Data->actual_voltage_battery_B,Boundary<float,ABOVE>(270.0));
 
 }
 void StateMachinePCU::add_transitions(){
