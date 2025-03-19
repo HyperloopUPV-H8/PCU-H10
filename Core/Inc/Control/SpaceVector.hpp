@@ -7,7 +7,7 @@ class SpaceVector{
         float Imodulation;
         uint32_t Modulation_frequency;
         
-        static constexpr float IMAX = 1.1547;
+        static constexpr float IMAX = 0.5;
 
         Data_struct *data;
     public:
