@@ -17,7 +17,7 @@ void SpaceVector::set_frequency_Modulation(uint32_t freq) {
 }
 
 void SpaceVector::calculate_duties() {
-#if MODE_CALCULATE_SIN == 1
+#if MODE_CALCULATE_SIN == 0
     float sin_u_prueba = Imodulation * sin(2.0f * M_PI * Modulation_frequency * time);
     float sin_v_prueba = Imodulation *
                   sin(2.0f * M_PI * Modulation_frequency * time + 2 * M_PI / 3);
