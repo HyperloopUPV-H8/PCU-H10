@@ -143,6 +143,7 @@ struct Data_struct{
     double current_Peak{};
     double target_voltage{};
     float time{};
+    float imod{};
     //encoder
     double position_encoder{};
     bool direction_encoder{};

@@ -1,6 +1,6 @@
 #include "StateMachinePCU/StateMachinePCU.hpp"
 #define MODULATION_FREQUENCY_DEFAULT 10
-
+#define Protecction_Voltage 270.0
 bool StateMachinePCU::space_vector_on = false;
 bool StateMachinePCU::speed_control = false;
 StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl,SpeedControl *speedControl):
@@ -17,7 +17,6 @@ speedControl(speedControl)
     add_enter_actions();
     add_transitions();
     add_exit_actions();
-    
 }
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
@@ -34,14 +33,22 @@ void StateMachinePCU::add_states(){
     operationalStateMachine->add_state(Operational_State_PCU::Accelerating);
     stateMachine->add_state_machine(*operationalStateMachine,State_PCU::Operational);
 
+        //protections
+        ProtectionManager::link_state_machine(*stateMachine,State_PCU::Fault);
+        add_protection(&Data->actual_voltage_battery_A,Boundary<float,ABOVE>(Protecction_Voltage));
+        add_protection(&Data->actual_voltage_battery_B,Boundary<float,ABOVE>(Protecction_Voltage));
+
 }
 void StateMachinePCU::add_transitions(){
 
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Operational,[this](){
         return communication->is_connected();
     });
+    stateMachine->add_transition(State_PCU::Connecting,State_PCU::Fault,[this](){
+        return Data->actual_voltage_battery_A > Protecction_Voltage || Data->actual_voltage_battery_B >Protecction_Voltage;
+    });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
-        return !communication->is_connected();
+        return !communication->is_connected() || Data->actual_voltage_battery_A > Protecction_Voltage || Data->actual_voltage_battery_B >Protecction_Voltage;
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Sending_PWM,[this](){
         return (Data->pwm_active != PWM_ACTIVE::NONE && Data->buffer_enable == BUFFER_ENABLE::ON);
