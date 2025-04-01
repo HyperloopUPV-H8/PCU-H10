@@ -27,13 +27,16 @@ class Communication{
         HeapOrder *Complete_Run_order;
         //packets//
         HeapPacket *Pwm_packet;
-        HeapPacket *batteries_Packet;
         HeapPacket *Current_sensor_Packet;
         HeapPacket *StateMachine_Packet;
         HeapPacket *Encoder_Packet;
         HeapPacket *Control_Speed_Packet;
         HeapPacket *ControlState_Packet;
     public:
+        #if COMMUNICATION_HVSCU 
+        DatagramSocket *HVSCU_datagramSocket;
+        #endif
+        HeapPacket *batteries_Packet;
         Communication(Data_struct *data);
         #if TEST_PWM
             static bool received_enable_buffer;

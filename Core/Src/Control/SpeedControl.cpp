@@ -36,7 +36,7 @@ void SpeedControl::control_action(){
     Data->actual_current_ref = actual_current_ref;
     currentControl->set_current_ref(actual_current_ref);
     //if we are in regenerate and we arrive to the max speed we change the reference speed to zero
-    if(Data->speedState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed_km_h_encoder > reference_speed){
+    if(Data->speedState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed_km_h_encoder > reference_speed - 0.5){
         set_reference_speed(REGENERATIVE_SPEED_REF);
     }
 }
