@@ -18,22 +18,22 @@ void SpaceVector::set_frequency_Modulation(uint32_t freq) {
 
 void SpaceVector::calculate_duties() {
 #if MODE_CALCULATE_SIN == 0
-    float sin_u_prueba = Imodulation * sin(2.0f * M_PI * Modulation_frequency * time);
-    float sin_v_prueba = Imodulation *
-                  sin(2.0f * M_PI * Modulation_frequency * time + 2 * M_PI / 3);
-    float sin_w_prueba = Imodulation *
-                  sin(2.0f * M_PI * Modulation_frequency * time - 2 * M_PI / 3);
+    float sin_u = Imodulation * sin(2.0f * M_PI * Modulation_frequency * time);
+    float sin_v = Imodulation * sin(2.0f * M_PI * Modulation_frequency * time + 2 * M_PI / 3);
+    float sin_w = Imodulation * sin(2.0f * M_PI * Modulation_frequency * time - 2 * M_PI / 3);
 #endif
 #if MODE_CALCULATE_SIN == 1
     float sin_u = calculate_sin_phase(phase::U);
     float sin_v = calculate_sin_phase(phase::V);
     float sin_w = calculate_sin_phase(phase::W);
 #endif
-    float offset =  (std::max({sin_u, sin_v, sin_w}) + std::min({sin_u, sin_v, sin_w})) / 2;
 
+#if ARMONIC_INJECTION == 1
+    float offset =  (std::max({sin_u, sin_v, sin_w}) + std::min({sin_u, sin_v, sin_w})) / 2;
     sin_u -= offset;
     sin_v -= offset;
     sin_w -= offset;
+#endif
 
     if (data->Stablished_direction == Direction::FORWARD){
         actuators->set_duty_u((sin_u / 2.0 + 0.5) * 100.0);
