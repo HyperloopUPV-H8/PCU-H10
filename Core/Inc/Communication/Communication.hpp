@@ -15,6 +15,8 @@ class Communication{
             HeapOrder *Disable_Buffer_Order;
             HeapOrder *Send_pwm_Order;
             HeapOrder *Stop_pwm_Order;
+            HeapOrder *Disable_Reset;
+            HeapOrder *Enable_Reset;
         #endif   
         HeapOrder *Start_space_vector;
         HeapOrder *Stop_space_vector;
@@ -41,6 +43,8 @@ class Communication{
             static bool received_disable_buffer;
             static bool received_pwm_order;
             static bool received_stop_pwm_order;
+            static bool received_disable_reset;
+            static bool received_enable_reset;
         #endif
         static bool received_activate_space_vector;
         static bool received_stop_space_vector;

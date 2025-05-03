@@ -16,6 +16,7 @@ namespace Pinout{
     static constexpr Pin& W_PWM_NEGATED = PE12;
 
     static constexpr Pin& ENABLE_BUFFER = PF4; 
+    static constexpr Pin& Reset = PB7;
     static constexpr Pin& Batt_Voltage_A = PF3;
     static constexpr Pin& Batt_Voltage_B = PF5;
     static constexpr Pin& LED_COMMUTATION = PG6;

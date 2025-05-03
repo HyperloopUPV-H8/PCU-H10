@@ -9,11 +9,12 @@ class Actuators{
         DualPWM V_Dual;
         DualPWM W_Dual;
         DigitalOutput Enable; // the logic is negated
+        DigitalOutput Reset;
         Data_struct *data;
     public:
         DigitalOutput Led_Commutation{Pinout::LED_COMMUTATION};
         DigitalOutput Led_fault{Pinout::LED_FAULT};
-        Actuators(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Data_struct *data);
+        Actuators(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Data_struct *data);
         void start();
         void stop_all();
         void enable();
@@ -38,4 +39,6 @@ class Actuators{
         void turn_off_v();
         void turn_off_w();
         void turn_off_active_pwm();
+        void Disable_reset();
+        void Enable_reset();
 };
