@@ -247,6 +247,7 @@ map<Pin, ADC::Instance> ADC::available_instances = {
     {PF12, Instance(&peripherals[0], ADC_CHANNEL_6)},
     {PF13, Instance(&peripherals[1], ADC_CHANNEL_2)},
     {PF14, Instance(&peripherals[1], ADC_CHANNEL_6)},
+    {PF3, Instance(&peripherals[2], ADC_CHANNEL_5)},
     {PF5, Instance(&peripherals[2], ADC_CHANNEL_4)},
     {PF6, Instance(&peripherals[2], ADC_CHANNEL_8)},
     {PF7, Instance(&peripherals[2], ADC_CHANNEL_3)},
