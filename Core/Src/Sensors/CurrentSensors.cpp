@@ -25,6 +25,7 @@ void CurrentSensors::zeroing(){
     sensor_v_b.set_offset(sensor_v_b.get_offset()-new_offset_v_b);
     sensor_w_a.set_offset(sensor_w_a.get_offset()-new_offset_w_a);
     sensor_w_b.set_offset(sensor_w_b.get_offset()-new_offset_w_b);
+    Watchdog::refresh();
 }
 void CurrentSensors::read(){
     sensor_u_a.read();
