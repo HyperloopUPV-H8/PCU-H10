@@ -104,13 +104,14 @@ Communication::Communication(Data_struct *data): Data(data){
     ControlState_Packet = new HeapPacket(Communication_Data::CONTROL_STATE_PACKET,&Data->Stablished_direction,&Data->currentState,&Data->speedState);
 }
 void Communication::send_UDP_packets(){
-    datagramSocket->send_packet(*Pwm_packet);
+   datagramSocket->send_packet(*Pwm_packet);
     datagramSocket->send_packet(*batteries_Packet);
     datagramSocket->send_packet(*Current_sensor_Packet);
-    datagramSocket->send_packet(*StateMachine_Packet);
+    
     datagramSocket->send_packet(*Encoder_Packet);
     datagramSocket->send_packet(*Control_Speed_Packet);
-    datagramSocket->send_packet(*ControlState_Packet);
+    datagramSocket->send_packet(*StateMachine_Packet);
+    datagramSocket->send_packet(*ControlState_Packet); 
     #if COMMUNICATION_HVSCU 
         HVSCU_datagramSocket->send_packet(*batteries_Packet);
     #endif

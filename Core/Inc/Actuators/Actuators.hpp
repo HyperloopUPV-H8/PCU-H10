@@ -14,6 +14,7 @@ class Actuators{
     public:
         DigitalOutput Led_Commutation{Pinout::LED_COMMUTATION};
         DigitalOutput Led_fault{Pinout::LED_FAULT};
+        DigitalOutput Led_Operational{Pinout::LED_OPERATIONAL};
         Actuators(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Data_struct *data);
         void start();
         void stop_all();

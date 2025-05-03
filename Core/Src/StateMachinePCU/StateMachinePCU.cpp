@@ -34,7 +34,7 @@ void StateMachinePCU::add_states(){
     stateMachine->add_state_machine(*operationalStateMachine,State_PCU::Operational);
 
         //protections
-        ProtectionManager::link_state_machine(*stateMachine,State_PCU::Fault);
+       ProtectionManager::link_state_machine(*stateMachine,State_PCU::Fault);
         add_protection(&Data->actual_voltage_battery_A,Boundary<float,ABOVE>(Protecction_Voltage));
         add_protection(&Data->actual_voltage_battery_B,Boundary<float,ABOVE>(Protecction_Voltage));
 }
@@ -63,19 +63,16 @@ void StateMachinePCU::add_transitions(){
     });
 }
 void StateMachinePCU::add_cyclic_actions(){
-
     Time::register_low_precision_alarm(100,[this](){
         Data->state_pcu = stateMachine->current_state;
         Data->operational_state_pcu = operationalStateMachine->current_state;
-    });
-    Time::register_low_precision_alarm(10,[this](){
-        sensors->read_speetec();
     });
     Time::register_mid_precision_alarm(1000, [this](){
         send_upd_data_flag = true;
     });
     Time::register_mid_precision_alarm(Sensors_data::read_sensors_us,[this](){
         sensors->read();
+        sensors->read_speetec();
     });
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){
@@ -95,16 +92,21 @@ void StateMachinePCU::add_enter_actions(){
         actuators->Enable_reset();
     },Operational_State_PCU::Accelerating);
 
-    operationalStateMachine->add_enter_action([this](){
+    stateMachine->add_enter_action([this](){
         sensors->currentSensors.zeroing();
+        actuators->Led_Operational.turn_on();
     },State_PCU::Operational);
 
+    stateMachine->add_enter_action([this]() {
+           actuators->stop_all();
+    },State_PCU::Fault);
 }
 void StateMachinePCU::add_exit_actions(){
     stateMachine->add_exit_action([this](){
         actuators->stop_all();
         actuators->Led_fault.turn_on();
         actuators->Led_Commutation.turn_off();
+        actuators->Led_Operational.turn_off();
     },State_PCU::Operational);
     
     operationalStateMachine->add_exit_action([this](){
