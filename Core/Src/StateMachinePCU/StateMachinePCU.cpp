@@ -93,7 +93,6 @@ void StateMachinePCU::add_enter_actions(){
     operationalStateMachine->add_enter_action([this](){
         actuators->Led_Commutation.turn_on();
         actuators->enable();
-        actuators->Enable_reset();
     },Operational_State_PCU::Accelerating);
 
     operationalStateMachine->add_enter_action([this](){
@@ -126,14 +125,6 @@ void StateMachinePCU::update(){
         if(Communication::received_stop_pwm_order == true){
             Communication::received_stop_pwm_order = false;
             actuators->stop_all();
-        }
-        if(Communication::received_disable_reset == true){
-            Communication::received_disable_reset = false;
-            actuators->Disable_reset();
-        }
-        else if(Communication::received_enable_reset == true){
-            Communication::received_enable_reset = false;
-            actuators->Enable_reset();
         }
     #endif
 

@@ -2,12 +2,11 @@
 using namespace std::chrono_literals;
 
 Actuators::Actuators(Pin& u, Pin& u_negated, Pin& v, Pin& v_negated, Pin& w,
-                     Pin& w_negated, Pin& enable, Pin& reset, Data_struct* data)
+                     Pin& w_negated, Pin& enable, Data_struct* data)
     : U_Dual(u, u_negated),
       V_Dual(v, v_negated),
       W_Dual(w, w_negated),
       Enable(enable),
-      Reset(reset),
       data(data) {}
 void Actuators::start() {
     U_Dual.set_frequency(initial_frequency);
@@ -24,8 +23,6 @@ void Actuators::start() {
     W_Dual.turn_on();
 
     Enable.turn_on();  // works Active low
-    Enable_reset();    // has to be active to work
-
     data->pwm_active = PWM_ACTIVE::NONE;
     data->actual_duty = 0;
     data->actual_frequency = 0.0;
@@ -35,7 +32,6 @@ void Actuators::stop_all() {
     V_Dual.set_duty_cycle(0.0);
     W_Dual.set_duty_cycle(0.0);
     disable();
-    Disable_reset();
 }
 void Actuators::disable() {
     Enable.turn_on();
@@ -138,9 +134,6 @@ void Actuators::turn_off_active_pwm() {
             turn_off_w();
     }
 }
-void Actuators::Disable_reset() { Reset.turn_off(); }
-void Actuators::Enable_reset() { Reset.turn_on(); }
-
 void Actuators::set_three_frequencies(uint32_t frequency) {
     U_Dual.set_frequency(frequency);
     V_Dual.set_frequency(frequency);

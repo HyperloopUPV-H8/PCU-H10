@@ -15,7 +15,7 @@ int main(void) {
 #endif
     Data_struct Data;
     Sensors sensors(&Data);
-    Actuators actuators(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,Pinout::Reset,&Data);
+    Actuators actuators(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,&Data);
     SpaceVector spaceVec(&actuators, &Data);
     CurrentControl currentControl(&Data,&spaceVec);
     SpeedControl speedControl(&Data,&currentControl,&spaceVec);
