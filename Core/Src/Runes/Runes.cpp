@@ -1,4 +1,5 @@
 #include "HALAL/HALAL.hpp"
+#include "../../Inc/Data/Data.hpp"
 
 DMA_HandleTypeDef hdma_adc1;
 DMA_HandleTypeDef hdma_adc2;
@@ -175,6 +176,7 @@ vector<reference_wrapper<TimerPeripheral>> TimerPeripheral::timers = {
 
 #define NORMAL TimerPeripheral::PWM_MODE::NORMAL
 #define PHASED TimerPeripheral::PWM_MODE::PHASED
+#define CENTER_ALIGNED TimerPeripheral::PWM_MODE::CENTER_ALIGNED
 
 PWMmap TimerPeripheral::available_pwm = {
     {PB14, {timer12, {TIM_CHANNEL_1, NORMAL}}},
@@ -194,10 +196,16 @@ PWMmap TimerPeripheral::available_pwm = {
 DualPWMmap TimerPeripheral::available_dual_pwms = {
     {{PB8, PB6}, {timer16, {TIM_CHANNEL_1, NORMAL}}},
     {{PB9, PB7}, {timer17, {TIM_CHANNEL_1, PHASED}}},
+#if MOTOR_CENTER_ALIGNED == 1
+    {{PE11, PE10}, {timer1, {TIM_CHANNEL_2, CENTER_ALIGNED}}},
+    {{PE13, PE12}, {timer1, {TIM_CHANNEL_3, CENTER_ALIGNED}}},
+    {{PE9, PE8}, {timer1, {TIM_CHANNEL_1, CENTER_ALIGNED}}},
+#else
     {{PE11, PE10}, {timer1, {TIM_CHANNEL_2, NORMAL}}},
     {{PE13, PE12}, {timer1, {TIM_CHANNEL_3, NORMAL}}},
-    {{PE5, PE4}, {timer15, {TIM_CHANNEL_1, NORMAL}}},
     {{PE9, PE8}, {timer1, {TIM_CHANNEL_1, NORMAL}}},
+#endif
+    {{PE5, PE4}, {timer15, {TIM_CHANNEL_1, NORMAL}}}
 };
 
 #endif

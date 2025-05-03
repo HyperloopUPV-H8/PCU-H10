@@ -1,12 +1,14 @@
 #pragma once
 #include "ST-LIB.hpp"
 //configuraciones
+//TODO : PASS the configuration to a config file
 #define PPU_USING 2     // 0 PPU connector A, 1 PPU connector B , 2 Both PPU
 #define COMMUNICATION_HVSCU 0   // 0 = No communication, 1 = send packet with voltages 
 #define TEST_PWM 0 //0 = no test pwm, eliminate some orders, 1 = have every order for test single pwm
 #define CHILL_KEEPALIVES  1  //0 = agressive keepalives, 1 = chill keepalives
 #define MODE_CALCULATE_SIN 0 //0 = Normal sin, 1 = Look Up table with direct interpolation
 #define ARMONIC_INJECTION 1 // 0 = NO armonic injection, 1 = Armonic injection active
+#define MOTOR_CENTER_ALIGNED 0 // 0 = Normal dualPWM, 1 = CenterAligned DualPWM
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8; 
