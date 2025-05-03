@@ -8,23 +8,25 @@
 #define MODE_CALCULATE_SIN 1 //0 = Normal sin, 1 = Look Up table with direct interpolation
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
-    static constexpr Pin& U_PWM_NEGATED = PE8;
-    static constexpr Pin& W_PWM = PE13;
-    static constexpr Pin& W_PWM_NEGATED = PE12;
+    static constexpr Pin& U_PWM_NEGATED = PE8; 
     static constexpr Pin& V_PWM = PE11;
     static constexpr Pin& V_PWM_NEGATED = PE10; 
+    static constexpr Pin& W_PWM = PE13;
+    static constexpr Pin& W_PWM_NEGATED = PE12;
+
     static constexpr Pin& ENABLE_BUFFER = PF4; 
-    static constexpr Pin& Reset = PE15;
-    static constexpr Pin& Batt_Voltage_A = PF11;
-    static constexpr Pin& Batt_Voltage_B = PF12;
-    static constexpr Pin& LED_COMMUTION = PG6;
+    static constexpr Pin& Reset = PB7;
+    static constexpr Pin& Batt_Voltage_A = PF3;
+    static constexpr Pin& Batt_Voltage_B = PF5;
+    static constexpr Pin& LED_COMMUTATION = PG6;
     static constexpr Pin& LED_FAULT = PG7;
+    static constexpr Pin& LED_OPERATIONAL = PG8;
     //current sensors
     static constexpr Pin& CURRENT_SENSOR_U_A = PA0;
-    static constexpr Pin& CURRENT_SENSOR_U_B = PB0;
+    static constexpr Pin& CURRENT_SENSOR_U_B = PA6;
     static constexpr Pin& CURRENT_SENSOR_V_A = PA4;
-    static constexpr Pin& CURRENT_SENSOR_V_B = PA6;
-    static constexpr Pin& CURRENT_SENSOR_W_A =PA5;
+    static constexpr Pin& CURRENT_SENSOR_V_B = PB0;
+    static constexpr Pin& CURRENT_SENSOR_W_A = PA5;
     static constexpr Pin& CURRENT_SENSOR_W_B = PB1;
     //Speetec
     static constexpr Pin& ENCODER_A = PF1;

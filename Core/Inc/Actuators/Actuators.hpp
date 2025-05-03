@@ -12,7 +12,7 @@ class Actuators{
         DigitalOutput Reset;
         Data_struct *data;
     public:
-        DigitalOutput Led_Commutation{Pinout::LED_COMMUTION};
+        DigitalOutput Led_Commutation{Pinout::LED_COMMUTATION};
         DigitalOutput Led_fault{Pinout::LED_FAULT};
         Actuators(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Data_struct *data);
         void start();
