@@ -1,6 +1,16 @@
 #include "Sensors/Sensors.hpp"
 
-Sensors::Sensors(Data_struct *data):data(data),currentSensors(data){}
+Sensors::Sensors(Data_struct *data): 
+speetec( Pinout::ENCODER_B,
+        Pinout::ENCODER_A,
+        Sensors_data::encoder_counter_distance_m,
+        Sensors_data::encoder_sample_time_s,
+        &data->direction_encoder,
+        &data->position_encoder,
+        &data->speed_encoder,
+        &data->acceleration_encoder),
+data(data), 
+currentSensors(data) {}
 
 void Sensors::read(){
     currentSensors.read();
@@ -8,7 +18,7 @@ void Sensors::read(){
     sensor_voltage_B.read();
 }
 void Sensors::start(){
-    speetec.start();
+    speetec.turn_on();
 }
 void Sensors::read_speetec(){
     speetec.read();

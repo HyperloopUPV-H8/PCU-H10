@@ -75,7 +75,7 @@ void StateMachinePCU::add_cyclic_actions(){
     Time::register_mid_precision_alarm(1000, [this](){
         send_upd_data_flag = true;
     });
-    Time::register_mid_precision_alarm(200,[this](){
+    Time::register_mid_precision_alarm(Sensors_data::read_sensors_us,[this](){
         sensors->read();
     });
     operationalStateMachine->add_mid_precision_cyclic_action(

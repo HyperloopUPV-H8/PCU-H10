@@ -37,6 +37,11 @@ namespace Sensors_data{
     
     static constexpr float slope_voltage_sensor = 133.31627;
     static constexpr float offset_voltage_sensor = -9.24655;
+
+    static constexpr uint32_t read_sensors_us = 200; 
+    static constexpr double encoder_sample_time_s =  static_cast<double>(read_sensors_us)/1e6; // this has to be the same frequency that the read is done
+    static constexpr double encoder_counter_distance_m = 0.0001;
+    static constexpr size_t  encoder_samples = 250;
 };
 
 namespace Communication_Data{
@@ -117,10 +122,7 @@ enum ControlStates{
     accelerate,
     regenerate
 };
-enum Direction{
-    Forward,
-    Backward
-};
+ using Direction = EncoderSensor<Sensors_data::encoder_samples>::Direction;
 struct Data_struct{
     PWM_ACTIVE pwm_active{};
     uint32_t actual_frequency{};
@@ -147,7 +149,7 @@ struct Data_struct{
     float imod{};
     //encoder
     double position_encoder{};
-    bool direction_encoder{};
+    Direction direction_encoder{};
     double speed_encoder{};
     double acceleration_encoder{};
     double speed_km_h_encoder{};
@@ -158,5 +160,5 @@ struct Data_struct{
     //control
     ControlStates currentState{ControlStates::accelerate};
     ControlStates speedState{ControlStates::accelerate};
-    Direction Stablished_direction{Direction::Forward};
+    Direction Stablished_direction{Direction::FORWARD};
 };

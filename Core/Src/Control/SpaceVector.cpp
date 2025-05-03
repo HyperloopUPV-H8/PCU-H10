@@ -35,7 +35,7 @@ void SpaceVector::calculate_duties() {
     sin_v -= offset;
     sin_w -= offset;
 
-    if (data->Stablished_direction == Direction::Forward) {
+    if (data->Stablished_direction == Direction::FORWARD){
         actuators->set_duty_u((sin_u / 2.0 + 0.5) * 100.0);
         actuators->set_duty_v((sin_v / 2.0 + 0.5) * 100.0);
     } else {
