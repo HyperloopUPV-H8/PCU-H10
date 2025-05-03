@@ -1,6 +1,6 @@
 #include "StateMachinePCU/StateMachinePCU.hpp"
 #define MODULATION_FREQUENCY_DEFAULT 10
-#define Protecction_Voltage 270.0
+#define Protecction_Voltage 320.0
 bool StateMachinePCU::space_vector_on = false;
 bool StateMachinePCU::speed_control = false;
 StateMachinePCU::StateMachinePCU(Data_struct *data, Actuators *actuators,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl,SpeedControl *speedControl):
