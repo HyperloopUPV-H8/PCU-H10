@@ -6,7 +6,7 @@
 #include "ST-LIB.hpp"
 #include "Communication/Communication.hpp"
 #include "Data/Data.hpp"
-#include "Three_Phased_PWM/Three_Phased_PWM.hpp"
+#include "Actuators/Actuators.hpp"
 #include "StateMachinePCU/StateMachinePCU.hpp"
 
 int main(void) {
@@ -15,11 +15,11 @@ int main(void) {
 #endif
     Data_struct Data;
     Sensors sensors(&Data);
-    Three_Phased_PWM three_phased_pwm(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,Pinout::Reset,&Data);
-    SpaceVector spaceVec(&three_phased_pwm, &Data);
+    Actuators actuators(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,Pinout::Reset,&Data);
+    SpaceVector spaceVec(&actuators, &Data);
     CurrentControl currentControl(&Data,&spaceVec);
     SpeedControl speedControl(&Data,&currentControl,&spaceVec);
-    StateMachinePCU stateMachinePCU(&Data,&three_phased_pwm,&sensors,&spaceVec,&currentControl,&speedControl);
+    StateMachinePCU stateMachinePCU(&Data,&actuators,&sensors,&spaceVec,&currentControl,&speedControl);
     STLIB::start("192.168.1.5");
     sensors.currentSensors.zeroing();
     Communication comms(&Data);

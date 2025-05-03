@@ -2,7 +2,7 @@
 #include "ST-LIB.hpp"
 #include "Communication/Communication.hpp"
 #include "Data/Data.hpp"
-#include "Three_Phased_PWM/Three_Phased_PWM.hpp"
+#include "Actuators/Actuators.hpp"
 #include  "Sensors/Sensors.hpp"
 #include "Control/SpaceVector.hpp"
 #include "Control/CurrentControl.hpp"
@@ -12,7 +12,7 @@ class StateMachinePCU{
         StateMachine *stateMachine;
         StateMachine *operationalStateMachine;
         Data_struct *Data;
-        Three_Phased_PWM *three_phased_pwm;
+        Actuators *actuators;
         Sensors *sensors;
         Communication *communication;
         SpaceVector *spaceVectorControl;
@@ -23,7 +23,7 @@ class StateMachinePCU{
     public:
         static bool space_vector_on;
         static bool speed_control;
-        StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec,CurrentControl *current_Control,SpeedControl *speedControl);
+        StateMachinePCU(Data_struct *data, Actuators *actuators,Sensors *sensors,SpaceVector *spVec,CurrentControl *current_Control,SpeedControl *speedControl);
         void start(Communication *comms);
         void add_states();
         void add_transitions();

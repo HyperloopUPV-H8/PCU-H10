@@ -3,9 +3,9 @@
 #define Protecction_Voltage 270.0
 bool StateMachinePCU::space_vector_on = false;
 bool StateMachinePCU::speed_control = false;
-StateMachinePCU::StateMachinePCU(Data_struct *data, Three_Phased_PWM *three_phased,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl,SpeedControl *speedControl):
+StateMachinePCU::StateMachinePCU(Data_struct *data, Actuators *actuators,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl,SpeedControl *speedControl):
 Data(data),
-three_phased_pwm(three_phased),
+actuators(actuators),
 sensors(sensors),
 spaceVectorControl(spVec),
 currentControl(currentControl),
@@ -20,7 +20,7 @@ speedControl(speedControl)
 }
 void StateMachinePCU::start(Communication *comms){
     communication = comms;
-    three_phased_pwm->start();
+    actuators->start();
     sensors->start();
     add_cyclic_actions();
     
@@ -91,9 +91,9 @@ void StateMachinePCU::add_cyclic_actions(){
 }
 void StateMachinePCU::add_enter_actions(){
     operationalStateMachine->add_enter_action([this](){
-        three_phased_pwm->Led_Commutation.turn_on();
-        three_phased_pwm->enable();
-        three_phased_pwm->Enable_reset();
+        actuators->Led_Commutation.turn_on();
+        actuators->enable();
+        actuators->Enable_reset();
     },Operational_State_PCU::Accelerating);
 
     operationalStateMachine->add_enter_action([this](){
@@ -103,44 +103,44 @@ void StateMachinePCU::add_enter_actions(){
 }
 void StateMachinePCU::add_exit_actions(){
     stateMachine->add_exit_action([this](){
-        three_phased_pwm->stop_all();
-        three_phased_pwm->Led_fault.turn_on();
-        three_phased_pwm->Led_Commutation.turn_off();
+        actuators->stop_all();
+        actuators->Led_fault.turn_on();
+        actuators->Led_Commutation.turn_off();
     },State_PCU::Operational);
     
     operationalStateMachine->add_exit_action([this](){
-        three_phased_pwm->Led_Commutation.turn_off();
-        three_phased_pwm->stop_all();
+        actuators->Led_Commutation.turn_off();
+        actuators->stop_all();
     },Operational_State_PCU::Accelerating);
 }
 void StateMachinePCU::update(){
     #if TEST_PWM
         if(Communication::received_disable_buffer == true){
             Communication::received_disable_buffer = false;
-            three_phased_pwm->disable();
+            actuators->disable();
         }
         if(Communication::received_enable_buffer == true){
             Communication::received_enable_buffer = false;
-            three_phased_pwm->enable();
+            actuators->enable();
         }
         if(Communication::received_stop_pwm_order == true){
             Communication::received_stop_pwm_order = false;
-            three_phased_pwm->stop_all();
+            actuators->stop_all();
         }
         if(Communication::received_disable_reset == true){
             Communication::received_disable_reset = false;
-            three_phased_pwm->Disable_reset();
+            actuators->Disable_reset();
         }
         else if(Communication::received_enable_reset == true){
             Communication::received_enable_reset = false;
-            three_phased_pwm->Enable_reset();
+            actuators->Enable_reset();
         }
     #endif
 
     if(Communication::received_activate_space_vector == true){
         Communication::received_activate_space_vector = false;
         StateMachinePCU::space_vector_on = true;
-        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         spaceVectorControl->set_target_voltage(Communication::ref_voltage_space_vector_received);
@@ -156,7 +156,7 @@ void StateMachinePCU::update(){
     if(Communication::received_Precharge_order == true){
         Communication::received_Precharge_order = false;
        
-        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
@@ -169,7 +169,7 @@ void StateMachinePCU::update(){
 
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         currentControl->set_current_ref(Communication::current_reference_received);
-        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         //actions
         speed_control = false;
@@ -182,7 +182,7 @@ void StateMachinePCU::update(){
         Communication::received_Speed_reference_order = false;
         
         speedControl->set_reference_speed(Communication::speed_reference_received);
-        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         //actions
         currentControl->change_mode(ControlStates::accelerate);
@@ -195,7 +195,7 @@ void StateMachinePCU::update(){
         Communication::received_Complete_Run_order = false;
 
         speedControl->set_reference_speed(Communication::speed_reference_received);
-        three_phased_pwm->set_three_frequencies(Communication::frequency_received);
+        actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         //actions
         currentControl->change_mode(ControlStates::regenerate);
@@ -211,25 +211,25 @@ void StateMachinePCU::update(){
     #if TEST_PWM
         if(Communication::received_pwm_order == true){
             Communication::received_pwm_order = false;
-            three_phased_pwm->turn_off_active_pwm();
+            actuators->turn_off_active_pwm();
             switch (Communication::pwm_received)
             {
                 case PWM_ACTIVE::NONE:
                     break;
                 case PWM_ACTIVE::U:
-                    three_phased_pwm->set_frequency_u(static_cast<uint32_t>(Communication::frequency_received));
-                    three_phased_pwm->set_duty_u(Communication::duty_cycle_received);
-                    three_phased_pwm->turn_on_u();
+                    actuators->set_frequency_u(static_cast<uint32_t>(Communication::frequency_received));
+                    actuators->set_duty_u(Communication::duty_cycle_received);
+                    actuators->turn_on_u();
                     break;
                 case PWM_ACTIVE::V:
-                    three_phased_pwm->set_frequency_v(static_cast<uint32_t>(Communication::frequency_received));
-                    three_phased_pwm->set_duty_v(Communication::duty_cycle_received);
-                    three_phased_pwm->turn_on_v();
+                    actuators->set_frequency_v(static_cast<uint32_t>(Communication::frequency_received));
+                    actuators->set_duty_v(Communication::duty_cycle_received);
+                    actuators->turn_on_v();
                     break;
                 case PWM_ACTIVE::W:
-                    three_phased_pwm->set_frequency_w(static_cast<uint32_t>(Communication::frequency_received));
-                    three_phased_pwm->set_duty_w(Communication::duty_cycle_received);
-                    three_phased_pwm->turn_on_w();  
+                    actuators->set_frequency_w(static_cast<uint32_t>(Communication::frequency_received));
+                    actuators->set_duty_w(Communication::duty_cycle_received);
+                    actuators->turn_on_w();  
                     break;
             }
         }

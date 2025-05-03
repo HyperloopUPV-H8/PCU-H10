@@ -1,8 +1,8 @@
 #include "Control/SpaceVector.hpp"
 
 
-SpaceVector::SpaceVector(Three_Phased_PWM *three_pwm_class, Data_struct *data)
-    : three_pwm(three_pwm_class), data(data) {}
+SpaceVector::SpaceVector(Actuators *actuators, Data_struct *data)
+    : actuators(actuators), data(data) {}
 
 void SpaceVector::set_target_voltage(float V_ref) {
     if (V_ref < 0) V_ref = 0;
@@ -36,13 +36,13 @@ void SpaceVector::calculate_duties() {
     sin_w -= offset;
 
     if (data->Stablished_direction == Direction::Forward) {
-        three_pwm->set_duty_u((sin_u / 2.0 + 0.5) * 100.0);
-        three_pwm->set_duty_v((sin_v / 2.0 + 0.5) * 100.0);
+        actuators->set_duty_u((sin_u / 2.0 + 0.5) * 100.0);
+        actuators->set_duty_v((sin_v / 2.0 + 0.5) * 100.0);
     } else {
-        three_pwm->set_duty_u((sin_v / 2.0 + 0.5) * 100.0);
-        three_pwm->set_duty_v((sin_u / 2.0 + 0.5) * 100.0);
+        actuators->set_duty_u((sin_v / 2.0 + 0.5) * 100.0);
+        actuators->set_duty_v((sin_u / 2.0 + 0.5) * 100.0);
     }
-    three_pwm->set_duty_w((sin_w / 2.0 + 0.5) * 100.0);
+    actuators->set_duty_w((sin_w / 2.0 + 0.5) * 100.0);
     time += Period / 1000000.0;
     data->time = time;
 }

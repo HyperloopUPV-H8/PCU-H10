@@ -3,7 +3,7 @@
 #include "Data/Data.hpp"
 static constexpr uint32_t initial_frequency = 10000;
 static constexpr std::chrono::nanoseconds dead_time_ns(300);
-class Three_Phased_PWM{
+class Actuators{
     private:
         DualPWM U_Dual;
         DualPWM V_Dual;
@@ -14,7 +14,7 @@ class Three_Phased_PWM{
     public:
         DigitalOutput Led_Commutation{Pinout::LED_COMMUTION};
         DigitalOutput Led_fault{Pinout::LED_FAULT};
-        Three_Phased_PWM(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Data_struct *data);
+        Actuators(Pin& u,Pin& u_negated,Pin& v,Pin& v_negated,Pin& w,Pin& w_negated,Pin& enable,Pin& reset,Data_struct *data);
         void start();
         void stop_all();
         void enable();
