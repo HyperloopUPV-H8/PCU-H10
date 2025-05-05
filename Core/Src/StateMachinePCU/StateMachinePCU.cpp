@@ -34,9 +34,9 @@ void StateMachinePCU::add_states(){
     stateMachine->add_state_machine(*operationalStateMachine,State_PCU::Operational);
 
         //protections
-       ProtectionManager::link_state_machine(*stateMachine,State_PCU::Fault);
-        add_protection(&Data->actual_voltage_battery_A,Boundary<float,ABOVE>(Protecction_Voltage));
-        add_protection(&Data->actual_voltage_battery_B,Boundary<float,ABOVE>(Protecction_Voltage));
+    ProtectionManager::link_state_machine(*stateMachine,State_PCU::Fault);
+    add_protection(&Data->actual_voltage_battery_A,Boundary<float,ABOVE>(Protecction_Voltage));
+    add_protection(&Data->actual_voltage_battery_B,Boundary<float,ABOVE>(Protecction_Voltage));
 }
 void StateMachinePCU::add_transitions(){
 
