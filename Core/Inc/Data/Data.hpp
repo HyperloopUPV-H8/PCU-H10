@@ -36,8 +36,11 @@ namespace Pinout{
     static constexpr Pin& ENCODER_B = PF0;
 };
 namespace Sensors_data{
-    static constexpr float slope_current_sensor = 96.945;
-    static constexpr float offset_current_sensor = 0.0;
+    constexpr static float slope_current_sensor{96.206615f};
+    constexpr static float offset_current_sensor{-159.5747f};
+
+    constexpr static float slope_current_sensor_inverted{-97.134615384615700f};
+    constexpr static float offset_current_sensor_inverted{160.660653846154000f};
     
     static constexpr float slope_voltage_sensor = 133.31627;
     static constexpr float offset_voltage_sensor = -9.24655;

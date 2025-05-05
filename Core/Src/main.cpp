@@ -21,7 +21,7 @@ int main(void) {
     SpeedControl speedControl(&Data,&currentControl,&spaceVec);
     StateMachinePCU stateMachinePCU(&Data,&actuators,&sensors,&spaceVec,&currentControl,&speedControl);
     STLIB::start("192.168.1.5");
-    sensors.currentSensors.zeroing();
+  //  sensors.currentSensors.zeroing();
     Communication comms(&Data);
     stateMachinePCU.start(&comms);
 
