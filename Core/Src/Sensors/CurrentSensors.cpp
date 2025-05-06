@@ -31,9 +31,7 @@ void CurrentSensors::read(){
     sensor_u_a.read();
     sensor_u_b.read();
     sensor_v_a.read();
-    data->actual_current_sensor_v_a = -data->actual_current_sensor_v_a; // change the direction because hardware is like that
     sensor_v_b.read();
-    data->actual_current_sensor_v_b = -data->actual_current_sensor_v_b;
     sensor_w_a.read();
     sensor_w_b.read();
 }
