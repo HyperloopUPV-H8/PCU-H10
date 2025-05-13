@@ -81,7 +81,8 @@
     "variant": "cpp",
     "xstring": "cpp",
     "regex": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "shared_mutex": "cpp"
   },
   "cortex-debug.variableUseNaturalFormat": false,
   "idf.pythonInstallPath": "/usr/bin/python3"

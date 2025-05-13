@@ -20,7 +20,7 @@ int main(void) {
     CurrentControl currentControl(&Data,&spaceVec);
     SpeedControl speedControl(&Data,&currentControl,&spaceVec);
     StateMachinePCU stateMachinePCU(&Data,&actuators,&sensors,&spaceVec,&currentControl,&speedControl);
-    STLIB::start("192.168.1.5");
+    STLIB::start(Communication_Data::Pcu_mac,Communication_Data::PCU_IP);
   //  sensors.currentSensors.zeroing();
     Communication comms(&Data);
     stateMachinePCU.start(&comms);
