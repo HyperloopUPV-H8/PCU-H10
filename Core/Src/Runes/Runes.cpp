@@ -1,4 +1,5 @@
 #include "HALAL/HALAL.hpp"
+#include "../../Inc/Data/Data.hpp"
 
 DMA_HandleTypeDef hdma_adc1;
 DMA_HandleTypeDef hdma_adc2;
@@ -28,6 +29,7 @@ TIM_HandleTypeDef htim12;
 TIM_HandleTypeDef htim16;
 TIM_HandleTypeDef htim17;
 TIM_HandleTypeDef htim15;
+TIM_HandleTypeDef htim22;
 TIM_HandleTypeDef htim23;
 TIM_HandleTypeDef htim24;
 UART_HandleTypeDef huart1;
@@ -133,10 +135,10 @@ bool UART::printf_ready = false;
 #ifdef HAL_TIM_MODULE_ENABLED
 #define BASE TimerPeripheral::TIM_TYPE::BASE
 
-TimerPeripheral encoder_timer(&htim8, {BASE, 0, 65535}, "TIM 8");
+TimerPeripheral encoder_timer(&htim23, {BASE, 0, 4294967295}, "TIM 23");
 
 map<pair<Pin, Pin>, TimerPeripheral*> Encoder::pin_timer_map = {
-    {{PC6, PC7}, &encoder_timer}};
+    {{PF0, PF1}, &encoder_timer}};
 
 #endif
 /************************************************
@@ -148,8 +150,8 @@ map<pair<Pin, Pin>, TimerPeripheral*> Encoder::pin_timer_map = {
 #define ADVANCED TimerPeripheral::TIM_TYPE::ADVANCED
 
 TIM_HandleTypeDef* Time::global_timer = &htim2;
-set<TIM_HandleTypeDef*> Time::high_precision_timers = {&htim5, &htim24};
-TIM_HandleTypeDef* Time::mid_precision_timer = &htim23;
+set<TIM_HandleTypeDef*> Time::high_precision_timers = {&htim5};
+TIM_HandleTypeDef* Time::mid_precision_timer = &htim24;
 
 TimerPeripheral timer1(&htim1, {ADVANCED}, "TIM 1");
 TimerPeripheral timer2(&htim2, {BASE}, "TIM 2");
@@ -159,11 +161,11 @@ TimerPeripheral timer12(&htim12, {ADVANCED}, "TIM 12");
 TimerPeripheral timer16(&htim16, {BASE}, "TIM 16");
 TimerPeripheral timer17(&htim17, {BASE}, "TIM 17");
 TimerPeripheral timer15(&htim15, {ADVANCED}, "TIM 15");
-TimerPeripheral timer23(&htim23, {BASE, 275, UINT32_MAX - 1}, "TIM 23");
+TimerPeripheral timer24(&htim24, {BASE, 275, UINT32_MAX - 1}, "TIM 24");
 
 vector<reference_wrapper<TimerPeripheral>> TimerPeripheral::timers = {
     timer1,  timer2,  timer3,  timer4, timer12,
-    timer15, timer16, timer17, timer23};
+    timer15, timer16, timer17, timer24};
 
 #endif
 
@@ -174,6 +176,7 @@ vector<reference_wrapper<TimerPeripheral>> TimerPeripheral::timers = {
 
 #define NORMAL TimerPeripheral::PWM_MODE::NORMAL
 #define PHASED TimerPeripheral::PWM_MODE::PHASED
+#define CENTER_ALIGNED TimerPeripheral::PWM_MODE::CENTER_ALIGNED
 
 PWMmap TimerPeripheral::available_pwm = {
     {PB14, {timer12, {TIM_CHANNEL_1, NORMAL}}},
@@ -186,9 +189,6 @@ PWMmap TimerPeripheral::available_pwm = {
     {PD15, {timer4, {TIM_CHANNEL_4, NORMAL}}},
     {PE14, {timer1, {TIM_CHANNEL_4, PHASED}}},
     {PE6, {timer15, {TIM_CHANNEL_2, NORMAL}}},
-    {PF1, {timer23, {TIM_CHANNEL_2, NORMAL}}},
-    {PF2, {timer23, {TIM_CHANNEL_3, NORMAL}}},
-    {PF3, {timer23, {TIM_CHANNEL_4, NORMAL}}},
     {PE5, {timer15, {TIM_CHANNEL_1, NORMAL}}},
     {PE11, {timer1, {TIM_CHANNEL_2, NORMAL}}},
 };
@@ -196,10 +196,16 @@ PWMmap TimerPeripheral::available_pwm = {
 DualPWMmap TimerPeripheral::available_dual_pwms = {
     {{PB8, PB6}, {timer16, {TIM_CHANNEL_1, NORMAL}}},
     {{PB9, PB7}, {timer17, {TIM_CHANNEL_1, PHASED}}},
-    {{PE11, PE10}, {timer1, {TIM_CHANNEL_2, PHASED}}},
-    {{PE13, PE12}, {timer1, {TIM_CHANNEL_3, PHASED}}},
-    {{PE5, PE4}, {timer15, {TIM_CHANNEL_1, NORMAL}}},
+#if MOTOR_CENTER_ALIGNED == 1
+    {{PE11, PE10}, {timer1, {TIM_CHANNEL_2, CENTER_ALIGNED}}},
+    {{PE13, PE12}, {timer1, {TIM_CHANNEL_3, CENTER_ALIGNED}}},
+    {{PE9, PE8}, {timer1, {TIM_CHANNEL_1, CENTER_ALIGNED}}},
+#else
+    {{PE11, PE10}, {timer1, {TIM_CHANNEL_2, NORMAL}}},
+    {{PE13, PE12}, {timer1, {TIM_CHANNEL_3, NORMAL}}},
     {{PE9, PE8}, {timer1, {TIM_CHANNEL_1, NORMAL}}},
+#endif
+    {{PE5, PE4}, {timer15, {TIM_CHANNEL_1, NORMAL}}}
 };
 
 #endif
@@ -208,9 +214,6 @@ DualPWMmap TimerPeripheral::available_dual_pwms = {
  *                 Input Capture
  ***********************************************/
 #ifdef HAL_TIM_MODULE_ENABLED
-
-map<Pin, InputCapture::Instance> InputCapture::available_instances = {
-    {PF0, InputCapture::Instance(PF0, &timer23, TIM_CHANNEL_1, TIM_CHANNEL_2)}};
 
 #endif
 
@@ -244,6 +247,7 @@ map<Pin, ADC::Instance> ADC::available_instances = {
     {PF12, Instance(&peripherals[0], ADC_CHANNEL_6)},
     {PF13, Instance(&peripherals[1], ADC_CHANNEL_2)},
     {PF14, Instance(&peripherals[1], ADC_CHANNEL_6)},
+    {PF3, Instance(&peripherals[2], ADC_CHANNEL_5)},
     {PF5, Instance(&peripherals[2], ADC_CHANNEL_4)},
     {PF6, Instance(&peripherals[2], ADC_CHANNEL_8)},
     {PF7, Instance(&peripherals[2], ADC_CHANNEL_3)},

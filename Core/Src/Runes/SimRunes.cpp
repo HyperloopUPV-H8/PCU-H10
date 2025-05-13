@@ -1,15 +1,5 @@
-#include "HALALMock/Services/Communication/SPI/SPI.hpp"
-#include "HALALMock/Services/Communication/FDCAN/FDCAN.hpp"
-#include "HALALMock/Services/Communication/UART/UART.hpp"
-#include "HALALMock/Services/Encoder/Encoder.hpp"
-#include "HALALMock/Services/InputCapture/InputCapture.hpp"
-#include "HALALMock/Services/ADC/ADC.hpp"
-#include "HALALMock/Services/EXTI/EXTI.hpp"
-#include "HALALMock/Services/SharedMemory/SharedMemory.hpp"
-#include "HALALMock/Models/PinModel/Pin.hpp"
 #include <netinet/in.h>
-#include "HALALMock/Models/Packets/Packet.hpp"
-#include "HALALMock/Models/Packets/Order.hpp"
+#include "HALAL/HALAL.hpp"
 
 LogConf Log::config =
     LogConf::Error | LogConf::Fatal | LogConf::Console | LogConf::File;
@@ -154,3 +144,36 @@ map<uint16_t, ExternalInterrupt::Instance> ExternalInterrupt::instances = {
  ***********************************************/
 
 UART::Peripheral UART::uart2 = UART::Peripheral::peripheral2;
+
+
+/************************************************
+                        Dual PWM
+ ***********************************************/
+TimerPeripheral timer1;
+TimerPeripheral timer3;
+TimerPeripheral timer4;
+TimerPeripheral timer12;
+TimerPeripheral timer15;
+TimerPeripheral timer16;
+TimerPeripheral timer17;
+TimerPeripheral timer23;
+#define TIM_CHANNEL_1 1
+#define TIM_CHANNEL_2 2
+#define TIM_CHANNEL_3 3
+#define TIM_CHANNEL_4 4
+
+std::unordered_map<std::pair<Pin, Pin>,
+                   std::pair<std::reference_wrapper<TimerPeripheral>,
+                             TimerPeripheral::PWMData>>
+    DualPWM::available_dual_pwms{
+        {{PE13, PE12},
+         {timer1, {TIM_CHANNEL_1, TimerPeripheral::PWM_MODE::NORMAL}}},
+        {{PE11, PE10},
+         {timer1, {TIM_CHANNEL_2, TimerPeripheral::PWM_MODE::PHASED}}},
+        {{PE13, PE12},
+         {timer1, {TIM_CHANNEL_3, TimerPeripheral::PWM_MODE::NORMAL}}},
+        {{PE5, PE4},
+         {timer15, {TIM_CHANNEL_1, TimerPeripheral::PWM_MODE::NORMAL}}},
+        {{PE9, PE8},
+         {timer1, {TIM_CHANNEL_1, TimerPeripheral::PWM_MODE::NORMAL}}},
+    };

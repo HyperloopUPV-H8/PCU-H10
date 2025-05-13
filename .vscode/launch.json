@@ -20,7 +20,8 @@
         "source": "probe",
         "decoders": [{ "type": "console", "label": "ITM", "port": 0 }]
       },
-      "preLaunchTask": "CMake: build"
+      "preLaunchTask": "CMake: build",
+      "stm32cubeprogrammer": "/home/osganig/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin"
     },
     {
       "type": "cortex-debug",
@@ -41,7 +42,6 @@
         "source": "probe",
         "decoders": [{ "type": "console", "label": "ITM", "port": 0 }]
       },
-      "stm32cubeprogrammer": "/opt/st/stm32cubeclt_1.16.0/STM32CubeProgrammer/bin"
     },
     {
       "name": "Debug simulator on Rosetta",

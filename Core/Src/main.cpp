@@ -1,23 +1,35 @@
 #ifndef SIM_ON
 #include "main.h"
-
 #include "lwip.h"
 #endif
 
 #include "ST-LIB.hpp"
+#include "Communication/Communication.hpp"
+#include "Data/Data.hpp"
+#include "Actuators/Actuators.hpp"
+#include "StateMachinePCU/StateMachinePCU.hpp"
 
 int main(void) {
 #ifdef SIM_ON
     SharedMemory::start();
 #endif
+    Data_struct Data;
+    Sensors sensors(&Data);
+    Actuators actuators(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,Pinout::Reset,&Data);
+    SpaceVector spaceVec(&actuators, &Data);
+    CurrentControl currentControl(&Data,&spaceVec);
+    SpeedControl speedControl(&Data,&currentControl,&spaceVec);
+    StateMachinePCU stateMachinePCU(&Data,&actuators,&sensors,&spaceVec,&currentControl,&speedControl);
+    STLIB::start(Communication_Data::Pcu_mac,Communication_Data::PCU_IP);
+  //  sensors.currentSensors.zeroing();
+    Communication comms(&Data);
+    stateMachinePCU.start(&comms);
 
-    DigitalOutput led_on(PA1);
-    STLIB::start();
-
-    Time::register_low_precision_alarm(100, [&]() { led_on.toggle(); });
 
     while (1) {
         STLIB::update();
+        stateMachinePCU.update();
+        ProtectionManager::check_protections();
     }
 }
 
