@@ -90,7 +90,7 @@ namespace Communication_Data{
     static constexpr uint16_t CONTROL_STATE_PACKET = 556;
 };
 namespace Current_Control_Data{
-    static constexpr double kp_accelerate = 1.0;
+    static constexpr double kp_accelerate = 0.1;
     static constexpr double ki_accelerate = 12.0;
     static constexpr double kp_regenerate = 0.2;
     static constexpr double ki_regenerate = 6.0;
@@ -98,7 +98,7 @@ namespace Current_Control_Data{
     static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
 }
 namespace Speed_Control_Data{
-    static constexpr double kp_accelerate = 9.0;
+    static constexpr double kp_accelerate = 4.0;
     static constexpr double ki_accelerate = 1.0;
     static constexpr double kp_regenerate = 0.2;
     static constexpr double ki_regenerate = 1.5;
@@ -134,7 +134,7 @@ enum ControlStates{
 struct Data_struct{
     PWM_ACTIVE pwm_active{};
     uint32_t actual_frequency{};
-    uint32_t modulation_frequency{};
+    double modulation_frequency{};
     float actual_duty{};
     BUFFER_ENABLE buffer_enable{};
     

@@ -65,6 +65,7 @@ void CurrentControl::control_action(){
 
 void CurrentControl::start() {
     should_be_running = true;
+    reset_PI();
 }
 
 void CurrentControl::stop() {

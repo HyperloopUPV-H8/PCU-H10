@@ -16,7 +16,7 @@ private:
     float time = 0.0;
     Actuators *actuators;
     float Imodulation;
-    uint32_t Modulation_frequency;
+    double Modulation_frequency;
 
     static constexpr float IMAX = 1.1547;
 
@@ -27,9 +27,9 @@ public:
     static constexpr uint32_t Period = 200; // this Period is in microseconds
     SpaceVector(Actuators *actuators, Data_struct *data);
     void set_target_voltage(float V_ref);
-    void set_frequency_Modulation(uint32_t freq);
+    void set_frequency_Modulation(double freq);
     void calculate_duties();
-    uint32_t get_modulation_frequency();
+    double get_modulation_frequency();
     float get_actual_time();
     void set_VMAX(float VMax);
     #if MODE_CALCULATE_SIN == 1

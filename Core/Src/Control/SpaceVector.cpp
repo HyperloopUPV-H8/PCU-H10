@@ -11,7 +11,7 @@ void SpaceVector::set_target_voltage(float V_ref) {
     data->imod = Imodulation;
 }
 
-void SpaceVector::set_frequency_Modulation(uint32_t freq) {
+void SpaceVector::set_frequency_Modulation(double freq) {
     Modulation_frequency = freq;
     data->modulation_frequency = Modulation_frequency;
 }
@@ -47,7 +47,7 @@ void SpaceVector::calculate_duties() {
     data->time = time;
 }
 
-uint32_t SpaceVector::get_modulation_frequency() {
+double SpaceVector::get_modulation_frequency() {
     return Modulation_frequency;
 }
 

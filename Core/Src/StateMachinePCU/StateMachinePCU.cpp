@@ -1,6 +1,6 @@
 #include "StateMachinePCU/StateMachinePCU.hpp"
 #define MODULATION_FREQUENCY_DEFAULT 10
-#define Protecction_Voltage 320.0
+#define Protecction_Voltage 325.0
 bool StateMachinePCU::space_vector_on = false;
 bool StateMachinePCU::speed_control = false;
 StateMachinePCU::StateMachinePCU(Data_struct *data, Actuators *actuators,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl,SpeedControl *speedControl):
@@ -181,7 +181,7 @@ void StateMachinePCU::update(){
     }
     if(Communication::received_Speed_reference_order == true){ 
         Communication::received_Speed_reference_order = false;
-        
+        speedControl->reset_PI();
         speedControl->set_reference_speed(Communication::speed_reference_received);
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);

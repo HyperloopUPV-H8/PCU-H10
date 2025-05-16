@@ -84,6 +84,6 @@
     "valarray": "cpp",
     "shared_mutex": "cpp"
   },
-  "cortex-debug.variableUseNaturalFormat": false,
+  "cortex-debug.variableUseNaturalFormat": true,
   "idf.pythonInstallPath": "/usr/bin/python3"
 }
