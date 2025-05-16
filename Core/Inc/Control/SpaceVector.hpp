@@ -27,9 +27,9 @@ public:
     static constexpr uint32_t Period = 200; // this Period is in microseconds
     SpaceVector(Actuators *actuators, Data_struct *data);
     void set_target_voltage(float V_ref);
-    void set_frequency_Modulation(double freq);
+    void set_frequency_Modulation(float freq);
     void calculate_duties();
-    double get_modulation_frequency();
+    float get_modulation_frequency();
     float get_actual_time();
     void set_VMAX(float VMax);
     #if MODE_CALCULATE_SIN == 1

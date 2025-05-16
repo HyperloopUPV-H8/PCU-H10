@@ -134,7 +134,7 @@ enum ControlStates{
 struct Data_struct{
     PWM_ACTIVE pwm_active{};
     uint32_t actual_frequency{};
-    double modulation_frequency{};
+    float modulation_frequency{};
     float actual_duty{};
     BUFFER_ENABLE buffer_enable{};
     
