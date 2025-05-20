@@ -49,7 +49,7 @@ void CurrentControl::control_action(){
         current_PI.input(current_error);
         current_PI.execute();
         target_voltage = current_PI.output_value;
-        if(current_ref <= 0.1){
+        if(current_ref <= 0.0){
             current_PI.integrator.output_value = integrator_temp;
         }
     }

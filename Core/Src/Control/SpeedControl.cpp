@@ -42,7 +42,7 @@ void SpeedControl::control_action(){
     //actual_current_ref = (actual_current_ref > CURRENT_LIMIT || actual_current_ref < -CURRENT_LIMIT) ? CURRENT_LIMIT : actual_current_ref;
     if(actual_current_ref > CURRENT_LIMIT)
         actual_current_ref = CURRENT_LIMIT;
-    if(actual_current_ref < 0.0){
+    if(actual_current_ref <= 0.0){
         actual_current_ref = 0.0;
     }
         
