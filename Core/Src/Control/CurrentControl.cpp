@@ -1,7 +1,6 @@
 #include "Control/CurrentControl.hpp"
-
 double Max_Peak::modulation_frequency = 0.0;
-
+static bool saturate = false;
 CurrentControl::CurrentControl(Data_struct *Data,SpaceVector *spaceVector):
 Data(Data),
 spaceVector(spaceVector)
@@ -9,8 +8,9 @@ spaceVector(spaceVector)
     current_PI.reset();
     current_ref = 0.0; 
 }
-void CurrentControl::set_current_ref(float cur_ref){
+void CurrentControl::set_current_ref(float cur_ref,bool saturation){
     current_ref = cur_ref;
+    saturate = saturation;
 }
 
 float CurrentControl::get_current_ref(){
@@ -47,9 +47,13 @@ void CurrentControl::control_action(){
     Data->current_error = current_error;
     
     if(Data->currentState == ControlStates::accelerate){
+        float integrator_temp = current_PI.integrator.output_value;
         current_PI.input(current_error);
         current_PI.execute();
         target_voltage = current_PI.output_value;
+        if(saturate){
+            current_PI.integrator.output_value = integrator_temp;
+        }
     }
     else{
         current_regenerate_PI.input(current_error);

@@ -169,7 +169,7 @@ void StateMachinePCU::update(){
         Communication::received_Current_reference_order = false;
 
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
-        currentControl->set_current_ref(Communication::current_reference_received);
+        currentControl->set_current_ref(Communication::current_reference_received,false);
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         //actions

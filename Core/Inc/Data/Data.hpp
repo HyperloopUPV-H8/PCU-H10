@@ -102,7 +102,7 @@ namespace Speed_Control_Data{
     static constexpr double ki_accelerate = 1.0;
     static constexpr double kp_regenerate = 0.2;
     static constexpr double ki_regenerate = 1.5;
-    static constexpr double period = 0.001;
+    static constexpr double period = 0.1;
     static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
 }
 enum class PWM_ACTIVE: uint8_t{

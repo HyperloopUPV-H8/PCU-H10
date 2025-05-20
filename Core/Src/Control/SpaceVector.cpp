@@ -12,11 +12,7 @@ void SpaceVector::set_target_voltage(float V_ref) {
 }
 
 void SpaceVector::set_frequency_Modulation(float freq) {
-    freq*=100; //We only want two decimals
-    int32_t temp = freq;
-    freq = static_cast<float>(temp)/100.0;
     Modulation_frequency = freq;
-    
     data->modulation_frequency = Modulation_frequency;
 }
 

@@ -70,7 +70,7 @@ private:
 
 public:
     CurrentControl(Data_struct *Data,SpaceVector *spaceVector);
-    void set_current_ref(float cur_ref);
+    void set_current_ref(float cur_ref,bool saturator);
     double calculate_peak();
     float get_current_ref();
     void control_action();
