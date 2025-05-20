@@ -1,9 +1,9 @@
 #include "Control/SpeedControl.hpp"
 #define CURRENT_LIMIT 100
 #define REGENERATIVE_SPEED_REF 0.0
-bool saturating_current = false;
-static double output{0.0};
+
 static double exp_follower(double reference, double error_factor = 0.5){
+    static double output{0.0};
     double error{reference - output};
     output += error * error_factor;
     return output;
@@ -17,7 +17,6 @@ SpeedControl::SpeedControl(Data_struct *Data,CurrentControl *currentControl,Spac
 void SpeedControl::set_reference_speed(float speed_ref){
     reference_speed = speed_ref;
     Data->target_speed = reference_speed;
-    output = 0.0;
 }
 float SpeedControl::get_reference_speed(){
     return reference_speed;
@@ -43,16 +42,12 @@ void SpeedControl::control_action(){
     //actual_current_ref = (actual_current_ref > CURRENT_LIMIT || actual_current_ref < -CURRENT_LIMIT) ? CURRENT_LIMIT : actual_current_ref;
     if(actual_current_ref > CURRENT_LIMIT)
         actual_current_ref = CURRENT_LIMIT;
-    if(actual_current_ref < 0){
-        actual_current_ref = 0;
-        saturating_current = true;
-    }else{
-        saturating_current = false;
+    if(actual_current_ref < 0.0){
+        actual_current_ref = 0.0;
     }
         
-
     Data->actual_current_ref = actual_current_ref;
-    currentControl->set_current_ref(actual_current_ref,saturating_current);
+    currentControl->set_current_ref(actual_current_ref);
     //if we are in regenerate and we arrive to the max speed we change the reference speed to zero
     if(Data->speedState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed_km_h_encoder > reference_speed - 0.5){
         set_reference_speed(REGENERATIVE_SPEED_REF);
