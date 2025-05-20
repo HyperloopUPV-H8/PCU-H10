@@ -15,6 +15,7 @@ bool Communication::received_zeroing_order = false;
 bool Communication::received_Speed_reference_order = false;
 bool Communication::received_Precharge_order = false;
 bool Communication::received_Complete_Run_order = false;
+bool Communication::received_start_regenerative_now_order = false;
 
 
 float Communication::duty_cycle_received{};
@@ -68,6 +69,9 @@ void received_Precharge_callback(){
 void received_Complete_Run_callback(){
     Communication::received_Complete_Run_order = true;
 }
+void received_start_regenerative_now_callback(){
+    Communication::received_start_regenerative_now_order = true;
+}
 
 Communication::Communication(Data_struct *data): Data(data){
     #if CHILL_KEEPALIVES
@@ -94,6 +98,7 @@ Communication::Communication(Data_struct *data): Data(data){
     Complete_Run_order = new HeapOrder(Communication_Data::MAKE_COMPLETE_RUN_ORDER,&received_Complete_Run_callback,&speed_reference_received,&frequency_received,&Vmax_control_received,&Data->Stablished_direction);
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
     Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&Vmax_control_received);
+    Start_regenerative_now_order = new HeapOrder(Communication_Data::START_REGENERATIVE_NOW_ORDER,&received_start_regenerative_now_callback);
     //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->pwm_active,&Data->actual_frequency,&Data->modulation_frequency,&Data->actual_duty,&Data->buffer_enable);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
