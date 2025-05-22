@@ -45,13 +45,17 @@ void CurrentControl::control_action(){
     Data->current_error = current_error;
     
     if(Data->currentState == ControlStates::accelerate){
+        #if SATURATOR_PI
         float integrator_temp = current_PI.integrator.output_value;
+        #endif
         current_PI.input(current_error);
         current_PI.execute();
+        #if SATURATOR_PI
         target_voltage = current_PI.output_value;
         if(current_ref <= 0.0){
             current_PI.integrator.output_value = integrator_temp;
         }
+        #endif
     }
     else{
         current_regenerate_PI.input(current_error);

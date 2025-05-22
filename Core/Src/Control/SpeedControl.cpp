@@ -39,19 +39,19 @@ void SpeedControl::control_action(){
         regenerate_PI.execute();
         actual_current_ref = regenerate_PI.output_value;
     }
-    //actual_current_ref = (actual_current_ref > CURRENT_LIMIT || actual_current_ref < -CURRENT_LIMIT) ? CURRENT_LIMIT : actual_current_ref;
-    if(actual_current_ref > CURRENT_LIMIT)
+    actual_current_ref = (actual_current_ref > CURRENT_LIMIT || actual_current_ref < -30.0) ? CURRENT_LIMIT : actual_current_ref;
+    /*if(actual_current_ref > CURRENT_LIMIT)
         actual_current_ref = CURRENT_LIMIT;
     if(actual_current_ref <= 0.0){
         actual_current_ref = 0.0;
-    }
+    }*/
         
     Data->actual_current_ref = actual_current_ref;
     currentControl->set_current_ref(actual_current_ref);
     //if we are in regenerate and we arrive to the max speed we change the reference speed to zero
-    if(Data->speedState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed_km_h_encoder > reference_speed - 0.5){
+   /* if(Data->speedState == ControlStates::regenerate && reference_speed > 0.1 &&  Data->speed_km_h_encoder > reference_speed){
         set_reference_speed(REGENERATIVE_SPEED_REF);
-    }
+    }*/
 }
 ControlStates SpeedControl::get_controlState(){
     return Data->speedState;

@@ -9,6 +9,7 @@
 #define MODE_CALCULATE_SIN 0 //0 = Normal sin, 1 = Look Up table with direct interpolation
 #define ARMONIC_INJECTION 1 // 0 = NO armonic injection, 1 = Armonic injection active
 #define MOTOR_CENTER_ALIGNED 0 // 0 = Normal dualPWM, 1 = CenterAligned DualPWM
+#define SATURATOR_PI 1 // 0 = No saturator PI, 1 = Saturator PI
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8; 
@@ -101,8 +102,8 @@ namespace Current_Control_Data{
 namespace Speed_Control_Data{
     static constexpr double kp_accelerate = 4.0;
     static constexpr double ki_accelerate = 1.0;
-    static constexpr double kp_regenerate = 0.2;
-    static constexpr double ki_regenerate = 1.5;
+    static constexpr double kp_regenerate = 4.0;
+    static constexpr double ki_regenerate = 1.0;
     static constexpr double period = 0.1;
     static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
 }

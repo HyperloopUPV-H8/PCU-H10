@@ -186,18 +186,21 @@ void StateMachinePCU::update(){
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         //actions
-        currentControl->change_mode(ControlStates::accelerate);
-        speedControl->change_mode(ControlStates::accelerate); 
+        if(Data->currentState != ControlStates::regenerate){
+            currentControl->change_mode(ControlStates::accelerate);
+            speedControl->change_mode(ControlStates::accelerate); 
+        }
+        
         StateMachinePCU::space_vector_on = true;
         currentControl->start();
         StateMachinePCU::speed_control = true;
     }
     if(Communication::received_start_regenerative_now_order == true){
         Communication::received_start_regenerative_now_order = false;
-        if(Data->speed_km_h_encoder < 12) return;
+        if(!StateMachinePCU::speed_control) return;
         currentControl->change_mode(ControlStates::regenerate);
         speedControl->change_mode(ControlStates::regenerate);
-        speedControl->set_reference_speed(Data->speed_km_h_encoder);
+       // speedControl->set_reference_speed(0.0);
     }
     if(Communication::received_Complete_Run_order == true){
         Communication::received_Complete_Run_order = false;
