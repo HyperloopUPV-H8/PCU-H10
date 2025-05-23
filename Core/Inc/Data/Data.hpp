@@ -35,6 +35,11 @@ namespace Pinout{
     //Speetec
     static constexpr Pin& ENCODER_A = PF1;
     static constexpr Pin& ENCODER_B = PF0;
+    //Reeds
+    static constexpr Pin& REED_1 = PD12;
+    static constexpr Pin& REED_2 = PD13;
+    static constexpr Pin& REED_3 = PD14;
+    static constexpr Pin& REED_4 = PD15;
 };
 namespace Sensors_data{
     constexpr static float slope_current_sensor{96.206615f};
@@ -125,8 +130,9 @@ enum State_PCU: uint8_t{
 };
 enum Operational_State_PCU: uint8_t{
     Idle,
-    Sending_PWM,
-    Accelerating
+    Accelerating,
+    Regenerative
+    
 };
 enum ControlStates{
     accelerate,
@@ -134,10 +140,11 @@ enum ControlStates{
 };
  using Direction = EncoderSensor<Sensors_data::encoder_samples>::Direction;
 struct Data_struct{
-    PWM_ACTIVE pwm_active{};
     uint32_t actual_frequency{};
     float modulation_frequency{};
-    float actual_duty{};
+    float actual_duty_u{};
+    float actual_duty_v{};
+    float actual_duty_w{};
     BUFFER_ENABLE buffer_enable{};
     
     //batteries
@@ -168,7 +175,12 @@ struct Data_struct{
     double speed_error{};
     float actual_current_ref{};
     //control
-    ControlStates currentState{ControlStates::accelerate};
     ControlStates speedState{ControlStates::accelerate};
     Direction Stablished_direction{Direction::FORWARD};
+    //reeds
+    bool reed1{};
+    bool reed2{};
+    bool reed3{};
+    bool reed4{};
+
 };

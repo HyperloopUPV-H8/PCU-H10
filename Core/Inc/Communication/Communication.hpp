@@ -63,7 +63,6 @@ class Communication{
         static float current_reference_received;
         static float Vmax_control_received;
         static float speed_reference_received;
-        static PWM_ACTIVE pwm_received;
         
         void send_UDP_packets(); 
         bool is_connected();
