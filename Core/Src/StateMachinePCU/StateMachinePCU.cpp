@@ -2,9 +2,8 @@
 #define MODULATION_FREQUENCY_DEFAULT 10
 #define Protecction_Voltage 325.0
 bool StateMachinePCU::space_vector_on = false;
-bool StateMachinePCU::speed_control = false;
 StateMachinePCU::StateMachinePCU(Data_struct *data, Actuators *actuators,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl,SpeedControl *speedControl):
-Data(data),
+data(data),
 actuators(actuators),
 sensors(sensors),
 spaceVectorControl(spVec),
@@ -29,68 +28,111 @@ void StateMachinePCU::start(Communication *comms){
 void StateMachinePCU::add_states(){
     stateMachine->add_state(State_PCU::Operational);
     stateMachine->add_state(State_PCU::Fault);
-    operationalStateMachine->add_state(Operational_State_PCU::Sending_PWM);
+    operationalStateMachine->add_state(Operational_State_PCU::Braked);
     operationalStateMachine->add_state(Operational_State_PCU::Accelerating);
+    operationalStateMachine->add_state(Operational_State_PCU::Regenerative);
     stateMachine->add_state_machine(*operationalStateMachine,State_PCU::Operational);
 
-        //protections
+    //protections
     ProtectionManager::link_state_machine(*stateMachine,State_PCU::Fault);
-    add_protection(&Data->actual_voltage_battery_A,Boundary<float,ABOVE>(Protecction_Voltage));
-    add_protection(&Data->actual_voltage_battery_B,Boundary<float,ABOVE>(Protecction_Voltage));
+    add_protection(&data->actual_voltage_battery_A,Boundary<float,ABOVE>(Protecction_Voltage));
+    add_protection(&data->actual_voltage_battery_B,Boundary<float,ABOVE>(Protecction_Voltage));
 }
 void StateMachinePCU::add_transitions(){
-
+//transitions generals
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Operational,[this](){
         return communication->is_connected();
     });
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Fault,[this](){
-        return Data->actual_voltage_battery_A > Protecction_Voltage || Data->actual_voltage_battery_B >Protecction_Voltage;
+        return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
     });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
-        return !communication->is_connected() || Data->actual_voltage_battery_A > Protecction_Voltage || Data->actual_voltage_battery_B >Protecction_Voltage;
+        return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
     });
-    operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Sending_PWM,[this](){
-        return (Data->pwm_active != PWM_ACTIVE::NONE && Data->buffer_enable == BUFFER_ENABLE::ON);
+
+    //Braked
+    operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Braked,[this](){
+        return sensors->reeds_braking();
     });
-    operationalStateMachine->add_transition(Operational_State_PCU::Sending_PWM,Operational_State_PCU::Idle,[this](){
-        return (Data->pwm_active == PWM_ACTIVE::NONE || Data->buffer_enable == BUFFER_ENABLE::OFF);
+    operationalStateMachine->add_transition(Operational_State_PCU::Accelerating,Operational_State_PCU::Braked,[this](){
+        return sensors->reeds_braking();
     });
-     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Accelerating,[this](){
+    operationalStateMachine->add_transition(Operational_State_PCU::Regenerative,Operational_State_PCU::Braked,[this](){
+        return sensors->reeds_braking();
+    });
+    //Unbraked
+    operationalStateMachine->add_transition(Operational_State_PCU::Braked,Operational_State_PCU::Idle,[this](){
+        return !sensors->reeds_braking();
+    });
+    //Pass to regenerative mode
+    operationalStateMachine->add_transition(Operational_State_PCU::Accelerating,Operational_State_PCU::Regenerative,[this](){
+        return data->speedState == ControlStates::regenerate;
+    });
+    operationalStateMachine->add_transition(Operational_State_PCU::Regenerative,Operational_State_PCU::Accelerating,[this](){
+        return data->speedState == ControlStates::accelerate;
+    });
+    //Pass to idle if the space vector is off
+
+    operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Accelerating,[this](){
         return StateMachinePCU::space_vector_on == true;
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Accelerating,Operational_State_PCU::Idle,[this](){
-        return StateMachinePCU::space_vector_on == false;
+        return StateMachinePCU::space_vector_on == false || currentControl->running == false;
+    });
+    operationalStateMachine->add_transition(Operational_State_PCU::Regenerative,Operational_State_PCU::Idle,[this](){
+        return StateMachinePCU::space_vector_on == false || currentControl->running == false;
     });
 }
+
 void StateMachinePCU::add_cyclic_actions(){
     Time::register_low_precision_alarm(100,[this](){
-        Data->state_pcu = stateMachine->current_state;
-        Data->operational_state_pcu = operationalStateMachine->current_state;
+        data->state_pcu = stateMachine->current_state;
+        data->operational_state_pcu = operationalStateMachine->current_state;
     });
     Time::register_mid_precision_alarm(1000, [this](){
-        send_upd_data_flag = true;
+        send_udp_data_flag = true;
     });
     Time::register_mid_precision_alarm(Sensors_data::read_sensors_us,[this](){
         sensors->read();
         sensors->read_speetec();
     });
+    //current control
+    operationalStateMachine->add_mid_precision_cyclic_action(
+        [this](){ 
+            if(currentControl->running){
+                execute_current_control_flag = true;
+            }
+        },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+    
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){
-            execute_5khz_accelerating_flag = true;
+          execute_current_control_flag = true;
+        },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Regenerative);
+    //speed control 
+    operationalStateMachine->add_mid_precision_cyclic_action(
+        [this](){ 
+            if(speedControl->running){
+                execute_speed_control_flag = true;
+            }
         },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
 
     operationalStateMachine->add_mid_precision_cyclic_action([this](){
-        if(speed_control){
-            speedControl->control_action();
-        }
-    },us(Speed_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+        execute_speed_control_flag = true;
+    },us(Speed_Control_Data::microsecond_period),Operational_State_PCU::Regenerative);
+
+  
 }
+
 void StateMachinePCU::add_enter_actions(){
     operationalStateMachine->add_enter_action([this](){
         actuators->Led_Commutation.turn_on();
         actuators->enable();
         actuators->Enable_reset();
     },Operational_State_PCU::Accelerating);
+    
+    operationalStateMachine->add_enter_action([this](){
+        actuators->stop_all(); //just for safety reasons
+    },Operational_State_PCU::Idle);
 
     stateMachine->add_enter_action([this](){
         sensors->currentSensors.zeroing();
@@ -99,20 +141,21 @@ void StateMachinePCU::add_enter_actions(){
 
     stateMachine->add_enter_action([this]() {
            actuators->stop_all();
+           actuators->Led_fault.turn_on();
     },State_PCU::Fault);
+    
+    operationalStateMachine->add_enter_action([this](){
+        actuators->stop_all();
+    },Operational_State_PCU::Braked);
 }
 void StateMachinePCU::add_exit_actions(){
+    //exit from operational
     stateMachine->add_exit_action([this](){
         actuators->stop_all();
         actuators->Led_fault.turn_on();
         actuators->Led_Commutation.turn_off();
         actuators->Led_Operational.turn_off();
     },State_PCU::Operational);
-    
-    operationalStateMachine->add_exit_action([this](){
-        actuators->Led_Commutation.turn_off();
-        actuators->stop_all();
-    },Operational_State_PCU::Accelerating);
 }
 void StateMachinePCU::update(){
     #if TEST_PWM
@@ -146,17 +189,17 @@ void StateMachinePCU::update(){
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         spaceVectorControl->set_target_voltage(Communication::ref_voltage_space_vector_received);
         currentControl->stop();
+        speedControl->stop();
     }
-    else if(Communication::received_stop_space_vector == true){
-        Communication::received_stop_space_vector = false;
+    else if(Communication::received_stop_motor == true){
+        Communication::received_stop_motor = false;
+        actuators->stop_all();
         StateMachinePCU::space_vector_on = false;
-        StateMachinePCU::speed_control = false;
         currentControl->stop();
-        speedControl->reset_PI();
+        speedControl->stop();
     }
     if(Communication::received_Precharge_order == true){
         Communication::received_Precharge_order = false;
-       
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
@@ -168,16 +211,15 @@ void StateMachinePCU::update(){
     if(Communication::received_Current_reference_order == true){
         Communication::received_Current_reference_order = false;
 
+        speedControl->reset_PI();
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         currentControl->set_current_ref(Communication::current_reference_received);
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
-        //actions
-        speed_control = false;
+
         StateMachinePCU::space_vector_on = true;
-        currentControl->change_mode(ControlStates::accelerate);
+        speedControl->stop();
         currentControl->start();
-        
     }
     if(Communication::received_Speed_reference_order == true){ 
         Communication::received_Speed_reference_order = false;
@@ -186,21 +228,19 @@ void StateMachinePCU::update(){
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         //actions
-        if(Data->currentState != ControlStates::regenerate){
-            currentControl->change_mode(ControlStates::accelerate);
+        if(data->speedState != ControlStates::regenerate){
             speedControl->change_mode(ControlStates::accelerate); 
         }
-        
         StateMachinePCU::space_vector_on = true;
         currentControl->start();
-        StateMachinePCU::speed_control = true;
+        speedControl->start();
+        
     }
     if(Communication::received_start_regenerative_now_order == true){
         Communication::received_start_regenerative_now_order = false;
-        if(!StateMachinePCU::speed_control) return;
-        currentControl->change_mode(ControlStates::regenerate);
+        if(!speedControl->running) return;
+    
         speedControl->change_mode(ControlStates::regenerate);
-       // speedControl->set_reference_speed(0.0);
     }
     if(Communication::received_Complete_Run_order == true){
         Communication::received_Complete_Run_order = false;
@@ -209,11 +249,11 @@ void StateMachinePCU::update(){
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
         //actions
-        currentControl->change_mode(ControlStates::regenerate);
+        /*This should be changed in a future*/
         speedControl->change_mode(ControlStates::regenerate);
         StateMachinePCU::space_vector_on = true;
         currentControl->start();
-        StateMachinePCU::speed_control = true;
+        speedControl->start();
     }
     if(Communication::received_zeroing_order == true){
         Communication::received_zeroing_order = false;
@@ -245,14 +285,19 @@ void StateMachinePCU::update(){
             }
         }
     #endif
-    if(execute_5khz_accelerating_flag){
-        execute_5khz_accelerating_flag = false;
+    if(execute_current_control_flag){
+        execute_current_control_flag = false;
         spaceVectorControl->calculate_duties();
         currentControl->control_action();
     }
-    if(send_upd_data_flag){
-        send_upd_data_flag = false;
+    if(execute_speed_control_flag){
+        execute_speed_control_flag = false;
+        speedControl->control_action();
+    }
+    if(send_udp_data_flag){
+        send_udp_data_flag = false;
         communication->send_UDP_packets();
     }
     stateMachine->check_transitions();
+    operationalStateMachine->check_transitions();
 }

@@ -9,7 +9,7 @@
     bool Communication::received_enable_reset = false;
 #endif
 bool Communication::received_activate_space_vector = false;
-bool Communication::received_stop_space_vector = false;
+bool Communication::received_stop_motor = false;
 bool Communication::received_Current_reference_order = false;
 bool Communication::received_zeroing_order = false;
 bool Communication::received_Speed_reference_order = false;
@@ -18,7 +18,7 @@ bool Communication::received_Complete_Run_order = false;
 bool Communication::received_start_regenerative_now_order = false;
 
 
-float Communication::duty_cycle_received{};
+
 float Communication::ref_voltage_space_vector_received{};
 float Communication::Vmax_control_received{};
 float Communication::frequency_space_vector_received{};
@@ -27,7 +27,6 @@ float Communication::frequency_received{};
 float Communication::current_reference_received{};
 float Communication::speed_reference_received{};
 
-PWM_ACTIVE Communication::pwm_received = PWM_ACTIVE::NONE;
 #if TEST_PWM
     void received_enable_buffer_callback(){
         Communication::received_enable_buffer = true;
@@ -51,8 +50,8 @@ PWM_ACTIVE Communication::pwm_received = PWM_ACTIVE::NONE;
 void received_activate_space_vector_callback(){
     Communication::received_activate_space_vector = true;
 }
-void received_stop_space_vector_callback(){
-    Communication::received_stop_space_vector = true;
+void received_stop_motor_callback(){
+    Communication::received_stop_motor = true;
 }
 void received_current_reference_callback(){
     Communication::received_Current_reference_order = true;
@@ -92,7 +91,7 @@ Communication::Communication(Data_struct *data): Data(data){
         Enable_Reset = new HeapOrder(Communication_Data::ENABLE_RESET_ORDER,&enable_reset_callback);
     #endif
     Start_space_vector = new HeapOrder(Communication_Data::START_SPACE_VECTOR_ORDER,&received_activate_space_vector_callback,&frequency_space_vector_received,&frequency_received,&ref_voltage_space_vector_received,&Vmax_control_received,&Data->Stablished_direction);
-    Stop_space_vector = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_space_vector_callback);
+    Stop_motor = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_motor_callback);
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received,&Data->Stablished_direction);
     Speed_reference_Order = new HeapOrder(Communication_Data::SPEED_REFERENCE_ORDER,&received_speed_reference_callback,&speed_reference_received,&frequency_received,&Vmax_control_received,&Data->Stablished_direction);
     Complete_Run_order = new HeapOrder(Communication_Data::MAKE_COMPLETE_RUN_ORDER,&received_Complete_Run_callback,&speed_reference_received,&frequency_received,&Vmax_control_received,&Data->Stablished_direction);
@@ -107,6 +106,7 @@ Communication::Communication(Data_struct *data): Data(data){
     Encoder_Packet = new HeapPacket(Communication_Data::ENCODER_PACKET,&Data->position_encoder,&Data->direction_encoder,&Data->speed_encoder,&Data->speed_km_h_encoder,&Data->acceleration_encoder);
     Control_Speed_Packet = new HeapPacket(Communication_Data::CONTROL_SPEED_PACKET,&Data->target_speed,&Data->speed_error,&Data->actual_current_ref);
     ControlState_Packet = new HeapPacket(Communication_Data::CONTROL_STATE_PACKET,&Data->Stablished_direction,&Data->speedState);
+    Reeds_Packet = new HeapPacket(Communication_Data::REEDS_PACKET,&data->reed1,&data->reed2,&data->reed3,&data->reed4);
 }
 void Communication::send_UDP_packets(){
    datagramSocket->send_packet(*Pwm_packet);

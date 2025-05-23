@@ -66,9 +66,10 @@ private:
         Max_Peak current_v_b{Data->actual_current_sensor_v_b};
         Max_Peak current_W_b{Data->actual_current_sensor_w_b};
     #endif
-    bool should_be_running{false};
+    
 
 public:
+    bool running{false};
     CurrentControl(Data_struct *Data,SpaceVector *spaceVector);
     void set_current_ref(float cur_ref);
     double calculate_peak();
@@ -76,7 +77,5 @@ public:
     void control_action();
     void start();
     void stop();
-    bool is_running();
-    void change_mode(ControlStates state);
     void reset_PI();
 };

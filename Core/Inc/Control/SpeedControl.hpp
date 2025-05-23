@@ -16,6 +16,7 @@ private:
     double calculate_frequency_modulation();
 
 public:
+    bool running{false};
     float current_ref{};
     SpeedControl(Data_struct *Data,CurrentControl *currentControl,SpaceVector *spaceVector);
     void set_reference_speed(float speed_ref);
@@ -23,5 +24,7 @@ public:
     ControlStates get_controlState();
     void change_mode(ControlStates state);
     void control_action();
+    void start();
+    void stop();
     void reset_PI();
 };

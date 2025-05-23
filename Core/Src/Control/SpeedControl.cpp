@@ -25,7 +25,7 @@ double SpeedControl::calculate_frequency_modulation(){
     return (Data->speedState == ControlStates::accelerate) ? exp_follower(a*Data->speed_km_h_encoder + b) : exp_follower(a*Data->speed_km_h_encoder + b - Data->speed_km_h_encoder/1.2);
 }
 void SpeedControl::control_action(){
-    if(!currentControl->is_running())  return;
+    if(!currentControl->running || running)  return;
     spaceVector->set_frequency_Modulation(calculate_frequency_modulation());
     double speed_error = reference_speed - Data->speed_km_h_encoder;
     Data->speed_error = speed_error;
@@ -63,4 +63,10 @@ void SpeedControl::reset_PI(){
     speed_PI.reset();
     regenerate_PI.reset();
     currentControl->reset_PI();
+}
+void SpeedControl::start(){
+    running = true;
+}
+void SpeedControl::stop(){
+    running = false;
 }

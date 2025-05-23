@@ -37,14 +37,14 @@ double CurrentControl::calculate_peak(){
     #endif
 }
 void CurrentControl::control_action(){
-    if (!should_be_running) return;
+    if (!running) return;
     double target_voltage;
     double current_peak = calculate_peak();
     double current_error = current_ref - current_peak;
     Data->current_Peak = current_peak;
     Data->current_error = current_error;
     
-    if(Data->currentState == ControlStates::accelerate){
+    if(Data->speedState == ControlStates::accelerate){
         #if SATURATOR_PI
         float integrator_temp = current_PI.integrator.output_value;
         #endif
@@ -70,18 +70,12 @@ void CurrentControl::control_action(){
 }
 
 void CurrentControl::start() {
-    should_be_running = true;
+    running = true;
     reset_PI();
 }
 
 void CurrentControl::stop() {
-    should_be_running = false;
-}
-bool CurrentControl::is_running(){
-    return should_be_running;
-}
-void CurrentControl::change_mode(ControlStates state){
-    Data->currentState = state;
+    running = false;
 }
 void CurrentControl::reset_PI(){
     current_PI.reset();

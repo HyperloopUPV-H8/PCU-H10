@@ -10,16 +10,8 @@ class Communication{
         DatagramSocket *HVSCU_datagramSocket;
         #endif
         //orders//
-        #if TEST_PWM
-            HeapOrder *Enable_Buffer_Order;
-            HeapOrder *Disable_Buffer_Order;
-            HeapOrder *Send_pwm_Order;
-            HeapOrder *Stop_pwm_Order;
-            HeapOrder *Disable_Reset;
-            HeapOrder *Enable_Reset;
-        #endif   
         HeapOrder *Start_space_vector;
-        HeapOrder *Stop_space_vector;
+        HeapOrder *Stop_motor;
         HeapOrder *Current_reference_Order;
         HeapOrder *Speed_reference_Order;
         HeapOrder *Zeroing_Order;
@@ -33,6 +25,7 @@ class Communication{
         HeapPacket *Encoder_Packet;
         HeapPacket *Control_Speed_Packet;
         HeapPacket *ControlState_Packet;
+        HeapPacket *Reeds_Packet;
     public:
         #if COMMUNICATION_HVSCU 
         DatagramSocket *HVSCU_datagramSocket;
@@ -48,7 +41,7 @@ class Communication{
             static bool received_enable_reset;
         #endif
         static bool received_activate_space_vector;
-        static bool received_stop_space_vector;
+        static bool received_stop_motor;
         static bool received_Current_reference_order;
         static bool received_Speed_reference_order;
         static bool received_zeroing_order;

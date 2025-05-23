@@ -95,6 +95,7 @@ namespace Communication_Data{
     static constexpr uint16_t ENCODER_PACKET = 554;
     static constexpr uint16_t CONTROL_SPEED_PACKET = 555;
     static constexpr uint16_t CONTROL_STATE_PACKET = 556;
+    static constexpr uint16_t REEDS_PACKET = 557;
 };
 namespace Current_Control_Data{
     static constexpr double kp_accelerate = 0.1;
@@ -130,6 +131,7 @@ enum State_PCU: uint8_t{
 };
 enum Operational_State_PCU: uint8_t{
     Idle,
+    Braked,
     Accelerating,
     Regenerative
     
@@ -178,9 +180,9 @@ struct Data_struct{
     ControlStates speedState{ControlStates::accelerate};
     Direction Stablished_direction{Direction::FORWARD};
     //reeds
-    bool reed1{};
-    bool reed2{};
-    bool reed3{};
-    bool reed4{};
+    PinState reed1{};
+    PinState reed2{};
+    PinState reed3{};
+    PinState reed4{};
 
 };

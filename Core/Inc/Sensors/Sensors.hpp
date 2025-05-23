@@ -23,5 +23,6 @@ class Sensors{
     void start();
     void read_speetec();
     void read_reeds();
+    bool reeds_braking();
      
 };

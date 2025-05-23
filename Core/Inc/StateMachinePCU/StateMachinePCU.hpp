@@ -11,18 +11,19 @@ class StateMachinePCU{
     private:
         StateMachine *stateMachine;
         StateMachine *operationalStateMachine;
-        Data_struct *Data;
+        Data_struct *data;
         Actuators *actuators;
         Sensors *sensors;
         Communication *communication;
         SpaceVector *spaceVectorControl;
         CurrentControl *currentControl;
         SpeedControl *speedControl;
-        bool execute_5khz_accelerating_flag{false};
-        bool send_upd_data_flag{false};
+        bool execute_current_control_flag{false};
+        bool send_udp_data_flag{false};
+        bool execute_speed_control_flag{false};
     public:
         static bool space_vector_on;
-        static bool speed_control;
+        static bool speed_control_active;
         StateMachinePCU(Data_struct *data, Actuators *actuators,Sensors *sensors,SpaceVector *spVec,CurrentControl *current_Control,SpeedControl *speedControl);
         void start(Communication *comms);
         void add_states();
