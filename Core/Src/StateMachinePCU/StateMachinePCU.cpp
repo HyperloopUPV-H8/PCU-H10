@@ -77,7 +77,7 @@ void StateMachinePCU::add_transitions(){
         return StateMachinePCU::space_vector_on == true;
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Accelerating,Operational_State_PCU::Idle,[this](){
-        return StateMachinePCU::space_vector_on == false || currentControl->running == false;
+        return StateMachinePCU::space_vector_on == false;
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Regenerative,Operational_State_PCU::Idle,[this](){
         return StateMachinePCU::space_vector_on == false || currentControl->running == false;
@@ -99,14 +99,18 @@ void StateMachinePCU::add_cyclic_actions(){
     //current control
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){ 
+            execute_space_vector_control_flag = true;
             if(currentControl->running){
                 execute_current_control_flag = true;
+                
             }
         },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
     
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){
           execute_current_control_flag = true;
+          execute_space_vector_control_flag = true;
+          execute_speed_control_flag = true;
         },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Regenerative);
     //speed control 
     operationalStateMachine->add_mid_precision_cyclic_action(
@@ -285,9 +289,12 @@ void StateMachinePCU::update(){
             }
         }
     #endif
-    if(execute_current_control_flag){
+    if(execute_space_vector_control_flag){
         execute_current_control_flag = false;
         spaceVectorControl->calculate_duties();
+    }
+    if(execute_current_control_flag){
+        execute_current_control_flag = false;
         currentControl->control_action();
     }
     if(execute_speed_control_flag){

@@ -33,5 +33,5 @@ void Sensors::read_reeds(){
 }
 
 bool Sensors::reeds_braking(){
-    return data->reed1 == PinState::OFF || data->reed2 == PinState::OFF || data->reed3 == PinState::OFF || data->reed4 == PinState::OFF;
+    return false;//data->reed1 == PinState::OFF || data->reed2 == PinState::OFF || data->reed3 == PinState::OFF || data->reed4 == PinState::OFF;
 }

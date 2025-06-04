@@ -19,6 +19,7 @@ class StateMachinePCU{
         CurrentControl *currentControl;
         SpeedControl *speedControl;
         bool execute_current_control_flag{false};
+        bool execute_space_vector_control_flag{false};
         bool send_udp_data_flag{false};
         bool execute_speed_control_flag{false};
     public:

@@ -117,6 +117,7 @@ void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Control_Speed_Packet);
     datagramSocket->send_packet(*StateMachine_Packet);
     datagramSocket->send_packet(*ControlState_Packet); 
+    datagramSocket->send_packet(*Reeds_Packet);
     #if COMMUNICATION_HVSCU 
         HVSCU_datagramSocket->send_packet(*batteries_Packet);
     #endif

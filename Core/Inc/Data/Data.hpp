@@ -113,12 +113,6 @@ namespace Speed_Control_Data{
     static constexpr double period = 0.1;
     static constexpr uint32_t microsecond_period = static_cast<uint32_t>(period * 1000000);
 }
-enum class PWM_ACTIVE: uint8_t{
-    NONE = 0,
-    U = 1,
-    V = 2,
-    W = 3
-}; 
 enum class BUFFER_ENABLE : uint8_t{
     OFF = 0,
     ON = 1
@@ -147,7 +141,6 @@ struct Data_struct{
     float actual_duty_u{};
     float actual_duty_v{};
     float actual_duty_w{};
-    BUFFER_ENABLE buffer_enable{};
     
     //batteries
     float actual_voltage_battery_A{};

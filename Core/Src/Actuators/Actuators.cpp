@@ -36,11 +36,9 @@ void Actuators::stop_all() {
 }
 void Actuators::disable() {
     Enable.turn_on();
-    data->buffer_enable = BUFFER_ENABLE::OFF;
 }
 void Actuators::enable() {
     Enable.turn_off();
-    data->buffer_enable = BUFFER_ENABLE::ON;
 }
 void Actuators::set_frequency_u(uint32_t frequency) {
     U_Dual.set_frequency(frequency);
