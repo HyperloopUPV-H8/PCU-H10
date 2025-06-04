@@ -135,7 +135,8 @@ void StateMachinePCU::add_enter_actions(){
     },Operational_State_PCU::Accelerating);
     
     operationalStateMachine->add_enter_action([this](){
-        actuators->stop_all(); //just for safety reasons
+       Motor_Stop(); //just for safety reasons
+
     },Operational_State_PCU::Idle);
 
     stateMachine->add_enter_action([this](){
@@ -144,18 +145,18 @@ void StateMachinePCU::add_enter_actions(){
     },State_PCU::Operational);
 
     stateMachine->add_enter_action([this]() {
-           actuators->stop_all();
+           Motor_Stop();
            actuators->Led_fault.turn_on();
     },State_PCU::Fault);
     
     operationalStateMachine->add_enter_action([this](){
-        actuators->stop_all();
+        Motor_Stop();
     },Operational_State_PCU::Braked);
 }
 void StateMachinePCU::add_exit_actions(){
     //exit from operational
     stateMachine->add_exit_action([this](){
-        actuators->stop_all();
+        Motor_Stop();
         actuators->Led_fault.turn_on();
         actuators->Led_Commutation.turn_off();
         actuators->Led_Operational.turn_off();
@@ -197,10 +198,7 @@ void StateMachinePCU::update(){
     }
     else if(Communication::received_stop_motor == true){
         Communication::received_stop_motor = false;
-        actuators->stop_all();
-        StateMachinePCU::space_vector_on = false;
-        currentControl->stop();
-        speedControl->stop();
+        Motor_Stop();
     }
     if(Communication::received_Precharge_order == true){
         Communication::received_Precharge_order = false;
@@ -290,7 +288,7 @@ void StateMachinePCU::update(){
         }
     #endif
     if(execute_space_vector_control_flag){
-        execute_current_control_flag = false;
+        execute_space_vector_control_flag = false;
         spaceVectorControl->calculate_duties();
     }
     if(execute_current_control_flag){
@@ -307,4 +305,14 @@ void StateMachinePCU::update(){
     }
     stateMachine->check_transitions();
     operationalStateMachine->check_transitions();
+}
+
+void StateMachinePCU::Motor_Stop(){ //This may be rebundance but Safety Reasons
+    actuators->stop_all();
+    space_vector_on = false;
+    execute_current_control_flag = false;
+    execute_space_vector_control_flag = false;
+    execute_speed_control_flag = false;
+    currentControl->stop();
+    speedControl->stop();
 }

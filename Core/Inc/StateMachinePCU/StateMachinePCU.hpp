@@ -33,5 +33,5 @@ class StateMachinePCU{
         void add_exit_actions();
         void add_cyclic_actions();
         void update();
-
+        void Motor_Stop();
 };
