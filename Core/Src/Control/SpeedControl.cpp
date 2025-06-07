@@ -66,7 +66,9 @@ void SpeedControl::reset_PI(){
 }
 void SpeedControl::start(){
     running = true;
+    Data->speed_control_active = true;
 }
 void SpeedControl::stop(){
     running = false;
+    Data->speed_control_active = false;
 }

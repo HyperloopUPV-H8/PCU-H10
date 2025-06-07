@@ -1,7 +1,6 @@
 #include "StateMachinePCU/StateMachinePCU.hpp"
 #define MODULATION_FREQUENCY_DEFAULT 10
 #define Protecction_Voltage 325.0
-bool StateMachinePCU::space_vector_on = false;
 StateMachinePCU::StateMachinePCU(Data_struct *data, Actuators *actuators,Sensors *sensors,SpaceVector *spVec,CurrentControl *currentControl,SpeedControl *speedControl):
 data(data),
 actuators(actuators),
@@ -74,13 +73,13 @@ void StateMachinePCU::add_transitions(){
     //Pass to idle if the space vector is off
 
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Accelerating,[this](){
-        return StateMachinePCU::space_vector_on == true;
+        return data->space_vector_active == true;
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Accelerating,Operational_State_PCU::Idle,[this](){
-        return StateMachinePCU::space_vector_on == false;
+        return data->space_vector_active == false;
     });
     operationalStateMachine->add_transition(Operational_State_PCU::Regenerative,Operational_State_PCU::Idle,[this](){
-        return StateMachinePCU::space_vector_on == false || currentControl->running == false;
+        return data->space_vector_active == false || currentControl->running == false;
     });
 }
 
@@ -188,7 +187,7 @@ void StateMachinePCU::update(){
 
     if(Communication::received_activate_space_vector == true){
         Communication::received_activate_space_vector = false;
-        StateMachinePCU::space_vector_on = true;
+        data->space_vector_active = true;
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
         spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
@@ -208,7 +207,7 @@ void StateMachinePCU::update(){
         spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
         //actions
         currentControl->stop();
-        StateMachinePCU::space_vector_on = true;
+        data->space_vector_active = true;
     }
     if(Communication::received_Current_reference_order == true){
         Communication::received_Current_reference_order = false;
@@ -219,7 +218,7 @@ void StateMachinePCU::update(){
         actuators->set_three_frequencies(Communication::frequency_received);
         spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
 
-        StateMachinePCU::space_vector_on = true;
+        data->space_vector_active = true;
         speedControl->stop();
         currentControl->start();
     }
@@ -233,7 +232,7 @@ void StateMachinePCU::update(){
         if(data->speedState != ControlStates::regenerate){
             speedControl->change_mode(ControlStates::accelerate); 
         }
-        StateMachinePCU::space_vector_on = true;
+        data->space_vector_active = true;
         currentControl->start();
         speedControl->start();
         
@@ -253,7 +252,7 @@ void StateMachinePCU::update(){
         //actions
         /*This should be changed in a future*/
         speedControl->change_mode(ControlStates::regenerate);
-        StateMachinePCU::space_vector_on = true;
+        data->space_vector_active = true;
         currentControl->start();
         speedControl->start();
     }
@@ -309,7 +308,7 @@ void StateMachinePCU::update(){
 
 void StateMachinePCU::Motor_Stop(){ //This may be rebundance but Safety Reasons
     actuators->stop_all();
-    space_vector_on = false;
+    data->space_vector_active = false;
     execute_current_control_flag = false;
     execute_space_vector_control_flag = false;
     execute_speed_control_flag = false;

@@ -172,6 +172,9 @@ struct Data_struct{
     //control
     ControlStates speedState{ControlStates::accelerate};
     Direction Stablished_direction{Direction::FORWARD};
+    bool space_vector_active{};
+    bool current_control_active{};
+    bool speed_control_active{};
     //reeds
     PinState reed1{};
     PinState reed2{};

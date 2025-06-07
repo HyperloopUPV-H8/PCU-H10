@@ -71,11 +71,13 @@ void CurrentControl::control_action(){
 
 void CurrentControl::start() {
     running = true;
+    Data->current_control_active = true;
     reset_PI();
 }
 
 void CurrentControl::stop() {
     running = false;
+    Data->current_control_active = false;
 }
 void CurrentControl::reset_PI(){
     current_PI.reset();
