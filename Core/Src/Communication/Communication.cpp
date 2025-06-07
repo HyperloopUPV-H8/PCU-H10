@@ -16,7 +16,7 @@ bool Communication::received_Speed_reference_order = false;
 bool Communication::received_Precharge_order = false;
 bool Communication::received_Complete_Run_order = false;
 bool Communication::received_start_regenerative_now_order = false;
-
+bool Communication::received_motor_brake_order = false;
 
 
 float Communication::ref_voltage_space_vector_received{};
@@ -71,6 +71,9 @@ void received_Complete_Run_callback(){
 void received_start_regenerative_now_callback(){
     Communication::received_start_regenerative_now_order = true;
 }
+void received_motor_brake_callback(){
+    Communication::received_motor_brake_order = true;
+}
 
 Communication::Communication(Data_struct *data): Data(data){
     #if CHILL_KEEPALIVES
@@ -98,6 +101,7 @@ Communication::Communication(Data_struct *data): Data(data){
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
     Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&Vmax_control_received);
     Start_regenerative_now_order = new HeapOrder(Communication_Data::START_REGENERATIVE_NOW_ORDER,&received_start_regenerative_now_callback);
+    Motor_brake_order = new HeapOrder(Communication_Data::BRAKE_MOTOR_ORDER,&Vmax_control_received,&received_motor_brake_callback);
     //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->actual_frequency,&Data->modulation_frequency,&Data->actual_duty_u,&Data->actual_duty_v,&Data->actual_duty_w);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
@@ -112,7 +116,6 @@ void Communication::send_UDP_packets(){
    datagramSocket->send_packet(*Pwm_packet);
     datagramSocket->send_packet(*batteries_Packet);
     datagramSocket->send_packet(*Current_sensor_Packet);
-    
     datagramSocket->send_packet(*Encoder_Packet);
     datagramSocket->send_packet(*Control_Speed_Packet);
     datagramSocket->send_packet(*StateMachine_Packet);

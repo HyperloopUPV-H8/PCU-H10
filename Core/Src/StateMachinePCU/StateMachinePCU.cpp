@@ -234,8 +234,21 @@ void StateMachinePCU::update(){
         }
         data->space_vector_active = true;
         currentControl->start();
+        speedControl->start();   
+    }
+    if(Communication::received_motor_brake_order == true){
+        Communication::received_motor_brake_order = false;
+        speedControl->reset_PI();
+        //hardcoded almost everything 
+        speedControl->set_reference_speed(0);
+        data->Stablished_direction = Direction::BACKWARDS;
+        actuators->set_three_frequencies(10000);
+        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
+        //ACTIONS
+        data->space_vector_active = true;
+        currentControl->start();
         speedControl->start();
-        
+
     }
     if(Communication::received_start_regenerative_now_order == true){
         Communication::received_start_regenerative_now_order = false;
