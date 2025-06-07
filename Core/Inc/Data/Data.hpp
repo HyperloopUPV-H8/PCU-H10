@@ -10,6 +10,7 @@
 #define ARMONIC_INJECTION 1 // 0 = NO armonic injection, 1 = Armonic injection active
 #define MOTOR_CENTER_ALIGNED 0 // 0 = Normal dualPWM, 1 = CenterAligned DualPWM
 #define SATURATOR_PI 1 // 0 = No saturator PI, 1 = Saturator PI
+#define FALSIFY_BRAKES // To falsify brakes if it's possible only for testing
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8; 
