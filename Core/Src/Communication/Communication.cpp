@@ -101,8 +101,8 @@ Communication::Communication(Data_struct *data): Data(data){
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
     Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&Vmax_control_received);
     Start_regenerative_now_order = new HeapOrder(Communication_Data::START_REGENERATIVE_NOW_ORDER,&received_start_regenerative_now_callback);
-    Motor_brake_order = new HeapOrder(Communication_Data::BRAKE_MOTOR_ORDER,&Vmax_control_received,&received_motor_brake_callback);
-    //packets
+    Motor_brake_order = new HeapOrder(Communication_Data::BRAKE_MOTOR_ORDER,&received_motor_brake_callback,&Vmax_control_received);
+    // //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->actual_frequency,&Data->modulation_frequency,&Data->actual_duty_u,&Data->actual_duty_v,&Data->actual_duty_w);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
     Current_sensor_Packet = new HeapPacket(Communication_Data::CURRENT_SENSOR_PACKET,&Data->actual_current_sensor_u_a,&Data->actual_current_sensor_v_a,&Data->actual_current_sensor_w_a,&Data->actual_current_sensor_u_b,&Data->actual_current_sensor_v_b,&Data->actual_current_sensor_w_b,&Data->current_Peak,&Data->current_error,&Data->target_voltage,&Data->time,&Data->imod);
