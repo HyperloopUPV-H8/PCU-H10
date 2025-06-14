@@ -15,10 +15,10 @@ class Sensors{
         DigitalSensor reed4{Pinout::REED_4,&data->reed4};
         FilteredLinearSensor<float,50> sensor_voltage_A{Pinout::Batt_Voltage_A,Sensors_data::slope_voltage_sensor,Sensors_data::offset_voltage_sensor,&data->actual_voltage_battery_A,filter_voltage_A};
         FilteredLinearSensor<float,50> sensor_voltage_B{Pinout::Batt_Voltage_B,Sensors_data::slope_voltage_sensor,Sensors_data::offset_voltage_sensor,&data->actual_voltage_battery_B,filter_voltage_B};
-        DigitalSensor fault_gd_inverter_a{FAULT_GD_INVERTER_A, &data->fault_gd_inverter_a};
-        DigitalSensor fault_gd_inverter_b{FAULT_GD_INVERTER_B, &data->fault_gd_inverter_b};
-        DigitalSensor ready_gd_inverter_a{READY_GD_INVERTER_A, &data->ready_gd_inverter_a};
-        DigitalSensor ready_gd_inverter_b{READY_GD_INVERTER_B, &data->ready_gd_inverter_b};
+        DigitalSensor fault_gd_inverter_a{Pinout::FAULT_GD_INVERTER_A, &data->fault_gd_inverter_a};
+        DigitalSensor fault_gd_inverter_b{Pinout::FAULT_GD_INVERTER_B, &data->fault_gd_inverter_b};
+        DigitalSensor ready_gd_inverter_a{Pinout::READY_GD_INVERTER_A, &data->ready_gd_inverter_a};
+        DigitalSensor ready_gd_inverter_b{Pinout::READY_GD_INVERTER_B, &data->ready_gd_inverter_b};
     public:
     Sensors(Data_struct *data);
     CurrentSensors currentSensors;
