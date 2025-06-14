@@ -17,6 +17,10 @@ void Sensors::read(){
     sensor_voltage_A.read();
     sensor_voltage_B.read();
     read_reeds();
+    fault_gd_inverter_a.read();
+    fault_gd_inverter_b.read();
+    ready_gd_inverter_a.read();
+    ready_gd_inverter_b.read();
 }
 void Sensors::start(){
     speetec.turn_on();
