@@ -41,6 +41,11 @@ namespace Pinout{
     static constexpr Pin& REED_2 = PD13;
     static constexpr Pin& REED_3 = PD14;
     static constexpr Pin& REED_4 = PD15;
+
+    static constexpr Pin& FAULT_GD_INVERTER_A = PB6;
+    static constexpr Pin& FAULT_GD_INVERTER_B = PE15;
+    static constexpr Pin& READY_GD_INVERTER_A = PB5;
+    static constexpr Pin& READY_GD_INVERTER_B = PE14;
 };
 namespace Sensors_data{
     constexpr static float slope_current_sensor{96.206615f};
@@ -98,6 +103,7 @@ namespace Communication_Data{
     static constexpr uint16_t CONTROL_SPEED_PACKET = 555;
     static constexpr uint16_t CONTROL_STATE_PACKET = 556;
     static constexpr uint16_t REEDS_PACKET = 557;
+    static constexpr uint16_t GATE_DRIVER_PACKET = 558;
 };
 namespace Current_Control_Data{
     static constexpr double kp_accelerate = 0.1;
@@ -182,5 +188,10 @@ struct Data_struct{
     PinState reed2{};
     PinState reed3{};
     PinState reed4{};
+    //Gate Driver Reporting
+    PinState fault_gd_inverter_a{PinState::ON};
+    PinState fault_gd_inverter_b{PinState::ON};
+    PinState ready_gd_inverter_a{PinState::ON};
+    PinState ready_gd_inverter_b{PinState::ON};
 
 };

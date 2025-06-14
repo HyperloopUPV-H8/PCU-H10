@@ -111,6 +111,7 @@ Communication::Communication(Data_struct *data): Data(data){
     Control_Speed_Packet = new HeapPacket(Communication_Data::CONTROL_SPEED_PACKET,&Data->target_speed,&Data->speed_error,&Data->actual_current_ref);
     ControlState_Packet = new HeapPacket(Communication_Data::CONTROL_STATE_PACKET,&Data->Stablished_direction,&Data->speedState);
     Reeds_Packet = new HeapPacket(Communication_Data::REEDS_PACKET,&data->reed1,&data->reed2,&data->reed3,&data->reed4);
+    Gate_Driver_Packet = new HeapPacket(Communication_Data::GATE_DRIVER_PACKET,&Data->fault_gd_inverter_a,&Data->fault_gd_inverter_b,&Data->ready_gd_inverter_a,&Data->ready_gd_inverter_b);
 }
 void Communication::send_UDP_packets(){
    datagramSocket->send_packet(*Pwm_packet);
@@ -121,6 +122,7 @@ void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*StateMachine_Packet);
     datagramSocket->send_packet(*ControlState_Packet); 
     datagramSocket->send_packet(*Reeds_Packet);
+    datagramSocket->send_packet(*Gate_Driver_Packet);
     #if COMMUNICATION_HVSCU 
         HVSCU_datagramSocket->send_packet(*batteries_Packet);
     #endif

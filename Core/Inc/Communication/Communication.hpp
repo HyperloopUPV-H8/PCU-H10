@@ -27,6 +27,7 @@ class Communication{
         HeapPacket *Control_Speed_Packet;
         HeapPacket *ControlState_Packet;
         HeapPacket *Reeds_Packet;
+        HeapPacket* Gate_Driver_Packet;
     public:
         #if COMMUNICATION_HVSCU 
         DatagramSocket *HVSCU_datagramSocket;
