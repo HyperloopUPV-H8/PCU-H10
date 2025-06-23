@@ -44,3 +44,9 @@ bool Sensors::reeds_braking(){
         data->reed1 == PinState::OFF || data->reed2 == PinState::OFF || data->reed3 == PinState::OFF || data->reed4 == PinState::OFF;
     #endif
 }
+bool Sensors::check_gate_drivers() const {
+    return data->fault_gd_inverter_a == PinState::ON &&
+           data->fault_gd_inverter_b == PinState::ON &&
+           data->ready_gd_inverter_a == PinState::ON &&
+           data->ready_gd_inverter_b == PinState::ON;
+}

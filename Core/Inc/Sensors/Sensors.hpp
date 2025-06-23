@@ -27,5 +27,6 @@ class Sensors{
     void read_speetec();
     void read_reeds();
     bool reeds_braking();
+    bool check_gate_drivers()const;
      
 };

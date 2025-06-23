@@ -46,9 +46,8 @@ void StateMachinePCU::add_transitions(){
         return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
     });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
-        return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
+        return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage || not sensors->check_gate_drivers();
     });
-
     //Braked
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Braked,[this](){
         return sensors->reeds_braking();
