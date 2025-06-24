@@ -3,6 +3,8 @@
 #include "SpaceVector.hpp"
 
 #define NANOSECOND 1000000000
+
+#define USE_VF_CONTROL 0
 class Max_Peak{
     private:
         double antiguo_maximo = 0.0;
@@ -51,6 +53,8 @@ class Max_Peak{
 };
 class CurrentControl{
 private:
+    float a = 1.3;
+    float b = 8.4;
     float current_ref;
     PI<IntegratorType::Trapezoidal> current_PI{Current_Control_Data::kp_accelerate,Current_Control_Data::ki_accelerate,Current_Control_Data::period};
     PI<IntegratorType::Trapezoidal> current_regenerate_PI{Current_Control_Data::kp_regenerate,Current_Control_Data::ki_regenerate,Current_Control_Data::period};
@@ -72,6 +76,7 @@ public:
     bool running{false};
     CurrentControl(Data_struct *Data,SpaceVector *spaceVector);
     void set_current_ref(float cur_ref);
+    double calculate_frequency_modulation();
     double calculate_peak();
     float get_current_ref();
     void control_action();

@@ -2,12 +2,6 @@
 #define CURRENT_LIMIT 100
 #define REGENERATIVE_SPEED_REF 0.0
 
-static double exp_follower(double reference, double error_factor = 0.5){
-    static double output{0.0};
-    double error{reference - output};
-    output += error * error_factor;
-    return output;
-}
 SpeedControl::SpeedControl(Data_struct *Data,CurrentControl *currentControl,SpaceVector *spaceVector):
     Data(Data),currentControl(currentControl),spaceVector(spaceVector){
         speed_PI.reset();
@@ -21,16 +15,8 @@ void SpeedControl::set_reference_speed(float speed_ref){
 float SpeedControl::get_reference_speed(){
     return reference_speed;
 }
-double SpeedControl::calculate_frequency_modulation(){
-    return (Data->speedState == ControlStates::accelerate) ? exp_follower(a*Data->speed_km_h_encoder + b) : exp_follower(a*Data->speed_km_h_encoder + b - Data->speed_km_h_encoder/1.2);
-}
 void SpeedControl::control_action(){
     if(!currentControl->running || !running)  return;
-    #if USE_VF_CURRENT_CONTROL
-        spaceVector->set_frequency_Modulation(calculate_frequency_modulation());
-    #else
-        spaceVector->set_frequency_Modulation(10);
-    #endif
     double speed_error = reference_speed - Data->speed_km_h_encoder;
     Data->speed_error = speed_error;
     float actual_current_ref;

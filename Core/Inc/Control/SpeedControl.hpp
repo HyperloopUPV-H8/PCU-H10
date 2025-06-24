@@ -6,8 +6,6 @@
 #define USE_VF_CURRENT_CONTROL 1
 class SpeedControl{
 private:
-    float a = 1.3;
-    float b = 8.4;
     float reference_speed{};
     PI<IntegratorType::Trapezoidal> speed_PI{Speed_Control_Data::kp_accelerate,Speed_Control_Data::ki_accelerate,Speed_Control_Data::period};
     PI<IntegratorType::Trapezoidal> regenerate_PI{Speed_Control_Data::kp_regenerate,Speed_Control_Data::ki_regenerate,Speed_Control_Data::period};

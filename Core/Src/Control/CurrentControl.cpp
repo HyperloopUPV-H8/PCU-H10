@@ -15,7 +15,6 @@ float CurrentControl::get_current_ref(){
     return current_ref;
 }
 double CurrentControl::calculate_peak(){
-    Max_Peak::set_modulation_freq(spaceVector->get_modulation_frequency());
     #if PPU_USING != 1
         double Peak_u_a = current_u_a.calculate_Max_Peak();
         double Peak_v_a = current_v_a.calculate_Max_Peak();
@@ -43,7 +42,11 @@ void CurrentControl::control_action(){
     double current_error = current_ref - current_peak;
     Data->current_Peak = current_peak;
     Data->current_error = current_error;
-    
+    #if USE_VF_CONTROL
+        spaceVector->set_frequency_Modulation(calculate_frequency_modulation());
+    #else
+        Max_Peak::set_modulation_freq(spaceVector->get_modulation_frequency());
+    #endif
     if(Data->speedState == ControlStates::accelerate){
         #if SATURATOR_PI
         float integrator_temp = current_PI.integrator.output_value;
@@ -82,4 +85,13 @@ void CurrentControl::stop() {
 void CurrentControl::reset_PI(){
     current_PI.reset();
     current_regenerate_PI.reset();
+}
+static double exp_follower(double reference, double error_factor = 0.5){
+    static double output{0.0};
+    double error{reference - output};
+    output += error * error_factor;
+    return output;
+}
+double CurrentControl::calculate_frequency_modulation(){
+    return (Data->speedState == ControlStates::accelerate) ? exp_follower(a*Data->speed_km_h_encoder + b) : exp_follower(a*Data->speed_km_h_encoder + b - Data->speed_km_h_encoder/1.2);
 }
