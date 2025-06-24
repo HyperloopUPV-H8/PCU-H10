@@ -3,6 +3,7 @@
 #include "SpaceVector.hpp"
 #include "CurrentControl.hpp"
 
+#define USE_VF_CURRENT_CONTROL 1
 class SpeedControl{
 private:
     float a = 1.3;

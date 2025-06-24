@@ -26,7 +26,11 @@ double SpeedControl::calculate_frequency_modulation(){
 }
 void SpeedControl::control_action(){
     if(!currentControl->running || !running)  return;
-    spaceVector->set_frequency_Modulation(calculate_frequency_modulation());
+    #if USE_VF_CURRENT_CONTROL
+        spaceVector->set_frequency_Modulation(calculate_frequency_modulation());
+    #else
+        spaceVector->set_frequency_Modulation(10);
+    #endif
     double speed_error = reference_speed - Data->speed_km_h_encoder;
     Data->speed_error = speed_error;
     float actual_current_ref;
