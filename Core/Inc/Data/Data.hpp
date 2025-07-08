@@ -82,21 +82,32 @@ namespace Communication_Data{
     const IPV4 VCU_IP = {"192.168.1.3"};
     #endif
     //orders//
-    static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
-    static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;
-    static constexpr uint16_t SEND_PWM_ORDER = 502;
-    static constexpr uint16_t STOP_PWM_ORDER = 503;
-    static constexpr uint16_t ENABLE_RESET_ORDER = 504;
-    static constexpr uint16_t DISABLE_RESET_ORDER = 505;
-    static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
-    static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
-    static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
-    static constexpr uint16_t ZEROING_ORDER = 510;
-    static constexpr uint16_t SPEED_REFERENCE_ORDER = 511;
-    static constexpr uint16_t PRECHARGE_ORDER = 512;
-    static constexpr uint16_t MAKE_COMPLETE_RUN_ORDER = 513;
-    static constexpr uint16_t START_REGENERATIVE_NOW_ORDER = 514;
-    static constexpr uint16_t BRAKE_MOTOR_ORDER = 515;
+
+    #if SOCKET_VCU_ENABLED
+        static constexpr uint16_t START_SPACE_VECTOR_ORDER = 1001;
+        static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 1002;
+        static constexpr uint16_t CURRENT_REFERENCE_ORDER = 1003;
+        static constexpr uint16_t SPEED_REFERENCE_ORDER = 1004;
+        static constexpr uint16_t BRAKE_MOTOR_ORDER = 1005;
+    //runs 1000
+
+    #else
+        static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
+        static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;
+        static constexpr uint16_t SEND_PWM_ORDER = 502;
+        static constexpr uint16_t STOP_PWM_ORDER = 503;
+        static constexpr uint16_t ENABLE_RESET_ORDER = 504;
+        static constexpr uint16_t DISABLE_RESET_ORDER = 505;
+        static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
+        static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
+        static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
+        static constexpr uint16_t ZEROING_ORDER = 510;
+        static constexpr uint16_t SPEED_REFERENCE_ORDER = 511;
+        static constexpr uint16_t PRECHARGE_ORDER = 512;
+        static constexpr uint16_t MAKE_COMPLETE_RUN_ORDER = 513;
+        static constexpr uint16_t START_REGENERATIVE_NOW_ORDER = 514;
+        static constexpr uint16_t BRAKE_MOTOR_ORDER = 515;
+    #endif
     
     //packets//
 
