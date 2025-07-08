@@ -15,12 +15,13 @@ int main(void) {
 #endif
     Data_struct Data;
     Sensors sensors(&Data);
+    RUNS::init(&Data);
     Actuators actuators(Pinout::U_PWM,Pinout::U_PWM_NEGATED,Pinout::V_PWM,Pinout::V_PWM_NEGATED,Pinout::W_PWM,Pinout::W_PWM_NEGATED,Pinout::ENABLE_BUFFER,Pinout::Reset,&Data);
     SpaceVector spaceVec(&actuators, &Data);
     CurrentControl currentControl(&Data,&spaceVec);
     SpeedControl speedControl(&Data,&currentControl,&spaceVec);
     StateMachinePCU stateMachinePCU(&Data,&actuators,&sensors,&spaceVec,&currentControl,&speedControl);
-    STLIB::start(Communication_Data::Pcu_mac,Communication_Data::PCU_IP,"255.255.0.0");
+    STLIB::start(Communication_Data::Pcu_mac,Communication_Data::PCU_IP,"255.255.255.0");
   //  sensors.currentSensors.zeroing();
     Communication comms(&Data);
     stateMachinePCU.start(&comms);
