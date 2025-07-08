@@ -36,6 +36,11 @@ void SpeedControl::control_action(){
         actual_current_ref = 0.0;
     }*/
         
+    if(Data->next_state == 0 || Data->next_state == 5 || Data->next_state == 7)
+    {
+        actual_current_ref = 0.0;
+        reset_PI();
+    }
     Data->actual_current_ref = actual_current_ref;
     currentControl->set_current_ref(actual_current_ref);
     //if we are in regenerate and we arrive to the max speed we change the reference speed to zero

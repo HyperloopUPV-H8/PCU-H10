@@ -130,10 +130,12 @@ void StateMachinePCU::add_enter_actions(){
         actuators->Led_Commutation.turn_on();
         actuators->enable();
         actuators->Enable_reset();
+        if(Communication::run_id) RUNS::start(Communication::run_id);
     },Operational_State_PCU::Accelerating);
     
     operationalStateMachine->add_enter_action([this](){
        Motor_Stop(); //just for safety reasons
+       Communication::run_id = 0;
 
     },Operational_State_PCU::Idle);
 
@@ -308,6 +310,7 @@ void StateMachinePCU::update(){
     }
     if(execute_speed_control_flag){
         execute_speed_control_flag = false;
+        if(Communication::run_id) speedControl->set_reference_speed(RUNS::update());
         speedControl->control_action();
     }
     if(send_udp_data_flag){
