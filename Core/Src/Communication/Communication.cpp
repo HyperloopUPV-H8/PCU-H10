@@ -103,6 +103,9 @@ Communication::Communication(Data_struct *data): Data(data){
         Disable_Reset = new HeapOrder(Communication_Data::DISABLE_RESET_ORDER,&disable_reset_callback);
         Enable_Reset = new HeapOrder(Communication_Data::ENABLE_RESET_ORDER,&enable_reset_callback);
     #endif
+    #if SOCKET_VCU_ENABLED
+        vcu_dgram = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_TO_VCU,Communication_Data::VCU_IP,Communication_Data::UDP_PORT_TO_VCU);
+    #endif
     Start_space_vector = new HeapOrder(Communication_Data::START_SPACE_VECTOR_ORDER,&received_activate_space_vector_callback,&frequency_space_vector_received,&frequency_received,&ref_voltage_space_vector_received,&Vmax_control_received,&Data->Stablished_direction);
     Stop_motor = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_motor_callback);
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received,&Data->Stablished_direction);
@@ -123,6 +126,9 @@ Communication::Communication(Data_struct *data): Data(data){
     ControlState_Packet = new HeapPacket(Communication_Data::CONTROL_STATE_PACKET,&Data->Stablished_direction,&Data->speedState);
     Reeds_Packet = new HeapPacket(Communication_Data::REEDS_PACKET,&data->reed1,&data->reed2,&data->reed3,&data->reed4);
     Gate_Driver_Packet = new HeapPacket(Communication_Data::GATE_DRIVER_PACKET,&Data->fault_gd_inverter_a,&Data->fault_gd_inverter_b,&Data->ready_gd_inverter_a,&Data->ready_gd_inverter_b);
+    #if SOCKET_VCU_ENABLED
+        State_to_Vcu_Packet = new HeapPacket(Communication_Data::STATE_TO_VCU_PACKET, &Data->operational_state_pcu);
+    #endif
 }
 void Communication::send_UDP_packets(){
    datagramSocket->send_packet(*Pwm_packet);
@@ -136,6 +142,9 @@ void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Gate_Driver_Packet);
     #if COMMUNICATION_HVSCU 
         HVSCU_datagramSocket->send_packet(*batteries_Packet);
+    #endif
+    #if SOCKET_VCU_ENABLED
+        vcu_dgram->send_packet(*State_to_Vcu_Packet);
     #endif
 }
 
