@@ -97,7 +97,6 @@ namespace Communication_Data{
     static constexpr uint16_t MAKE_COMPLETE_RUN_ORDER = 513;
     static constexpr uint16_t START_REGENERATIVE_NOW_ORDER = 514;
     static constexpr uint16_t BRAKE_MOTOR_ORDER = 515;
-    static constexpr uint16_t START_RUN_ORDER = 516;
     
     //packets//
 
@@ -190,8 +189,6 @@ struct Data_struct{
     bool space_vector_active{};
     bool current_control_active{};
     bool speed_control_active{};
-    //control runs
-    uint8_t next_state{};
     //reeds
     PinState reed1{};
     PinState reed2{};

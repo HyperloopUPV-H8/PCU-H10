@@ -20,7 +20,6 @@ class Communication{
         HeapOrder *Complete_Run_order;
         HeapOrder *Start_regenerative_now_order;
         HeapOrder *Motor_brake_order;
-        HeapOrder *start_run;
         //packets//
         HeapPacket *Pwm_packet;
         HeapPacket *Current_sensor_Packet;
@@ -62,8 +61,6 @@ class Communication{
         static float current_reference_received;
         static float Vmax_control_received;
         static float speed_reference_received;
-
-        static uint8_t run_id;
         
         void send_UDP_packets(); 
         bool is_connected();

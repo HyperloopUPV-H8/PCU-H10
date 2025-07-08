@@ -27,8 +27,6 @@ float Communication::frequency_received{};
 float Communication::current_reference_received{};
 float Communication::speed_reference_received{};
 
-uint8_t Communication::run_id = 0;
-
 #if TEST_PWM
     void received_enable_buffer_callback(){
         Communication::received_enable_buffer = true;
@@ -77,14 +75,6 @@ void received_motor_brake_callback(){
     Communication::received_motor_brake_order = true;
 }
 
-void receive_run_demostration_callback()
-{
-    //establecer con valores estándard
-
-    received_speed_reference_callback();
-
-}
-
 Communication::Communication(Data_struct *data): Data(data){
     #if CHILL_KEEPALIVES
         ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER,1000,500,10);
@@ -115,7 +105,6 @@ Communication::Communication(Data_struct *data): Data(data){
     Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&Vmax_control_received);
     Start_regenerative_now_order = new HeapOrder(Communication_Data::START_REGENERATIVE_NOW_ORDER,&received_start_regenerative_now_callback);
     Motor_brake_order = new HeapOrder(Communication_Data::BRAKE_MOTOR_ORDER,&received_motor_brake_callback,&Vmax_control_received);
-    start_run = new HeapOrder(Communication_Data::START_RUN_ORDER, &receive_run_demostration_callback, &run_id);
     // //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->actual_frequency,&Data->modulation_frequency,&Data->actual_duty_u,&Data->actual_duty_v,&Data->actual_duty_w);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
