@@ -145,14 +145,6 @@ void StateMachinePCU::add_enter_actions(){
     stateMachine->add_enter_action([this](){
         sensors->currentSensors.zeroing();
         actuators->Led_Operational.turn_on();
-
-        //precharge is now an enter action
-        actuators->set_three_frequencies(Communication::frequency_received);
-        spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
-        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
-        spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
-        //actions
-        currentControl->stop();
     },State_PCU::Operational);
 
     stateMachine->add_enter_action([this]() {
@@ -171,6 +163,8 @@ void StateMachinePCU::add_exit_actions(){
         actuators->Led_fault.turn_on();
         actuators->Led_Commutation.turn_off();
         actuators->Led_Operational.turn_off();
+
+        Start_Precharge();
     },State_PCU::Operational);
 }
 void StateMachinePCU::update(){
@@ -340,4 +334,15 @@ void StateMachinePCU::Motor_Stop(){ //This may be rebundance but Safety Reasons
     execute_speed_control_flag = false;
     currentControl->stop();
     speedControl->stop();
+}
+
+void StateMachinePCU::Start_Precharge()
+{
+    //precharge is now an enter action
+    actuators->set_three_frequencies(Communication::frequency_received);
+    spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
+    spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
+    spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
+    //actions
+    currentControl->stop();
 }

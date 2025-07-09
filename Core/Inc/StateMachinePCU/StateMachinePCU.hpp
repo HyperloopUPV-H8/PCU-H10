@@ -35,4 +35,5 @@ class StateMachinePCU{
         void add_cyclic_actions();
         void update();
         void Motor_Stop();
+        void Start_Precharge();
 };
