@@ -94,10 +94,13 @@ void StateMachinePCU::add_cyclic_actions(){
         sensors->read();
         sensors->read_speetec();
     });
+    stateMachine->add_mid_precision_cyclic_action(
+        [this](){ 
+            execute_space_vector_control_flag = true;
+        },us(Current_Control_Data::microsecond_period),State_PCU::Operational);
     //current control
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){ 
-            execute_space_vector_control_flag = true;
             if(currentControl->running){
                 execute_current_control_flag = true;
                 
@@ -142,6 +145,14 @@ void StateMachinePCU::add_enter_actions(){
     stateMachine->add_enter_action([this](){
         sensors->currentSensors.zeroing();
         actuators->Led_Operational.turn_on();
+
+        //precharge is now an enter action
+        actuators->set_three_frequencies(Communication::frequency_received);
+        spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
+        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
+        spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
+        //actions
+        currentControl->stop();
     },State_PCU::Operational);
 
     stateMachine->add_enter_action([this]() {
@@ -200,16 +211,16 @@ void StateMachinePCU::update(){
         Communication::received_stop_motor = false;
         Motor_Stop();
     }
-    if(Communication::received_Precharge_order == true){
-        Communication::received_Precharge_order = false;
-        actuators->set_three_frequencies(Communication::frequency_received);
-        spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
-        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
-        spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
-        //actions
-        currentControl->stop();
-        data->space_vector_active = true;
-    }
+    // if(Communication::received_Precharge_order == true){
+    //     Communication::received_Precharge_order = false;
+    //     actuators->set_three_frequencies(Communication::frequency_received);
+    //     spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
+    //     spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
+    //     spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
+    //     //actions
+    //     currentControl->stop();
+    //     data->space_vector_active = true;
+    // }
     if(Communication::received_Current_reference_order == true){
         Communication::received_Current_reference_order = false;
 
