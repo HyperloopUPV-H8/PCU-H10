@@ -25,8 +25,19 @@ void Sensors::read(){
 void Sensors::start(){
     speetec.turn_on();
 }
+void Sensors::start_emulated_speetec()
+{
+    speetec.start_emulation(data->emulated_speetec, data->emulated_arg);
+}
 void Sensors::read_speetec(){
-    speetec.read();
+    if(data->emulated_speetec)
+    {
+        speetec.emulated_read();
+    }
+    else
+    {
+        speetec.read();
+    }
     data->speed_km_h_encoder = 3.6*data->speed_encoder;
 }
 void Sensors::read_reeds(){

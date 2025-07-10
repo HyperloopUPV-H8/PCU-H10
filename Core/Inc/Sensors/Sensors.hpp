@@ -24,6 +24,7 @@ class Sensors{
     CurrentSensors currentSensors;
     void read();
     void start();
+    void start_emulated_speetec();
     void read_speetec();
     void read_reeds();
     bool reeds_braking();

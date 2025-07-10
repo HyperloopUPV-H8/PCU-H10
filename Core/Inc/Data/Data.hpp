@@ -94,6 +94,7 @@ namespace Communication_Data{
     static constexpr uint16_t START_REGENERATIVE_NOW_ORDER = 514;
     static constexpr uint16_t BRAKE_MOTOR_ORDER = 515;
     static constexpr uint16_t START_RUN_ORDER = 516;
+    static constexpr uint16_t START_EMULATED_SPEETEC_ORDER = 517;
     
     //packets//
 
@@ -179,6 +180,9 @@ struct Data_struct{
     float target_speed{};
     double speed_error{};
     float actual_current_ref{};
+    //emulated_speed
+    uint8_t emulated_speetec{};
+    float emulated_arg{};
     //control
     ControlStates speedState{ControlStates::accelerate};
     Direction Stablished_direction{Direction::FORWARD};

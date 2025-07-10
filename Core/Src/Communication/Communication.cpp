@@ -17,6 +17,7 @@ bool Communication::received_Precharge_order = false;
 bool Communication::received_Complete_Run_order = false;
 bool Communication::received_start_regenerative_now_order = false;
 bool Communication::received_motor_brake_order = false;
+bool Communication::receive_emulated_speetec_order = false;
 
 
 float Communication::ref_voltage_space_vector_received{};
@@ -85,6 +86,11 @@ void receive_run_demostration_callback()
 
 }
 
+void receive_emulated_speetec_callback()
+{
+    Communication::receive_emulated_speetec_order = true;
+}
+
 Communication::Communication(Data_struct *data): Data(data){
     #if CHILL_KEEPALIVES
         ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER,1000,500,10);
@@ -113,6 +119,7 @@ Communication::Communication(Data_struct *data): Data(data){
     Start_regenerative_now_order = new HeapOrder(Communication_Data::START_REGENERATIVE_NOW_ORDER,&received_start_regenerative_now_callback);
     Motor_brake_order = new HeapOrder(Communication_Data::BRAKE_MOTOR_ORDER,&received_motor_brake_callback,&Vmax_control_received);
     start_run = new HeapOrder(Communication_Data::START_RUN_ORDER, &receive_run_demostration_callback, &run_id);
+    emulated_speetec_order = new HeapOrder(Communication_Data::START_EMULATED_SPEETEC_ORDER, &receive_emulated_speetec_callback, &data->emulated_speetec, &data->emulated_arg);
     // //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->actual_frequency,&Data->modulation_frequency,&Data->actual_duty_u,&Data->actual_duty_v,&Data->actual_duty_w);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);

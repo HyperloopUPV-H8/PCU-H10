@@ -292,6 +292,11 @@ void StateMachinePCU::update(){
         Communication::received_zeroing_order = false;
         sensors->currentSensors.zeroing();
     }
+    if(Communication::receive_emulated_speetec_order == true)
+    {
+        Communication::receive_emulated_speetec_order = false;
+        sensors->start_emulated_speetec();
+    }
     #if TEST_PWM
         if(Communication::received_pwm_order == true){
             Communication::received_pwm_order = false;

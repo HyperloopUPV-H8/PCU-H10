@@ -20,6 +20,7 @@ class Communication{
         HeapOrder *Start_regenerative_now_order;
         HeapOrder *Motor_brake_order;
         HeapOrder *start_run;
+        HeapOrder *emulated_speetec_order;
         //packets//
         HeapPacket *Pwm_packet;
         HeapPacket *Current_sensor_Packet;
@@ -52,6 +53,7 @@ class Communication{
         static bool received_Complete_Run_order;
         static bool received_start_regenerative_now_order;
         static bool received_motor_brake_order;
+        static bool receive_emulated_speetec_order;
 
         static float frequency_received;
         static float duty_cycle_received;
