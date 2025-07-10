@@ -84,7 +84,7 @@ Communication::Communication(Data_struct *data): Data(data){
     #if COMMUNICATION_HVSCU 
         HVSCU_datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_HVSCU,Communication_Data::HVSCU_IP,Communication_Data::UDP_PORT_HVSCU_SEND);
     #endif
-    datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT);
+    datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT_PCU);
     #if TEST_PWM
         Enable_Buffer_Order = new HeapOrder(Communication_Data::ENABLE_BUFFER_ORDER,&received_enable_buffer_callback);
         Disable_Buffer_Order = new HeapOrder(Communication_Data::DISABLE_BUFFER_ORDER,&received_disable_buffer_callback);
@@ -99,8 +99,8 @@ Communication::Communication(Data_struct *data): Data(data){
     Start_space_vector = new HeapOrder(Communication_Data::START_SPACE_VECTOR_ORDER,&received_activate_space_vector_callback,&frequency_space_vector_received,&frequency_received,&ref_voltage_space_vector_received,&Vmax_control_received,&Data->Stablished_direction);
     Stop_motor = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_motor_callback);
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received,&Data->Stablished_direction);
-    #if !SOCKET_VCU_ENABLED
     Speed_reference_Order = new HeapOrder(Communication_Data::SPEED_REFERENCE_ORDER,&received_speed_reference_callback,&speed_reference_received,&frequency_received,&Vmax_control_received,&Data->Stablished_direction);
+    #if !SOCKET_VCU_ENABLED
     Complete_Run_order = new HeapOrder(Communication_Data::MAKE_COMPLETE_RUN_ORDER,&received_Complete_Run_callback,&speed_reference_received,&frequency_received,&Vmax_control_received,&Data->Stablished_direction);
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
     Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&Vmax_control_received);
