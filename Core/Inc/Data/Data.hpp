@@ -145,6 +145,14 @@ enum ControlStates{
     accelerate,
     regenerate
 };
+
+enum emulated_speetec_States: uint8_t{
+    STOP=0,
+    POSITION,
+    SPEED,
+    ACCELERATION
+};
+
  using Direction = EncoderSensor<Sensors_data::encoder_samples>::Direction;
 struct Data_struct{
     uint32_t actual_frequency{};
@@ -180,9 +188,9 @@ struct Data_struct{
     float target_speed{};
     double speed_error{};
     float actual_current_ref{};
-    //emulated_speed
+    //emulated_speeds
     uint8_t emulated_speetec{};
-    float emulated_arg{};
+    float emulated_ref{};
     //control
     ControlStates speedState{ControlStates::accelerate};
     Direction Stablished_direction{Direction::FORWARD};

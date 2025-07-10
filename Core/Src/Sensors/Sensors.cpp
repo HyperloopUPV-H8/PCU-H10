@@ -27,12 +27,12 @@ void Sensors::start(){
 }
 void Sensors::start_emulated_speetec()
 {
-    speetec.start_emulation(data->emulated_speetec, data->emulated_arg);
+    emulation_start = Time::get_global_tick();
 }
 void Sensors::read_speetec(){
     if(data->emulated_speetec)
     {
-        speetec.emulated_read();
+        emulated_read();
     }
     else
     {
@@ -45,6 +45,33 @@ void Sensors::read_reeds(){
     reed2.read();
     reed3.read();
     reed4.read();
+}
+
+double Sensors::get_emulation_time() {
+    return (Time::get_global_tick() - emulation_start) / 1000000000.0;
+}
+
+void Sensors::emulated_read()
+{
+    double time = get_emulation_time();
+    switch(data->emulated_speetec)
+    {
+        case emulated_speetec_States::STOP:
+        break;
+        case emulated_speetec_States::POSITION:
+            data->position_encoder = data->emulated_ref;
+
+        break;
+        case emulated_speetec_States::SPEED:
+            data->speed_encoder = data->emulated_ref;
+            data->position_encoder = time*data->emulated_ref;
+        break;
+        case emulated_speetec_States::ACCELERATION:
+            data->acceleration_encoder = data->emulated_ref;
+            data->speed_encoder = time*data->emulated_ref;
+            data->position_encoder = time*(data->speed_encoder);
+        break;
+    }
 }
 
 bool Sensors::reeds_braking(){

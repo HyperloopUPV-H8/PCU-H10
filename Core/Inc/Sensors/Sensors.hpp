@@ -19,6 +19,7 @@ class Sensors{
         DigitalSensor fault_gd_inverter_b{Pinout::FAULT_GD_INVERTER_B, &data->fault_gd_inverter_b};
         DigitalSensor ready_gd_inverter_a{Pinout::READY_GD_INVERTER_A, &data->ready_gd_inverter_a};
         DigitalSensor ready_gd_inverter_b{Pinout::READY_GD_INVERTER_B, &data->ready_gd_inverter_b};
+        uint64_t emulation_start{};
     public:
     Sensors(Data_struct *data);
     CurrentSensors currentSensors;
@@ -29,5 +30,9 @@ class Sensors{
     void read_reeds();
     bool reeds_braking();
     bool check_gate_drivers()const;
+
+    private:
+    void emulated_read();
+    double get_emulation_time();
      
 };

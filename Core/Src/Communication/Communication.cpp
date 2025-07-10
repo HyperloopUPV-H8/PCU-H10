@@ -119,7 +119,7 @@ Communication::Communication(Data_struct *data): Data(data){
     Start_regenerative_now_order = new HeapOrder(Communication_Data::START_REGENERATIVE_NOW_ORDER,&received_start_regenerative_now_callback);
     Motor_brake_order = new HeapOrder(Communication_Data::BRAKE_MOTOR_ORDER,&received_motor_brake_callback,&Vmax_control_received);
     start_run = new HeapOrder(Communication_Data::START_RUN_ORDER, &receive_run_demostration_callback, &run_id);
-    emulated_speetec_order = new HeapOrder(Communication_Data::START_EMULATED_SPEETEC_ORDER, &receive_emulated_speetec_callback, &data->emulated_speetec, &data->emulated_arg);
+    emulated_speetec_order = new HeapOrder(Communication_Data::START_EMULATED_SPEETEC_ORDER, &receive_emulated_speetec_callback, &data->emulated_speetec, &data->emulated_ref);
     // //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->actual_frequency,&Data->modulation_frequency,&Data->actual_duty_u,&Data->actual_duty_v,&Data->actual_duty_w);
     batteries_Packet = new HeapPacket(Communication_Data::BATTERIES_PACKET,&Data->actual_voltage_battery_A,&Data->actual_voltage_battery_B);
