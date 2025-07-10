@@ -94,6 +94,7 @@ void StateMachinePCU::add_cyclic_actions(){
         sensors->read();
         sensors->read_speetec();
     });
+    #if USING_FILTER
     stateMachine->add_mid_precision_cyclic_action(
         [this](){ 
             execute_space_vector_control_flag = true;
@@ -106,6 +107,17 @@ void StateMachinePCU::add_cyclic_actions(){
                 
             }
         },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+    #else
+        //current control
+    operationalStateMachine->add_mid_precision_cyclic_action(
+        [this](){ 
+            execute_space_vector_control_flag = true;
+            if(currentControl->running){
+                execute_current_control_flag = true;
+                
+            }
+        },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+    #endif
     
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){
@@ -163,8 +175,9 @@ void StateMachinePCU::add_exit_actions(){
         actuators->Led_fault.turn_on();
         actuators->Led_Commutation.turn_off();
         actuators->Led_Operational.turn_off();
-
+        #if USING_FILTER
         Start_Precharge();
+        #endif
     },State_PCU::Operational);
 }
 void StateMachinePCU::update(){
