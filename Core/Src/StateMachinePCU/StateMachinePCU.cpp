@@ -138,7 +138,6 @@ void StateMachinePCU::add_enter_actions(){
     },Operational_State_PCU::Idle);
 
     stateMachine->add_enter_action([this](){
-        sensors->currentSensors.zeroing();
         actuators->Led_Operational.turn_on();
     },State_PCU::Operational);
 
