@@ -8,63 +8,42 @@ void RUNS::init(Data_struct *d)
 
 float RUNS::update()
 {
-    curr_state = Data->next_state;
 
     double vel = Data->speed_km_h_encoder;
     double pos = Data->position_encoder;
-
-    //LIM + BOOSTER
-    if(run == 1)
+    if(Data->state_run == RunState::BRAKING)
     {
-
-        if(pos > 48 - distance_brake  ||   vel > vel_ref)
-        {        //En principio no debería hacer falta "vel > vel_ref" y el control debería mantenerse en crucero
-            vel_ref = 0.0F;
-        }
-        else
+        if(vel == 0.0)
         {
+            Communication::received_stop_motor = true;
+        }
+        return 0.0;
+    }
+
+
+    switch(run)
+    {
+        case RunMode::BOOSTER_LIM:
+        case RunMode::LIM_50_KM_H:
             vel_ref = 50.0F;
-        }
-    }
-
-    //Booster
-    else if(run == 2)
-    {
-
-        if(pos > 48 - distance_brake  ||   vel > 30)
-        {
-            vel_ref = 0.0F;
-        }
-        else
-        {
-            vel_ref = 25.0F;
-        }
-    }
-
-    //LIM
-    else if(run == 4)
-    {
-        if(pos > 48 - distance_brake  ||   vel > vel_ref)
-        {
-            vel_ref = 0.0F;
-        }
-        else
-        {
+            break;
+        case RunMode::LIM:
             vel_ref = 35.0F;
-        }
+            break;
+        case RunMode::BOOSTER:
+            vel_ref = 25.0F;
+            break;
     }
 
-    //LIM (50 km/h)
-    else if(run == 5)
+    if(pos > (48-distance_brake))
     {
-        if(vel > vel_ref && pos > 48-distance_brake)
-        {
-            vel_ref = 0.0F;
-        }
-        else
-        {
-            vel_ref = 50.0F;
-        }
+        Communication::received_motor_brake_order = true;
+        Data->state_run = RunState::BRAKING;
+        vel_ref = 0.0;
+    }
+    if(vel > vel_ref)
+    {
+        vel_ref = 0.0;
     }
 
     return vel_ref;
@@ -73,5 +52,6 @@ float RUNS::update()
 
 void RUNS::start(uint8_t run_id)
 {
-    run = run_id;
+    run = (RunMode)run_id;
+    Data->state_run = RunState::MOVING;
 }

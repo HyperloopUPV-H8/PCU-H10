@@ -36,4 +36,5 @@ class StateMachinePCU{
         void update();
         void Motor_Stop();
         void Start_Precharge();
+        void Motor_Brake();
 };

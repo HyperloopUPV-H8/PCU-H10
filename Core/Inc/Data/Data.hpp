@@ -11,7 +11,7 @@
 #define MOTOR_CENTER_ALIGNED 0 // 0 = Normal dualPWM, 1 = CenterAligned DualPWM
 #define SATURATOR_PI 1 // 0 = No saturator PI, 1 = Saturator PI
 #define FALSIFY_BRAKES // To falsify brakes if it's possible only for testing
-#define USING_FILTER 0 //Only we do Precharge with filter
+#define USING_FILTER 1 //Only we do Precharge with filter
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8; 
@@ -146,6 +146,19 @@ enum ControlStates{
     regenerate
 };
 
+enum RunMode: uint8_t{
+    BOOSTER_LIM=1,
+    BOOSTER,
+    LIM,
+    LIM_50_KM_H
+};
+
+enum RunState: uint8_t{
+    NOTHING=0,
+    MOVING,
+    BRAKING
+};
+
 enum emulated_speetec_States: uint8_t{
     STOP=0,
     POSITION,
@@ -198,7 +211,7 @@ struct Data_struct{
     bool current_control_active{};
     bool speed_control_active{};
     //control runs
-    uint8_t next_state{};
+    RunState state_run{};
     //reeds
     PinState reed1{};
     PinState reed2{};

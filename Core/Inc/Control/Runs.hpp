@@ -1,19 +1,19 @@
 #pragma once 
 #include "SpeedControl.hpp"
+#include "Communication/Communication.hpp"
 
 
 class RUNS
 {
 
     private:
-    inline static uint8_t run{0};
-    inline static uint8_t curr_state{};
+    inline static RunMode run{0};
     inline static float vel_ref{0.0};
 
 
     inline static Data_struct *Data{nullptr};
 
-    inline static float distance_brake{20.0};
+    inline static float distance_brake{25.0};
     
     public:
     static void init(Data_struct *d);

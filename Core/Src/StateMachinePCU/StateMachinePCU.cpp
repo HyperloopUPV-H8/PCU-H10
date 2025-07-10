@@ -150,6 +150,7 @@ void StateMachinePCU::add_enter_actions(){
     
     operationalStateMachine->add_enter_action([this](){
        Motor_Stop(); //just for safety reasons
+       data->state_run = RunState::NOTHING;
        Communication::run_id = 0;
 
     },Operational_State_PCU::Idle);
@@ -257,16 +258,7 @@ void StateMachinePCU::update(){
     }
     if(Communication::received_motor_brake_order == true){
         Communication::received_motor_brake_order = false;
-        speedControl->reset_PI();
-        //hardcoded almost everything 
-        speedControl->set_reference_speed(0);
-        data->Stablished_direction = Direction::BACKWARDS;
-        actuators->set_three_frequencies(10000);
-        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
-        //ACTIONS
-        data->space_vector_active = true;
-        currentControl->start();
-        speedControl->start();
+        Motor_Brake();
 
     }
     if(Communication::received_start_regenerative_now_order == true){
@@ -352,6 +344,7 @@ void StateMachinePCU::Motor_Stop(){ //This may be rebundance but Safety Reasons
     execute_speed_control_flag = false;
     currentControl->stop();
     speedControl->stop();
+    data->Stablished_direction = Direction::FORWARD;
 }
 
 void StateMachinePCU::Start_Precharge()
@@ -363,4 +356,18 @@ void StateMachinePCU::Start_Precharge()
     spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
     //actions
     currentControl->stop();
+}
+
+void StateMachinePCU::Motor_Brake()
+{
+    speedControl->reset_PI();
+    speedControl->set_reference_speed(0);
+    if(data->Stablished_direction == Direction::FORWARD) data->Stablished_direction = Direction::BACKWARDS;
+    else data->Stablished_direction = Direction::FORWARD;
+    actuators->set_three_frequencies(10000);
+    spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
+    //ACTIONS
+    data->space_vector_active = true;
+    currentControl->start();
+    speedControl->start();
 }
