@@ -13,7 +13,7 @@ class RUNS
 
     inline static Data_struct *Data{nullptr};
 
-    inline static float distance_brake{25.0};
+    inline static float distance_brake{18.0};
     
     public:
     static void init(Data_struct *d);
