@@ -22,7 +22,7 @@ int main(void) {
     SpeedControl speedControl(&Data,&currentControl,&spaceVec);
     StateMachinePCU stateMachinePCU(&Data,&actuators,&sensors,&spaceVec,&currentControl,&speedControl);
     STLIB::start(Communication_Data::Pcu_mac,Communication_Data::PCU_IP,"255.255.255.0");
-  //  sensors.currentSensors.zeroing();
+    sensors.currentSensors.zeroing();
     Communication comms(&Data);
     stateMachinePCU.start(&comms);
 

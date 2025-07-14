@@ -9,6 +9,7 @@ class Communication{
         #if COMMUNICATION_HVSCU 
         DatagramSocket *HVSCU_datagramSocket;
         #endif
+        DatagramSocket *vcu_dgram;
         //orders//
         HeapOrder *Start_space_vector;
         HeapOrder *Stop_motor;
@@ -29,7 +30,8 @@ class Communication{
         HeapPacket *Control_Speed_Packet;
         HeapPacket *ControlState_Packet;
         HeapPacket *Reeds_Packet;
-        HeapPacket* Gate_Driver_Packet;
+        HeapPacket *Gate_Driver_Packet;
+        HeapPacket *State_to_Vcu_Packet;
     public:
         #if COMMUNICATION_HVSCU 
         DatagramSocket *HVSCU_datagramSocket;
@@ -62,8 +64,7 @@ class Communication{
         static float current_reference_received;
         static float Vmax_control_received;
         static float speed_reference_received;
-
-        static uint8_t run_id;
+        static uint8_t run_id; 
         
         void send_UDP_packets(); 
         bool is_connected();

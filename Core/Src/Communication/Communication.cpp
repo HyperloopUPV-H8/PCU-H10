@@ -101,7 +101,7 @@ Communication::Communication(Data_struct *data): Data(data){
     #if COMMUNICATION_HVSCU 
         HVSCU_datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_HVSCU,Communication_Data::HVSCU_IP,Communication_Data::UDP_PORT_HVSCU_SEND);
     #endif
-    datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT);
+    datagramSocket = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_PCU,Communication_Data::Backend,Communication_Data::UDP_PORT_PCU);
     #if TEST_PWM
         Enable_Buffer_Order = new HeapOrder(Communication_Data::ENABLE_BUFFER_ORDER,&received_enable_buffer_callback);
         Disable_Buffer_Order = new HeapOrder(Communication_Data::DISABLE_BUFFER_ORDER,&received_disable_buffer_callback);
@@ -110,16 +110,21 @@ Communication::Communication(Data_struct *data): Data(data){
         Disable_Reset = new HeapOrder(Communication_Data::DISABLE_RESET_ORDER,&disable_reset_callback);
         Enable_Reset = new HeapOrder(Communication_Data::ENABLE_RESET_ORDER,&enable_reset_callback);
     #endif
+    #if SOCKET_VCU_ENABLED
+        vcu_dgram = new DatagramSocket(Communication_Data::PCU_IP,Communication_Data::UDP_PORT_TO_VCU,Communication_Data::VCU_IP,Communication_Data::UDP_PORT_TO_VCU);
+    #endif
     Start_space_vector = new HeapOrder(Communication_Data::START_SPACE_VECTOR_ORDER,&received_activate_space_vector_callback,&frequency_space_vector_received,&frequency_received,&ref_voltage_space_vector_received,&Vmax_control_received,&Data->Stablished_direction);
     Stop_motor = new HeapOrder(Communication_Data::STOP_SPACE_VECTOR_ORDER,&received_stop_motor_callback);
     Current_reference_Order = new HeapOrder(Communication_Data::CURRENT_REFERENCE_ORDER,&received_current_reference_callback,&frequency_space_vector_received,&frequency_received,&current_reference_received,&Vmax_control_received,&Data->Stablished_direction);
     Speed_reference_Order = new HeapOrder(Communication_Data::SPEED_REFERENCE_ORDER,&received_speed_reference_callback,&speed_reference_received,&frequency_received,&Vmax_control_received,&Data->Stablished_direction);
+    #if !SOCKET_VCU_ENABLED
     Complete_Run_order = new HeapOrder(Communication_Data::MAKE_COMPLETE_RUN_ORDER,&received_Complete_Run_callback,&speed_reference_received,&frequency_received,&Vmax_control_received,&Data->Stablished_direction);
     Zeroing_Order = new HeapOrder(Communication_Data::ZEROING_ORDER,&received_zeroing_callback);
     Precharge_Order = new HeapOrder(Communication_Data::PRECHARGE_ORDER,&received_Precharge_callback,&frequency_received,&Vmax_control_received);
     Start_regenerative_now_order = new HeapOrder(Communication_Data::START_REGENERATIVE_NOW_ORDER,&received_start_regenerative_now_callback);
+    #endif
     Motor_brake_order = new HeapOrder(Communication_Data::BRAKE_MOTOR_ORDER,&received_motor_brake_callback,&Vmax_control_received);
-    start_run = new HeapOrder(Communication_Data::START_RUN_ORDER, &receive_run_demostration_callback, &run_id);
+    start_run = new HeapOrder(Communication_Data::START_RUN_ORDER, &receive_run_demostration_callback, &Communication::run_id);
     emulated_speetec_order = new HeapOrder(Communication_Data::START_EMULATED_SPEETEC_ORDER, &receive_emulated_speetec_callback, &data->emulated_speetec, &data->emulated_ref);
     // //packets
     Pwm_packet  = new HeapPacket(Communication_Data::PWM_PACKET,&Data->actual_frequency,&Data->modulation_frequency,&Data->actual_duty_u,&Data->actual_duty_v,&Data->actual_duty_w);
@@ -131,6 +136,9 @@ Communication::Communication(Data_struct *data): Data(data){
     ControlState_Packet = new HeapPacket(Communication_Data::CONTROL_STATE_PACKET,&Data->Stablished_direction,&Data->speedState);
     Reeds_Packet = new HeapPacket(Communication_Data::REEDS_PACKET,&data->reed1,&data->reed2,&data->reed3,&data->reed4);
     Gate_Driver_Packet = new HeapPacket(Communication_Data::GATE_DRIVER_PACKET,&Data->fault_gd_inverter_a,&Data->fault_gd_inverter_b,&Data->ready_gd_inverter_a,&Data->ready_gd_inverter_b);
+    #if SOCKET_VCU_ENABLED
+        State_to_Vcu_Packet = new HeapPacket(Communication_Data::STATE_TO_VCU_PACKET, &Data->operational_state_pcu);
+    #endif
 }
 void Communication::send_UDP_packets(){
    datagramSocket->send_packet(*Pwm_packet);
@@ -144,6 +152,9 @@ void Communication::send_UDP_packets(){
     datagramSocket->send_packet(*Gate_Driver_Packet);
     #if COMMUNICATION_HVSCU 
         HVSCU_datagramSocket->send_packet(*batteries_Packet);
+    #endif
+    #if SOCKET_VCU_ENABLED
+        vcu_dgram->send_packet(*State_to_Vcu_Packet);
     #endif
 }
 

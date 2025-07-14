@@ -3,6 +3,7 @@
 //configuraciones
 //TODO : PASS the configuration to a config file
 #define PPU_USING 2     // 0 PPU connector A, 1 PPU connector B , 2 Both PPU
+#define SOCKET_VCU_ENABLED 1 //0 Uses id from Adj, 1 Uses id from VCU
 #define COMMUNICATION_HVSCU 0   // 0 = No communication, 1 = send packet with voltages 
 #define TEST_PWM 0 //0 = no test pwm, eliminate some orders, 1 = have every order for test single pwm
 #define CHILL_KEEPALIVES  1  //0 = agressive keepalives, 1 = chill keepalives
@@ -77,23 +78,40 @@ namespace Communication_Data{
     static constexpr uint32_t UDP_PORT_HVSCU = 50417;
     const IPV4 HVSCU_IP = {"192.168.1.7"};
     #endif
+    #if SOCKET_VCU_ENABLED
+    static constexpr uint32_t UDP_PORT_TO_VCU = 50402;
+    const IPV4 VCU_IP = {"192.168.1.3"};
+    #endif
     //orders//
-    static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
-    static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;
-    static constexpr uint16_t SEND_PWM_ORDER = 502;
-    static constexpr uint16_t STOP_PWM_ORDER = 503;
-    static constexpr uint16_t ENABLE_RESET_ORDER = 504;
-    static constexpr uint16_t DISABLE_RESET_ORDER = 505;
-    static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
-    static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
-    static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
-    static constexpr uint16_t ZEROING_ORDER = 510;
-    static constexpr uint16_t SPEED_REFERENCE_ORDER = 511;
-    static constexpr uint16_t PRECHARGE_ORDER = 512;
-    static constexpr uint16_t MAKE_COMPLETE_RUN_ORDER = 513;
-    static constexpr uint16_t START_REGENERATIVE_NOW_ORDER = 514;
-    static constexpr uint16_t BRAKE_MOTOR_ORDER = 515;
-    static constexpr uint16_t START_RUN_ORDER = 516;
+
+    #if SOCKET_VCU_ENABLED
+        static constexpr uint16_t START_SPACE_VECTOR_ORDER = 1001;
+        static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 1002;
+        static constexpr uint16_t CURRENT_REFERENCE_ORDER = 1003;
+        static constexpr uint16_t SPEED_REFERENCE_ORDER = 1004;
+        static constexpr uint16_t BRAKE_MOTOR_ORDER = 1005;
+        static constexpr uint16_t START_RUN_ORDER = 56;
+    //runs 1000
+
+    #else
+        static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
+        static constexpr uint16_t DISABLE_BUFFER_ORDER = 501;
+        static constexpr uint16_t SEND_PWM_ORDER = 502;
+        static constexpr uint16_t STOP_PWM_ORDER = 503;
+        static constexpr uint16_t ENABLE_RESET_ORDER = 504;
+        static constexpr uint16_t DISABLE_RESET_ORDER = 505;
+        static constexpr uint16_t START_SPACE_VECTOR_ORDER = 507;
+        static constexpr uint16_t STOP_SPACE_VECTOR_ORDER = 508;
+        static constexpr uint16_t CURRENT_REFERENCE_ORDER = 509;
+        static constexpr uint16_t ZEROING_ORDER = 510;
+        static constexpr uint16_t SPEED_REFERENCE_ORDER = 511;
+        static constexpr uint16_t PRECHARGE_ORDER = 512;
+        static constexpr uint16_t MAKE_COMPLETE_RUN_ORDER = 513;
+        static constexpr uint16_t START_REGENERATIVE_NOW_ORDER = 514;
+        static constexpr uint16_t BRAKE_MOTOR_ORDER = 515;
+        static constexpr uint16_t START_RUN_ORDER = 516;
+    #endif
+
     static constexpr uint16_t START_EMULATED_SPEETEC_ORDER = 517;
     
     //packets//
@@ -107,6 +125,7 @@ namespace Communication_Data{
     static constexpr uint16_t CONTROL_STATE_PACKET = 556;
     static constexpr uint16_t REEDS_PACKET = 557;
     static constexpr uint16_t GATE_DRIVER_PACKET = 558;
+    static constexpr uint16_t STATE_TO_VCU_PACKET = 64;
 };
 namespace Current_Control_Data{
     static constexpr double kp_accelerate = 0.1;
