@@ -43,8 +43,8 @@ void Sensors::read_speetec(){
 void Sensors::read_reeds(){
     reed1.read();
     reed2.read();
-    reed3.read();
-    reed4.read();
+    data->reed2 = data->reed1;
+    data->reed4 = data->reed3;
 }
 
 double Sensors::get_emulation_time() {
@@ -79,7 +79,7 @@ bool Sensors::reeds_braking(){
         return false;
     #endif
     #ifndef FALSIFY_BRAKES
-        data->reed1 == PinState::OFF || data->reed2 == PinState::OFF || data->reed3 == PinState::OFF || data->reed4 == PinState::OFF;
+        return (data->reed1 == PinState::ON || data->reed3 == PinState::ON);
     #endif
 }
 bool Sensors::check_gate_drivers() const {

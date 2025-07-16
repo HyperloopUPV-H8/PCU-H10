@@ -10,9 +10,7 @@ class Sensors{
         SPeetecSensor speetec;
         Data_struct *data;
         DigitalSensor reed1{Pinout::REED_1,&data->reed1};  
-        DigitalSensor reed2{Pinout::REED_2,&data->reed2};
-        DigitalSensor reed3{Pinout::REED_3,&data->reed3};
-        DigitalSensor reed4{Pinout::REED_4,&data->reed4};
+        DigitalSensor reed2{Pinout::REED_2,&data->reed3};
         FilteredLinearSensor<float,50> sensor_voltage_A{Pinout::Batt_Voltage_A,Sensors_data::slope_voltage_sensor,Sensors_data::offset_voltage_sensor,&data->actual_voltage_battery_A,filter_voltage_A};
         FilteredLinearSensor<float,50> sensor_voltage_B{Pinout::Batt_Voltage_B,Sensors_data::slope_voltage_sensor,Sensors_data::offset_voltage_sensor,&data->actual_voltage_battery_B,filter_voltage_B};
         DigitalSensor fault_gd_inverter_a{Pinout::FAULT_GD_INVERTER_A, &data->fault_gd_inverter_a};
