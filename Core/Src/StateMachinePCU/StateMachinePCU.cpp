@@ -46,7 +46,7 @@ void StateMachinePCU::add_transitions(){
         return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
     });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
-        return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage || not sensors->check_gate_drivers();
+        return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
     });
     //Braked
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Braked,[this](){
@@ -148,9 +148,11 @@ void StateMachinePCU::add_enter_actions(){
     },Operational_State_PCU::Accelerating);
     
     operationalStateMachine->add_enter_action([this](){
-       Motor_Stop(); //just for safety reasons
-       data->state_run = RunState::NOTHING;
-
+        Motor_Stop(); //just for safety reasons
+        data->state_run = RunState::NOTHING;
+        #if USING_FILTER
+            Start_Precharge();
+        #endif
     },Operational_State_PCU::Idle);
 
     stateMachine->add_enter_action([this](){
@@ -173,9 +175,6 @@ void StateMachinePCU::add_exit_actions(){
         actuators->Led_fault.turn_on();
         actuators->Led_Commutation.turn_off();
         actuators->Led_Operational.turn_off();
-        #if USING_FILTER
-        Start_Precharge();
-        #endif
     },State_PCU::Operational);
 }
 void StateMachinePCU::update(){
