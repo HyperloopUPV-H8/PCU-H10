@@ -151,6 +151,8 @@ void StateMachinePCU::add_enter_actions(){
         Motor_Stop(); //just for safety reasons
         data->state_run = RunState::NOTHING;
         #if USING_FILTER
+            actuators->enable();
+            actuators->Enable_reset();
             Start_Precharge();
         #endif
     },Operational_State_PCU::Idle);
@@ -345,9 +347,9 @@ void StateMachinePCU::Motor_Stop(){ //This may be rebundance but Safety Reasons
 void StateMachinePCU::Start_Precharge()
 {
     //precharge is now an enter action
-    actuators->set_three_frequencies(Communication::frequency_received);
+    actuators->set_three_frequencies(20'000);
     spaceVectorControl->set_frequency_Modulation(MODULATION_FREQUENCY_DEFAULT);
-    spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
+    spaceVectorControl->set_VMAX(375);
     spaceVectorControl->set_target_voltage(0); //in precharge the target_voltage must to be 0
     //actions
     currentControl->stop();
