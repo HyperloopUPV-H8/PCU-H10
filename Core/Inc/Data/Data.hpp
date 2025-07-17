@@ -12,7 +12,7 @@
 #define MOTOR_CENTER_ALIGNED 0 // 0 = Normal dualPWM, 1 = CenterAligned DualPWM
 #define SATURATOR_PI 1 // 0 = No saturator PI, 1 = Saturator PI
 #define FALSIFY_BRAKES // To falsify brakes if it's possible only for testing
-#define USING_FILTER 1 //Only we do Precharge with filter
+#define USING_FILTER 0 //Only we do Precharge with filter
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8; 
@@ -90,8 +90,7 @@ namespace Communication_Data{
         static constexpr uint16_t CURRENT_REFERENCE_ORDER = 1003;
         static constexpr uint16_t SPEED_REFERENCE_ORDER = 1004;
         static constexpr uint16_t BRAKE_MOTOR_ORDER = 1005;
-        static constexpr uint16_t START_RUN_ORDER = 56;
-    //runs 1000
+        static constexpr uint16_t START_RUN_ORDER = 1000;
 
     #else
         static constexpr uint16_t ENABLE_BUFFER_ORDER = 500;
