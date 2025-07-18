@@ -246,10 +246,10 @@ void StateMachinePCU::update(){
         Communication::received_Current_reference_order = false;
 
         speedControl->reset_PI();
-        spaceVectorControl->set_VMAX(Communication::Vmax_control_received);
-        currentControl->set_current_ref(Communication::current_reference_received);
-        actuators->set_three_frequencies(Communication::frequency_received);
-        spaceVectorControl->set_frequency_Modulation(Communication::frequency_space_vector_received);
+        spaceVectorControl->set_VMAX(250);
+        currentControl->set_current_ref(5);
+        actuators->set_three_frequencies(20'000);
+        spaceVectorControl->set_frequency_Modulation(10);
 
         data->space_vector_active = true;
         speedControl->stop();

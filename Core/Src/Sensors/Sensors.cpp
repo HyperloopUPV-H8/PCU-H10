@@ -100,7 +100,7 @@ void Sensors::update_protections()
 bool Sensors::check_speetec_disconnection_protection()
 {
     double position = sensor_check_window.compute(data->position_encoder);
-    if(position == 0 && data->current_Peak > 10) return true;
+    if(position < 0.1 && data->current_Peak > 6.0) return true;
     return false;
 }
 

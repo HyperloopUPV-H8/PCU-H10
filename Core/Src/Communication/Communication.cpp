@@ -84,7 +84,8 @@ void receive_run_demostration_callback()
     //establecer con valores estándard
 
     Communication::run_id += 1;
-    received_speed_reference_callback();
+    received_current_reference_callback();
+    Communication::received_start_run = true;
 
 }
 
