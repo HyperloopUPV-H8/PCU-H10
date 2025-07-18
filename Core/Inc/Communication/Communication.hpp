@@ -32,6 +32,8 @@ class Communication{
         HeapPacket *Reeds_Packet;
         HeapPacket *Gate_Driver_Packet;
         HeapPacket *State_to_Vcu_Packet;
+        HeapPacket *State_Recovery_Vcu;
+
     public:
         #if COMMUNICATION_HVSCU 
         DatagramSocket *HVSCU_datagramSocket;

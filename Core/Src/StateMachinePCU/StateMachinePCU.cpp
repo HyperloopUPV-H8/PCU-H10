@@ -121,7 +121,7 @@ void StateMachinePCU::add_cyclic_actions(){
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){ 
             execute_current_protection = true;
-        },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+        },ms(20),Operational_State_PCU::Accelerating);
 
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){

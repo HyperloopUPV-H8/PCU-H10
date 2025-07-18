@@ -125,6 +125,7 @@ namespace Communication_Data{
     static constexpr uint16_t REEDS_PACKET = 557;
     static constexpr uint16_t GATE_DRIVER_PACKET = 558;
     static constexpr uint16_t STATE_TO_VCU_PACKET = 64;
+    static constexpr uint16_t STATE_RECOVERY_VCU_PACKET = 65;
 };
 namespace Current_Control_Data{
     static constexpr double kp_accelerate = 0.1;
@@ -201,6 +202,7 @@ struct Data_struct{
     float actual_current_sensor_w_b{};
     uint8_t state_pcu{}; // general state
     uint8_t operational_state_pcu{}; //operational state
+    uint8_t recovery_state_vcu{}; //braking state 
     double current_error{};
     double current_Peak{};
     double target_voltage{};

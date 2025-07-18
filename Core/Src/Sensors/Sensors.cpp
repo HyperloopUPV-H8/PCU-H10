@@ -105,6 +105,9 @@ bool Sensors::check_speetec_disconnection_protection()
 
 bool Sensors::check_recovery_protection()
 {
-
-    return false;
+    static double prev_position_encoder = 0;
+    bool ret = false;
+    if((data->position_encoder - prev_position_encoder) <= -0.05 && data->recovery_state_vcu == 0) ret = true;
+    prev_position_encoder = data->position_encoder;
+    return ret;
 }
