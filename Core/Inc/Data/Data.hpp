@@ -3,7 +3,7 @@
 //configuraciones
 //TODO : PASS the configuration to a config file
 #define PPU_USING 2     // 0 PPU connector A, 1 PPU connector B , 2 Both PPU
-#define SOCKET_VCU_ENABLED 0 //0 Uses id from Adj, 1 Uses id from VCU
+#define SOCKET_VCU_ENABLED 1 //0 Uses id from Adj, 1 Uses id from VCU
 #define COMMUNICATION_HVSCU 0   // 0 = No communication, 1 = send packet with voltages 
 #define TEST_PWM 0 //0 = no test pwm, eliminate some orders, 1 = have every order for test single pwm
 #define CHILL_KEEPALIVES  1  //0 = agressive keepalives, 1 = chill keepalives
@@ -13,6 +13,8 @@
 #define SATURATOR_PI 1 // 0 = No saturator PI, 1 = Saturator PI
 #define FALSIFY_BRAKES // To falsify brakes if it's possible only for testing
 #define USING_FILTER 0 //Only we do Precharge with filter
+
+static constexpr float BRAKING_DISTANCE = 48.0 - 24;
 namespace Pinout{
     static constexpr Pin& U_PWM = PE9;
     static constexpr Pin& U_PWM_NEGATED = PE8; 

@@ -43,10 +43,12 @@ void StateMachinePCU::add_transitions(){
         return communication->is_connected();
     });
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Fault,[this](){
-        return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage || sensors->sensor_speetec_protection_flag || sensors->sensor_speetec_protection_flag;
+        return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage
+         || sensors->sensor_speetec_protection_flag || sensors->sensor_speetec_protection_flag || sensors->sensor_braking_zone_flag;
     });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
-        return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
+        return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage
+         || sensors->sensor_speetec_protection_flag || sensors->sensor_speetec_protection_flag || sensors->sensor_braking_zone_flag;
     });
     //Braked
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Braked,[this](){

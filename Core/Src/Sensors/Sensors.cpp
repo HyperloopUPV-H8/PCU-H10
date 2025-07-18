@@ -94,6 +94,7 @@ void Sensors::update_protections()
 {
     sensor_speetec_protection_flag |= check_speetec_disconnection_protection();
     sensor_recovery_protection_flag |= check_recovery_protection();
+    sensor_braking_zone_flag |= check_braking_distance_protection();
 }
 
 bool Sensors::check_speetec_disconnection_protection()
@@ -110,4 +111,10 @@ bool Sensors::check_recovery_protection()
     if((data->position_encoder - prev_position_encoder) <= -0.05 && data->recovery_state_vcu == 0) ret = true;
     prev_position_encoder = data->position_encoder;
     return ret;
+}
+
+bool Sensors::check_braking_distance_protection()
+{
+    if(data->position_encoder >= BRAKING_DISTANCE) return true;
+    return false;
 }

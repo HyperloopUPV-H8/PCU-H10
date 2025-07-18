@@ -22,7 +22,7 @@ float RUNS::update()
 
     vel_ref = 35.0F;
 
-    if(pos > (48-distance_brake))
+    if(pos > BRAKING_DISTANCE)
     {
         Communication::received_motor_brake_order = true;
         Data->state_run = RunState::BRAKING;
