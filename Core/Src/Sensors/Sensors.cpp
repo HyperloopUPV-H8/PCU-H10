@@ -88,3 +88,23 @@ bool Sensors::check_gate_drivers() const {
            data->ready_gd_inverter_a == PinState::ON &&
            data->ready_gd_inverter_b == PinState::ON;
 }
+
+static MovingAverage <10>sensor_check_window;
+void Sensors::update_protections()
+{
+    sensor_speetec_protection_flag |= check_speetec_disconnection_protection();
+    sensor_recovery_protection_flag |= check_recovery_protection();
+}
+
+bool Sensors::check_speetec_disconnection_protection()
+{
+    double position = sensor_check_window.compute(data->position_encoder);
+    if(position == 0 && data->current_Peak > 10) return true;
+    return false;
+}
+
+bool Sensors::check_recovery_protection()
+{
+
+    return false;
+}

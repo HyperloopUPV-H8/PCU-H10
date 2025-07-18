@@ -23,6 +23,7 @@ class StateMachinePCU{
         bool execute_space_vector_control_flag{false};
         bool send_udp_data_flag{false};
         bool execute_speed_control_flag{false};
+        bool execute_current_protection{false};
     public:
         static bool space_vector_on;
         static bool speed_control_active;

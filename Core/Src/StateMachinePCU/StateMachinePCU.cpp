@@ -43,7 +43,7 @@ void StateMachinePCU::add_transitions(){
         return communication->is_connected();
     });
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Fault,[this](){
-        return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
+        return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage || sensors->sensor_speetec_protection_flag || sensors->sensor_speetec_protection_flag;
     });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
         return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage;
@@ -118,7 +118,11 @@ void StateMachinePCU::add_cyclic_actions(){
             }
         },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
     #endif
-    
+    operationalStateMachine->add_mid_precision_cyclic_action(
+        [this](){ 
+            execute_current_protection = true;
+        },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
+
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){
           execute_current_control_flag = true;
@@ -335,6 +339,14 @@ void StateMachinePCU::update(){
     if(send_udp_data_flag){
         send_udp_data_flag = false;
         communication->send_UDP_packets();
+    }
+
+    //protections:
+    if(execute_current_protection)
+    {
+        execute_current_protection = false;
+        sensors->update_protections();
+
     }
     stateMachine->check_transitions();
     operationalStateMachine->check_transitions();

@@ -21,6 +21,8 @@ class Sensors{
     public:
     Sensors(Data_struct *data);
     CurrentSensors currentSensors;
+    bool sensor_speetec_protection_flag{false};
+    bool sensor_recovery_protection_flag{false};
     void read();
     void start();
     void start_emulated_speetec();
@@ -28,9 +30,13 @@ class Sensors{
     void read_reeds();
     bool reeds_braking();
     bool check_gate_drivers()const;
+    void update_protections();
+
 
     private:
     void emulated_read();
     double get_emulation_time();
+    inline bool check_speetec_disconnection_protection();
+    inline bool check_recovery_protection();
      
 };
