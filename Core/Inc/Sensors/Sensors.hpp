@@ -22,7 +22,7 @@ class Sensors{
     Sensors(Data_struct *data);
     CurrentSensors currentSensors;
     bool sensor_speetec_protection_flag{false};
-    bool sensor_recovery_protection_flag{false};
+    bool going_backwards{false};
     bool sensor_braking_zone_flag{false};
     void read();
     void start();
@@ -38,7 +38,7 @@ class Sensors{
     void emulated_read();
     double get_emulation_time();
     inline bool check_speetec_disconnection_protection();
-    inline bool check_recovery_protection();
+    inline bool is_going_backwards();
     inline bool check_braking_distance_protection();
      
 };

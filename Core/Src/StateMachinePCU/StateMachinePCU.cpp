@@ -44,11 +44,11 @@ void StateMachinePCU::add_transitions(){
     });
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Fault,[this](){
         return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage
-         || sensors->sensor_speetec_protection_flag || sensors->sensor_speetec_protection_flag || sensors->sensor_braking_zone_flag;
+         || sensors->sensor_speetec_protection_flag || sensors->going_backwards || sensors->sensor_braking_zone_flag;
     });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
         return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage
-         || sensors->sensor_speetec_protection_flag || sensors->sensor_speetec_protection_flag || sensors->sensor_braking_zone_flag;
+         || sensors->sensor_speetec_protection_flag || sensors->going_backwards || sensors->sensor_braking_zone_flag;
     });
     //Braked
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Braked,[this](){
@@ -96,6 +96,17 @@ void StateMachinePCU::add_cyclic_actions(){
         sensors->read();
         sensors->read_speetec();
     });
+
+    stateMachine->add_mid_precision_cyclic_action(
+        [this](){ 
+            execute_current_protection = true;
+        },ms(20), State_PCU::Operational);
+
+    stateMachine->add_mid_precision_cyclic_action(
+        [this](){ 
+            execute_current_protection = true;
+        },ms(20), State_PCU::Connecting);
+
     #if USING_FILTER
     stateMachine->add_mid_precision_cyclic_action(
         [this](){ 
@@ -120,10 +131,6 @@ void StateMachinePCU::add_cyclic_actions(){
             }
         },us(Current_Control_Data::microsecond_period),Operational_State_PCU::Accelerating);
     #endif
-    operationalStateMachine->add_mid_precision_cyclic_action(
-        [this](){ 
-            execute_current_protection = true;
-        },ms(20),Operational_State_PCU::Accelerating);
 
     operationalStateMachine->add_mid_precision_cyclic_action(
         [this](){
@@ -171,6 +178,7 @@ void StateMachinePCU::add_enter_actions(){
     stateMachine->add_enter_action([this]() {
            Motor_Stop();
            actuators->Led_fault.turn_on();
+           ProtectionManager::fault_and_propagate();
     },State_PCU::Fault);
     
     operationalStateMachine->add_enter_action([this](){
