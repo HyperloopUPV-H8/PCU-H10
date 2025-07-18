@@ -18,6 +18,7 @@ bool Communication::received_Complete_Run_order = false;
 bool Communication::received_start_regenerative_now_order = false;
 bool Communication::received_motor_brake_order = false;
 bool Communication::receive_emulated_speetec_order = false;
+bool Communication::received_start_run = false;
 
 
 float Communication::ref_voltage_space_vector_received{};

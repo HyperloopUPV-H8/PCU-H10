@@ -150,6 +150,7 @@ void StateMachinePCU::add_enter_actions(){
     operationalStateMachine->add_enter_action([this](){
         Motor_Stop(); //just for safety reasons
         data->state_run = RunState::NOTHING;
+        Communication::run_id = 0;
         #if USING_FILTER
             actuators->enable();
             actuators->Enable_reset();
@@ -240,6 +241,11 @@ void StateMachinePCU::update(){
         speedControl->stop();
         currentControl->start();
     }
+    if(Communication::received_start_run)
+    {
+        Communication::received_start_run = false;
+        RUNS::start(Communication::run_id);
+    }
     if(Communication::received_Speed_reference_order == true){ 
         Communication::received_Speed_reference_order = false;
         speedControl->reset_PI();
@@ -323,6 +329,7 @@ void StateMachinePCU::update(){
     }
     if(execute_speed_control_flag){
         execute_speed_control_flag = false;
+        if(Communication::run_id) speedControl->set_reference_speed(RUNS::update());
         speedControl->control_action();
     }
     if(send_udp_data_flag){

@@ -3,7 +3,7 @@
 //configuraciones
 //TODO : PASS the configuration to a config file
 #define PPU_USING 2     // 0 PPU connector A, 1 PPU connector B , 2 Both PPU
-#define SOCKET_VCU_ENABLED 1 //0 Uses id from Adj, 1 Uses id from VCU
+#define SOCKET_VCU_ENABLED 0 //0 Uses id from Adj, 1 Uses id from VCU
 #define COMMUNICATION_HVSCU 0   // 0 = No communication, 1 = send packet with voltages 
 #define TEST_PWM 0 //0 = no test pwm, eliminate some orders, 1 = have every order for test single pwm
 #define CHILL_KEEPALIVES  1  //0 = agressive keepalives, 1 = chill keepalives
@@ -165,10 +165,7 @@ enum ControlStates{
 };
 
 enum RunMode: uint8_t{
-    BOOSTER_LIM=1,
-    BOOSTER,
-    LIM,
-    LIM_50_KM_H
+    LIM=1
 };
 
 enum RunState: uint8_t{

@@ -56,6 +56,7 @@ class Communication{
         static bool received_start_regenerative_now_order;
         static bool received_motor_brake_order;
         static bool receive_emulated_speetec_order;
+        static bool received_start_run;
 
         static float frequency_received;
         static float duty_cycle_received;

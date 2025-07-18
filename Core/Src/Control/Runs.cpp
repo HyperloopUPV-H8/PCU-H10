@@ -13,27 +13,14 @@ float RUNS::update()
     double pos = Data->position_encoder;
     if(Data->state_run == RunState::BRAKING)
     {
-        if(vel == 0.0)
+        if(vel <= 0.1)
         {
             Communication::received_stop_motor = true;
         }
         return 0.0;
     }
 
-
-    switch(run)
-    {
-        case RunMode::BOOSTER_LIM:
-        case RunMode::LIM_50_KM_H:
-            vel_ref = 50.0F;
-            break;
-        case RunMode::LIM:
-            vel_ref = 35.0F;
-            break;
-        case RunMode::BOOSTER:
-            vel_ref = 25.0F;
-            break;
-    }
+    vel_ref = 35.0F;
 
     if(pos > (48-distance_brake))
     {
