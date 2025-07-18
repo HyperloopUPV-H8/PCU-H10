@@ -139,7 +139,7 @@ Communication::Communication(Data_struct *data): Data(data){
     Gate_Driver_Packet = new HeapPacket(Communication_Data::GATE_DRIVER_PACKET,&Data->fault_gd_inverter_a,&Data->fault_gd_inverter_b,&Data->ready_gd_inverter_a,&Data->ready_gd_inverter_b);
     #if SOCKET_VCU_ENABLED
         State_to_Vcu_Packet = new HeapPacket(Communication_Data::STATE_TO_VCU_PACKET, &Data->operational_state_pcu);
-        State_Recovery_Vcu = new HeapPacket(Communication_Data::STATE_RECOVERY_VCU_PACKET, &Data->braking_state_vcu);
+        State_Recovery_Vcu = new HeapPacket(Communication_Data::STATE_RECOVERY_VCU_PACKET, &Data->recovery_state_vcu);
     #endif
 }
 void Communication::send_UDP_packets(){
