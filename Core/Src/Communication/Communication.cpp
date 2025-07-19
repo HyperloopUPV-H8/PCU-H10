@@ -96,7 +96,7 @@ void receive_emulated_speetec_callback()
 
 Communication::Communication(Data_struct *data): Data(data){
     #if CHILL_KEEPALIVES
-        ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER,1000,500,10);
+        ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER,2000,1000,20);
     #else
         ControlStationSocket = new ServerSocket(Communication_Data::PCU_IP,Communication_Data::TCP_SERVER);
     #endif
