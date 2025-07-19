@@ -44,11 +44,11 @@ void StateMachinePCU::add_transitions(){
     });
     stateMachine->add_transition(State_PCU::Connecting,State_PCU::Fault,[this](){
         return data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage
-         || sensors->sensor_speetec_protection_flag || sensors->going_backwards || sensors->sensor_braking_zone_flag;
+         || sensors->going_backwards || sensors->sensor_braking_zone_flag;
     });
     stateMachine->add_transition(State_PCU::Operational,State_PCU::Fault,[this](){
         return !communication->is_connected() || data->actual_voltage_battery_A > Protecction_Voltage || data->actual_voltage_battery_B >Protecction_Voltage
-         || sensors->sensor_speetec_protection_flag || sensors->going_backwards || sensors->sensor_braking_zone_flag;
+         || sensors->going_backwards || sensors->sensor_braking_zone_flag;
     });
     //Braked
     operationalStateMachine->add_transition(Operational_State_PCU::Idle,Operational_State_PCU::Braked,[this](){
@@ -246,8 +246,8 @@ void StateMachinePCU::update(){
         Communication::received_Current_reference_order = false;
 
         speedControl->reset_PI();
-        spaceVectorControl->set_VMAX(250);
-        currentControl->set_current_ref(5);
+        spaceVectorControl->set_VMAX(237);
+        currentControl->set_current_ref(25);
         actuators->set_three_frequencies(20'000);
         spaceVectorControl->set_frequency_Modulation(10);
 
