@@ -247,7 +247,7 @@ void StateMachinePCU::update(){
 
         speedControl->reset_PI();
         spaceVectorControl->set_VMAX(237);
-        currentControl->set_current_ref(75.0F);
+        currentControl->set_current_ref(62.5F);
         actuators->set_three_frequencies(20'000);
         spaceVectorControl->set_frequency_Modulation(8.3);
 
