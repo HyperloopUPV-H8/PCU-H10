@@ -43,7 +43,9 @@ void CurrentControl::control_action(){
     Data->current_Peak = current_peak;
     Data->current_error = current_error;
     #if USE_VF_CONTROL
-        spaceVector->set_frequency_Modulation(calculate_frequency_modulation());
+        float freq = calculate_frequency_modulation();
+        spaceVector->set_frequency_Modulation(freq);
+        Max_Peak::set_modulation_freq(freq);
     #else
         Max_Peak::set_modulation_freq(spaceVector->get_modulation_frequency());
     #endif

@@ -4,7 +4,7 @@
 
 #define NANOSECOND 1000000000
 
-#define USE_VF_CONTROL 0
+#define USE_VF_CONTROL 1
 class Max_Peak{
     private:
         double antiguo_maximo = 0.0;
